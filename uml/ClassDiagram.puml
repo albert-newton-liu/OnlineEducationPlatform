@@ -1,0 +1,207 @@
+@startuml OnlineEducationPlatformSimplifiedClassDiagram
+
+skinparam classAttributeIconSize 0
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2F6C8F
+    BorderColor #2F6C8F
+    HeaderBackgroundColor #AADDEE
+    AttributeFontColor Black
+    StereotypeFontColor Gray
+}
+skinparam arrow {
+    Color #2F6C8F
+    Thickness 1
+}
+
+' --- User Management ---
+class Users {
+    + user_id: String
+    + username: String
+    + email: String
+    + password_hash: String
+    + role: Byte
+    + created_at: Timestamp
+    + last_login_at: Timestamp
+    + is_active: Boolean
+}
+
+class Students {
+    + student_id: String
+    + parent_email: String
+    + date_of_birth: Date
+    + avatar_url: String
+    + total_rewards: Integer
+}
+
+class Teachers {
+    + teacher_id: String
+    + bio: String
+    + profile_picture_url: String
+    + is_approved: Boolean
+    + rating: Numeric
+    + teaching_languages: String[]
+}
+
+class Admins {
+    + admin_id: String
+    + permissions: String[]
+}
+
+' --- Lesson Content Management ---
+class Lessons {
+    + lesson_id: String
+    + teacher_id: String
+    + title: String
+    + description: String
+    + difficulty_level: Byte
+    + thumbnail_url: String
+    + created_at: Timestamp
+    + updated_at: Timestamp
+    + is_published: Boolean
+    + admin_reviewed_at: Timestamp
+}
+
+class LessonPages {
+    + page_id: String
+    + lesson_id: String
+    + page_number: Integer
+    + page_layout_json: JSON
+    + created_at: Timestamp
+    + updated_at: Timestamp
+}
+
+class LessonPageElements {
+    + element_id: String
+    + page_id: String
+    + element_type: Byte
+    + content_text: Text
+    + content_url: String
+    + metadata_json: JSON
+    + created_at: Timestamp
+}
+
+class StudentLessonProgress {
+    + progress_id: String
+    + student_id: String
+    + lesson_id: String
+    + last_page_viewed: Integer
+    + completed_at: Timestamp
+    + status: Byte
+}
+
+' --- Booking System ---
+class TeacherRecurringAvailability {
+    + recurring_id: String
+    + teacher_id: String
+    + day_of_week: Byte
+    + start_time_of_day: Time
+    + end_time_of_day: Time
+    + effective_from_date: Date
+    + effective_to_date: Date
+    + is_active: Boolean
+    + created_at: Timestamp
+    + updated_at: Timestamp
+}
+
+class BookableSlots {
+    + slot_id: String
+    + teacher_id: String
+    + start_time: Timestamp
+    + end_time: Timestamp
+    + is_booked: Boolean
+    + recurring_id: String
+    + is_one_off: Boolean
+    + created_at: Timestamp
+}
+
+class Bookings {
+    + booking_id: String
+    + student_id: String
+    + teacher_id: String
+    + slot_id: String
+    + lesson_id: String
+    + booking_time: Timestamp
+    + status: Byte
+    + created_at: Timestamp
+    + updated_at: Timestamp
+}
+
+' --- Live Class ---
+class LiveClasses {
+    + live_class_id: String
+    + booking_id: String
+    + room_name: String
+    + room_password: String
+    + start_time: Timestamp
+    + end_time: Timestamp
+    + teacher_join_time: Timestamp
+    + student_join_time: Timestamp
+}
+
+' --- Rewards System ---
+class Rewards {
+    + reward_id: String
+    + student_id: String
+    + teacher_id: String
+    + reward_type: Byte
+    + reward_name: String
+    + reward_value: Integer
+    + awarded_at: Timestamp
+    + lesson_id: String
+}
+
+' --- Notifications ---
+class Notifications {
+    + notification_id: String
+    + user_id: String
+    + type: Byte
+    + message: Text
+    + is_read: Boolean
+    + created_at: Timestamp
+    + related_entity_id: String
+    + related_entity_type: String
+}
+
+' --- Relationships ---
+
+' User Hierarchy
+Users <|-- Students : extends
+Users <|-- Teachers : extends
+Users <|-- Admins : extends
+
+' Teacher creates Lessons
+Teachers "1" -- "0..*" Lessons : creates
+
+' Lessons contain Pages
+Lessons "1" -- "1..*" LessonPages : contains
+
+' LessonPages contain Elements
+LessonPages "1" -- "0..*" LessonPageElements : contains
+
+' Student Progress on Lessons
+Students "1" -- "0..*" StudentLessonProgress : tracks progress for
+Lessons "1" -- "0..*" StudentLessonProgress : has progress tracked by
+
+' Teacher Availability and Bookings
+Teachers "1" -- "0..*" TeacherRecurringAvailability : defines
+TeacherRecurringAvailability "1" -- "0..*" BookableSlots : generates
+Teachers "1" -- "0..*" BookableSlots : owns
+Students "1" -- "0..*" Bookings : makes
+Teachers "1" -- "0..*" Bookings : receives
+BookableSlots "1" -- "1" Bookings : is booked for >
+
+' Live Class from Booking
+Bookings "1" -- "1" LiveClasses : leads to
+
+' Rewards for Students by Teachers, potentially tied to Lessons
+Students "1" -- "0..*" Rewards : earns
+Teachers "1" -- "0..*" Rewards : gives
+Lessons "0..1" -- "0..*" Rewards : awarded in
+
+' Notifications target Users
+Users "1" -- "0..*" Notifications : receives
+
+@enduml

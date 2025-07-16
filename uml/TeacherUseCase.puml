@@ -1,0 +1,32 @@
+@startuml TeacherUseCases
+
+left to right direction
+
+actor Teacher as teacher
+
+package "Online Education Platform" {
+
+    usecase "Login" as UC2
+    usecase "Logout" as UC3
+    usecase "Create/Edit Lesson" as UC4
+    usecase "Preview Lesson" as UC5
+    usecase "Set Available Timeslots" as UC6
+    usecase "View Bookings" as UC7
+    usecase "Start Live Class" as UC8
+    usecase "Give Rewards" as UC9
+    usecase "Receive Booking Notification" as UC10
+    usecase "Participate in Video Chat" as UC11
+}
+
+teacher --> UC2
+teacher --> UC3
+teacher --> UC4
+UC4 ..> UC5 : <<include>>
+teacher --> UC6
+teacher --> UC7
+teacher --> UC8
+UC8 ..> UC11 : <<include>>
+teacher --> UC9
+teacher --> UC10
+
+@enduml
