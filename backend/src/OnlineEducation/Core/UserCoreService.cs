@@ -1,6 +1,9 @@
 
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Extensions;
+using OnlineEducation.Api.Request;
+using OnlineEducation.Api.Response;
 using OnlineEducation.Data.Dao;
 using OnlineEducation.Data.Repository;
 using OnlineEducation.Model;
@@ -10,6 +13,7 @@ namespace OnlineEducation.Core;
 
 public class UserCoreService : IUserCoreService
 {
+    private readonly ApplicationDbContext _dbContext;
     private readonly IUserRepository _userRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ITeacherRepository _teacherRepository;
@@ -19,8 +23,9 @@ public class UserCoreService : IUserCoreService
         IUserRepository userRepository,
         IStudentRepository studentRepository,
         ITeacherRepository teacherRepository,
-        IAdminRepository adminRepository)
+        IAdminRepository adminRepository, ApplicationDbContext dbContext)
     {
+        _dbContext = dbContext;
         _userRepository = userRepository;
         _studentRepository = studentRepository;
         _teacherRepository = teacherRepository;
@@ -61,7 +66,7 @@ public class UserCoreService : IUserCoreService
         return await GetUserByUsernameAsync<TUser>(user.Username);
     }
 
-    public async Task deleteUser(string username)
+    public async Task DeleteUser(string username)
     {
         UserDO? userDO = await _userRepository.GetUserByUsernameAsync(username);
 
@@ -90,7 +95,23 @@ public class UserCoreService : IUserCoreService
         UserDO? userDO = await _userRepository.GetUserByUsernameAsync(username);
         ArgumentNullException.ThrowIfNull(userDO);
 
-        User result;
+        User result = await FillUserInfo(userDO);
+
+        return result as TUser;
+    }
+
+    public async Task<TUser?> GetByIdAsync<TUser>(string id) where TUser : User
+    {
+        UserDO? userDO = await _userRepository.GetByIdAsync(id);
+        ArgumentNullException.ThrowIfNull(userDO);
+
+        User result = await FillUserInfo(userDO);
+        return result as TUser;
+    }
+
+    private async Task<User> FillUserInfo(UserDO userDO)
+    {
+        User? result = null;
         switch ((UserRole)userDO.Role)
         {
             case UserRole.Student:
@@ -111,16 +132,15 @@ public class UserCoreService : IUserCoreService
                 {
                     Console.WriteLine($"a.Permissions : {a.Permissions},adminDO:{adminDO.Permissions}");
                 }
-
-
                 break;
             default:
-                return null;
+                break;
         }
 
-        FillUser(userDO, result);
+        ArgumentNullException.ThrowIfNull(result);
 
-        return result as TUser;
+        FillUser(userDO, result);
+        return result;
     }
 
     public async Task<TUser?> UpdateUser<TUser>(TUser user) where TUser : User
@@ -160,6 +180,20 @@ public class UserCoreService : IUserCoreService
             ?? throw new KeyNotFoundException($"User with ID '{userId}' not found for updating LastLogin.");
         userDO.LastLoginAt = dateTime;
         await _userRepository.SaveChangesAsync();
+    }
+
+    public async Task<PaginatedResult<UserDO>> GetPaginatedBaseUsersAsync(PaginationParams paginationParams)
+    {
+        var query = _dbContext.UserDOs.AsQueryable();
+        var totalCount = await query.CountAsync();
+
+        var users = await query
+                            .OrderBy(u => u.Username) // Always order for consistent pagination
+                            .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                            .Take(paginationParams.PageSize)
+                            .ToListAsync();
+
+        return new PaginatedResult<UserDO>(users, totalCount, paginationParams.PageNumber, paginationParams.PageSize);
     }
 
 

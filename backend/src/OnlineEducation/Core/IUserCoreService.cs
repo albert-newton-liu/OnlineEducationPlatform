@@ -1,4 +1,7 @@
 
+using OnlineEducation.Api.Request;
+using OnlineEducation.Api.Response;
+using OnlineEducation.Data.Dao;
 using OnlineEducation.Model;
 
 namespace OnlineEducation.Core;
@@ -13,5 +16,10 @@ public interface IUserCoreService
 
     Task UpdateLastLogin(string username, DateTime dateTime);
 
-    Task deleteUser(string username);
+    Task DeleteUser(string username);
+
+    Task<TUser?> GetByIdAsync<TUser>(string id) where TUser : User;
+
+    Task<PaginatedResult<UserDO>> GetPaginatedBaseUsersAsync(PaginationParams paginationParams);
+
 }

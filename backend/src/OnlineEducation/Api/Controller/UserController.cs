@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineEducation.Api.Request;
+using OnlineEducation.Api.Response;
 using OnlineEducation.Model;
 using OnlineEducation.Service;
 
@@ -30,7 +31,7 @@ public class UsersController : ControllerBase
 
         try
         {
-            Admin createdAdmin = await _userService.addAdmin(request);
+            Admin createdAdmin = await _userService.AddAdmin(request);
             return CreatedAtAction(nameof(RegisterAdmin), new { id = createdAdmin.UserId }, createdAdmin);
         }
         catch (InvalidOperationException ex)
@@ -56,7 +57,7 @@ public class UsersController : ControllerBase
 
         try
         {
-            Student createdStudent = await _userService.addStudent(request);
+            Student createdStudent = await _userService.AddStudent(request);
             return CreatedAtAction(nameof(RegisterStudent), new { id = createdStudent.UserId }, createdStudent);
         }
         catch (InvalidOperationException ex)
@@ -82,7 +83,7 @@ public class UsersController : ControllerBase
 
         try
         {
-            Teacher createdTeacher = await _userService.addTeacher(request);
+            Teacher createdTeacher = await _userService.AddTeacher(request);
             return CreatedAtAction(nameof(RegisterTeacher), new { id = createdTeacher.UserId }, createdTeacher);
         }
         catch (InvalidOperationException ex)
@@ -95,10 +96,10 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPost("login")] 
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)] 
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]   
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]     
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -109,9 +110,19 @@ public class UsersController : ControllerBase
 
         try
         {
-            User loggedInUser = await _userService.login(request.Username, request.Password);
+            User loggedInUser = await _userService.Login(request.Username, request.Password);
 
-            return Ok(loggedInUser);
+            UserLoginResponse response = new UserLoginResponse();
+            response.UserId = loggedInUser.UserId;
+            response.Username = loggedInUser.Username;
+            response.Role = loggedInUser.Role;
+            if (loggedInUser is Admin admin)
+            {
+                response.Permissions = admin.Permissions;
+            }
+            response.Token = "token";
+
+            return Ok(response);
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -121,6 +132,41 @@ public class UsersController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during login." });
         }
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<User>> GetById(string id)
+    {
+        var user = await _userService.QueryById(id);
+
+        if (user == null)
+        {
+            return NotFound($"User with ID '{id}' not found.");
+        }
+
+        return Ok(user);
+    }
+    
+    [HttpGet()] 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResult<UserQueryResponse>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<PaginatedResult<UserQueryResponse>>> GetPaginated([FromQuery] PaginationParams paginationParams)
+    {
+        if (paginationParams == null)
+        {
+            paginationParams = new PaginationParams();
+        }
+        if (paginationParams.PageNumber < 1 || paginationParams.PageSize < 1)
+        {
+            return BadRequest("PageNumber and PageSize must be greater than 0.");
+        }
+
+        var paginatedUsers = await _userService.GetPaginatedUsersAsync(paginationParams);
+
+        return Ok(paginatedUsers);
     }
 
 }

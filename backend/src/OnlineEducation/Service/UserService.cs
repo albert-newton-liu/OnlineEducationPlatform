@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using OnlineEducation.Api.Request;
+using OnlineEducation.Api.Response;
 using OnlineEducation.Core;
+using OnlineEducation.Data.Dao;
 using OnlineEducation.Model;
 using OnlineEducation.Utils;
 
@@ -15,7 +17,7 @@ public class UserService : IUserService
         _userCoreService = userCoreService;
     }
 
-    public async Task<Admin> addAdmin(AdminAddRequst requst)
+    public async Task<Admin> AddAdmin(AdminAddRequst requst)
     {
         Admin admin = new Admin();
         admin.Username = requst.Username;
@@ -32,7 +34,7 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<Student> addStudent(StudentAddRequst requst)
+    public async Task<Student> AddStudent(StudentAddRequst requst)
     {
         Student student = new Student();
         student.Username = requst.Username;
@@ -54,7 +56,7 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<Teacher> addTeacher(TeacherAddRequst requst)
+    public async Task<Teacher> AddTeacher(TeacherAddRequst requst)
     {
         Teacher teacher = new Teacher();
         teacher.Username = requst.Username;
@@ -75,14 +77,34 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<User> login(string username, string password)
+    public async Task<PaginatedResult<UserQueryResponse>> GetPaginatedUsersAsync(PaginationParams paginationParams)
     {
-        User? user = await _userCoreService.GetUserByUsernameAsync<User>(username);
-        if (user == null)
-        {
-            throw new UnauthorizedAccessException("Invalid username or password.");
+        PaginatedResult<UserDO> paginatedResult = await _userCoreService.GetPaginatedBaseUsersAsync(paginationParams);
+        ArgumentNullException.ThrowIfNull(paginatedResult);
 
+        IEnumerable<UserDO> Items = paginatedResult.Items;
+        if (Items == null)
+        {
+            return new([], paginatedResult.TotalCount, paginatedResult.PageNumber, paginatedResult.PageSize);
         }
+
+        IEnumerable<UserQueryResponse> users = [.. Items.Select(item => new UserQueryResponse
+        {
+            UserId = item.UserId,
+            Username = item.Username,
+            Email = item.Email,
+            Role = item.Role,
+            CreatedAt = item.CreatedAt
+
+        })];
+
+
+        return new(users, paginatedResult.TotalCount, paginatedResult.PageNumber, paginatedResult.PageSize); ;
+    }
+
+    public async Task<User> Login(string username, string password)
+    {
+        User user = await _userCoreService.GetUserByUsernameAsync<User>(username) ?? throw new UnauthorizedAccessException("Invalid username or password.");
 
         bool isPasswordValid = BCryptPasswordHasher.VerifyPassword(password, user.PasswordHash);
 
@@ -93,6 +115,12 @@ public class UserService : IUserService
 
         await _userCoreService.UpdateLastLogin(user.UserId, DateTime.UtcNow);
 
+        return user;
+    }
+
+    public async Task<User> QueryById(string id)
+    {
+        User user = await _userCoreService.GetByIdAsync<User>(id) ?? throw new UnauthorizedAccessException("Invalid username or password.");
         return user;
     }
 }

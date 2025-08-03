@@ -1,15 +1,21 @@
 using OnlineEducation.Api.Request;
+using OnlineEducation.Api.Response;
 using OnlineEducation.Model;
 
 namespace OnlineEducation.Service;
 
 public interface IUserService
 {
-    Task<User> login(string username, string password);
+    Task<User> Login(string username, string password);
 
-    Task<Student> addStudent(StudentAddRequst requst);
+    Task<Student> AddStudent(StudentAddRequst requst);
 
-    Task<Teacher> addTeacher(TeacherAddRequst requst);
+    Task<Teacher> AddTeacher(TeacherAddRequst requst);
 
-    Task<Admin> addAdmin(AdminAddRequst requst);
+    Task<Admin> AddAdmin(AdminAddRequst requst);
+
+    Task<User> QueryById(string id);
+
+    Task<PaginatedResult<UserQueryResponse>> GetPaginatedUsersAsync(PaginationParams paginationParams);
+
 }

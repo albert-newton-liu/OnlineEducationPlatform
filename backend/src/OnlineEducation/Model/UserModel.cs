@@ -2,7 +2,7 @@ using OnlineEducation.Data.Dao;
 
 namespace OnlineEducation.Model;
 
-public abstract class User
+public class User
 {
     public string UserId { get; set; } = null!;
     public string Username { get; set; } = null!;

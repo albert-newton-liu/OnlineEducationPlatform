@@ -25,8 +25,27 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 
-builder.Services.AddScoped<IUserCoreService, UserCoreService>(); 
-builder.Services.AddScoped<IUserService, UserService>(); 
+builder.Services.AddScoped<IUserCoreService, UserCoreService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+// --- CORS Configuration Start ---
+builder.Services.AddCors(options =>
+{
+    // Define a CORS policy named "AllowSpecificOrigin".
+    // It's good practice to name your policies, especially if you have multiple.
+    options.AddPolicy("AllowSpecificOrigin",
+        policyBuilder =>
+        {
+            // IMPORTANT: In production, replace "http://localhost:5173" with your actual
+            // production frontend domain (e.g., "https://yourfrontend.com").
+            policyBuilder.WithOrigins("http://localhost:5173")
+                         .AllowAnyHeader()
+                         .AllowAnyMethod()
+                         .AllowCredentials();
+        });
+
+});
+// --- CORS Configuration End ---
 
 
 var app = builder.Build();
@@ -40,6 +59,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+app.UseCors("AllowSpecificOrigin"); 
 
 app.Run();
 
