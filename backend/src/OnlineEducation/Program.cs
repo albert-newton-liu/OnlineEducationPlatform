@@ -25,8 +25,16 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 
+builder.Services.AddScoped<ILessonRepository, LessonRepository>();
+builder.Services.AddScoped<ILessonPageRepository, LessonPageRepository>();
+builder.Services.AddScoped<ILessonPageElementRepository, LessonPageElementRepository>();
+
+
 builder.Services.AddScoped<IUserCoreService, UserCoreService>();
+builder.Services.AddScoped<ILessonCoreSerice, LessonCoreSerice>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 
 // --- CORS Configuration Start ---
 builder.Services.AddCors(options =>
@@ -59,7 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
-app.UseCors("AllowSpecificOrigin"); 
+app.UseCors("AllowSpecificOrigin");
 
 app.Run();
 

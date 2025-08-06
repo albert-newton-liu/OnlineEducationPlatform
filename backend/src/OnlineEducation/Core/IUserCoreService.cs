@@ -22,4 +22,6 @@ public interface IUserCoreService
 
     Task<PaginatedResult<UserDO>> GetPaginatedBaseUsersAsync(PaginationParams paginationParams);
 
+    Task<IEnumerable<UserDO>> QueryUserByCondition(QueryUserCondition condition);
+
 }

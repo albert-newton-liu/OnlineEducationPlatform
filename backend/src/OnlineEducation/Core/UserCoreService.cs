@@ -1,4 +1,5 @@
 
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Extensions;
@@ -194,6 +195,15 @@ public class UserCoreService : IUserCoreService
                             .ToListAsync();
 
         return new PaginatedResult<UserDO>(users, totalCount, paginationParams.PageNumber, paginationParams.PageSize);
+    }
+
+    public async Task<IEnumerable<UserDO>> QueryUserByCondition(QueryUserCondition condition)
+    {
+        Expression<Func<UserDO, bool>> predicate = user =>
+            (condition.Role == null || user.Role == condition.Role) &&
+            (condition.IsActive == null || user.IsActive == condition.IsActive);
+
+        return await _userRepository.FindAsync(predicate);
     }
 
 

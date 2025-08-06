@@ -71,3 +71,11 @@ public enum UserRole : byte
     Teacher = 1,
     Admin = 2
 }
+
+public class QueryUserCondition
+{
+    public byte? Role { get; set; } = null;
+
+
+    public bool? IsActive { get; set; } = null;
+}

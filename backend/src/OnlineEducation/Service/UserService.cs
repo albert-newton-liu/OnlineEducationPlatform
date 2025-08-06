@@ -99,7 +99,7 @@ public class UserService : IUserService
         })];
 
 
-        return new(users, paginatedResult.TotalCount, paginatedResult.PageNumber, paginatedResult.PageSize); ;
+        return new(users, paginatedResult.TotalCount, paginatedResult.PageNumber, paginatedResult.PageSize);
     }
 
     public async Task<User> Login(string username, string password)
