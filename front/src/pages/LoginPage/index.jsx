@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import {API_BASE_URL} from '../../constant/Constants'
+import { useNavigate } from 'react-router-dom';
+
+import { API_BASE_URL } from '../../constant/Constants';
 
 import './LoginPage.css';
 
-function LoginPage() {
+// Accept onLoginSuccess as a prop
+function LoginPage({ onLoginSuccess }) { // <--- Added onLoginSuccess prop
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate hook
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,16 +26,19 @@ function LoginPage() {
       });
 
       console.log('Login successful!', response.data);
-      
-      // TODO: Handle successful login:
-      // 1. Store user authentication token/data (e.g., in localStorage)
-      localStorage.setItem('userToken', response.data.token); // Assuming backend returns a 'token' field
-      localStorage.setItem('userId', response.data.userId); // Store user ID or other relevant info
 
-  
+      // Store user authentication token/data
+      localStorage.setItem('userToken', response.data.token);
+      localStorage.setItem('userId', response.data.userId);
 
-      // 3. Redirect the user to the dashboard or home page
-      navigate('/dashboard'); // Redirect to the dashboard route
+      // --- CRITICAL CHANGE HERE ---
+      // Call the onLoginSuccess function to update the parent App component's state.
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
+
+      // Redirect the user to the dashboard
+      navigate('/dashboard');
 
     } catch (err) {
       console.error('Login failed:', err);

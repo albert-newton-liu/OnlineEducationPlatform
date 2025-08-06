@@ -76,7 +76,7 @@ function AddUserModal({ onClose }) {
           Authorization: `Bearer ${token}`
         }
       });
-      alert('User added successfully!');
+      
       onClose(true); // Close modal and refresh user list
     } catch (err) {
       console.error('Failed to add user:', err.response?.data || err.message);

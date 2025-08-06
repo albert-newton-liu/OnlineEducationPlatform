@@ -1,26 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Outlet, Link } from 'react-router-dom'; // Import Outlet and Link
+import { useNavigate, Outlet, Link, useLocation } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
-import {API_BASE_URL} from '../../constant/Constants'
-import UserManagement from './UserManagement'
+import { API_BASE_URL } from '../../constant/Constants'
 
 import './DashboardPage.css'; // We'll update this CSS
 
-// Placeholder components for different sections
-// These will be defined in separate files later (e.g., src/pages/Admin/UserManagement.jsx)
-const CourseManagement = () => <div className="content-placeholder"><h2>Course Management Page</h2><p>Content for managing courses.</p></div>;
-const Announcements = () => <div className="content-placeholder"><h2>Announcements Page</h2><p>Content for announcements.</p></div>;
-const AppointmentManagement = () => <div className="content-placeholder"><h2>Appointment Management Page</h2><p>Content for managing appointments.</p></div>;
-const MyCourses = () => <div className="content-placeholder"><h2>My Courses Page</h2><p>Content for student's courses.</p></div>;
-
-
 function DashboardPage() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null); // To store user details
+  const location = useLocation(); // Get the current location object
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,7 +25,6 @@ function DashboardPage() {
 
       try {
         setLoading(true);
-        // Fetch detailed user profile based on userId and token
         const response = await axios.get(`${API_BASE_URL}/api/Users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -62,23 +51,23 @@ function DashboardPage() {
     navigate('/login');
   };
 
-  // Define menu items based on user role
   const getMenuItems = (role) => {
     switch (role) {
-      case 2: // Admin role (assuming 2 for Admin)
+      case 2: // Admin role
         return [
-          { name: 'User Management', path: 'users', component: UserManagement },
-          { name: 'Course Management', path: 'courses', component: CourseManagement },
-          { name: 'Announcements', path: 'announcements', component: Announcements },
+          { name: 'User Management', path: 'users' },
+          { name: 'Course Management', path: 'courses' },
+          { name: 'Announcements', path: 'announcements' },
+          { name: 'Add Course', path: 'add-course' }, // Add the new menu item
         ];
-      case 1: // Teacher role (assuming 1 for Teacher)
+      case 1: // Teacher role
         return [
-          { name: 'Course Management', path: 'courses', component: CourseManagement },
-          { name: 'Appointment Management', path: 'appointments', component: AppointmentManagement },
+          { name: 'Course Management', path: 'courses' },
+          { name: 'Appointment Management', path: 'appointments' },
         ];
-      case 0: // Student role (assuming 0 for Student)
+      case 0: // Student role
         return [
-          { name: 'My Courses', path: 'my-courses', component: MyCourses },
+          { name: 'My Courses', path: 'my-courses' },
         ];
       default:
         return [];
@@ -103,10 +92,13 @@ function DashboardPage() {
   }
 
   if (!userData) {
-    return null; // Should ideally redirect to login via useEffect
+    return null; 
   }
 
   const menuItems = getMenuItems(userData.role);
+  // Check if the current path is exactly the dashboard index page
+  const isDashboardIndex = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
+
 
   return (
     <div className="dashboard-layout">
@@ -127,8 +119,13 @@ function DashboardPage() {
           <ul>
             {menuItems.map((item) => (
               <li key={item.path}>
-                {/* Link to nested routes */}
-                <Link to={item.path}>{item.name}</Link>
+                {/* Add a dynamic active class to the Link */}
+                <Link 
+                  to={item.path} 
+                  className={location.pathname.endsWith(item.path) ? 'active' : ''}
+                >
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>
@@ -138,12 +135,14 @@ function DashboardPage() {
         <main className="dashboard-content">
           {/* Outlet is where the child route components will be rendered */}
           <Outlet />
-          {/* Default content if no specific sub-route is matched */}
-          {!window.location.pathname.endsWith('/dashboard') && !menuItems.find(item => window.location.pathname.includes(item.path)) && (
+          
+          {/* Corrected welcome message: only render if on the dashboard index page */}
+          {isDashboardIndex && (
              <div className="welcome-message">
+               <h3>Welcome to your Dashboard!</h3>
                <p>Select an option from the sidebar.</p>
              </div>
-           )}
+          )}
         </main>
       </div>
     </div>

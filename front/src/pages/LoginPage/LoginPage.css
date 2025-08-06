@@ -1,82 +1,123 @@
+/* src/pages/LoginPage/LoginPage.css - Updated to match Dashboard CSS */
+
+/* General page container for centering content */
 .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f0f2f5;
-  font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Match the body background color from dashboard's App.css */
+    background-color: #eef2f6; 
+    /* Match the font family from dashboard's App.css */
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+/* Styling for the main login form card */
 .login-form {
-  background: #fff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
+    background: #ffffff; /* White background for the form card */
+    padding: 40px;
+    /* Match dashboard's content card border-radius */
+    border-radius: 8px; 
+    /* Shadow similar to dashboard-content card */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s ease; /* Subtle animation */
+}
+
+/* Subtle hover effect for the form card */
+.login-form:hover {
+    transform: translateY(-2px);
 }
 
 .login-form h2 {
-  margin-bottom: 25px;
-  color: #333;
+    margin-bottom: 25px;
+    /* Darker text color similar to dashboard h1 */
+    color: #2c3e50; 
+    font-size: 26px; /* Similar to dashboard header h1 */
+    font-weight: 600;
 }
 
+/* Styling for input groups */
 .form-group {
-  margin-bottom: 20px;
-  text-align: left;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #555;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    /* Text color for labels, similar to sidebar h3 or link text */
+    color: #34495e; 
+    font-size: 15px; /* Consistent font size */
 }
 
 .form-group input[type="text"],
 .form-group input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box; /* Include padding in width */
-  font-size: 16px;
+    width: 100%;
+    padding: 12px 15px; /* Consistent padding with dashboard inputs if any */
+    border: 1px solid #d1d5db; /* Lighter, subtle border */
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #333; /* Standard text color */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-group input:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    /* Focus color matching dashboard active/hover states (e.g., sidebar links) */
+    border-color: #3498db; 
+    outline: none;
+    /* Consistent focus glow with dashboard elements */
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25); 
 }
 
+/* Primary submit button styling */
 button[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+    width: 100%;
+    padding: 12px;
+    /* Background color similar to dashboard sidebar active/hover or a slightly darker blue */
+    background-color: #2980b9; 
+    color: white;
+    border: none;
+    border-radius: 25px; /* Pill shape like logout button */
+    font-size: 18px;
+    font-weight: 500; /* Consistent font weight */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    /* Shadow consistent with dashboard buttons */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  background-color: #0056b3;
+    /* Hover color matching dashboard sidebar link active/hover color */
+    background-color: #2563eb; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly more pronounced hover shadow */
 }
 
 button[type="submit"]:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
+    background-color: #cccccc;
+    color: #95a5a6; /* Muted text color for disabled state */
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
+/* Error message styling - directly matching the dashboard's error-message */
 .error-message {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 20px;
-  font-size: 14px;
+    color: #c0392b; /* Darker red */
+    background-color: #fadde1; /* Lighter red background */
+    border: 1px solid #e74c3c;
+    border-radius: 8px; /* Consistent border-radius */
+    padding: 15px;
+    margin-bottom: 25px;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Consistent shadow */
 }

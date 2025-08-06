@@ -1,0 +1,178 @@
+/* Container for the entire course management page, to be placed inside .dashboard-content */
+.course-management-container {
+    padding: 20px;
+    background-color: #ffffff; /* White background to match the dashboard content area */
+    border-radius: 8px; /* Consistent rounded corners */
+}
+
+/* Header section with title and "Add New Course" button */
+.course-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e0e0e0; /* Softer border color from sidebar */
+    padding-bottom: 15px;
+}
+
+.course-management-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #2c3e50; /* Match dashboard header text color */
+}
+
+.add-course-button {
+    padding: 8px 18px;
+    background-color: #3498db; /* A blue that aligns with your sidebar hover/active state */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Pill shape to match logout button */
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-course-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+/* Table and its container styles */
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0; /* Border to contain the table, matching sidebar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff; /* Table internal background is white */
+    font-size: 14px;
+}
+
+.lesson-table thead tr {
+    background-color: #f7f9fb; /* Light blue from placeholder component */
+    color: #34495e; /* Darker text color from sidebar */
+    text-align: left;
+}
+
+.lesson-table th,
+.lesson-table td {
+    padding: 15px;
+    border: 1px solid #e0e0e0; /* Border color from dashboard sidebar */
+    vertical-align: top;
+}
+
+.lesson-table tbody tr:hover {
+    background-color: #f8fafc; /* Lighter hover background */
+}
+
+/* Status tag for Published/Unpublished courses */
+.status-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.status-tag.published {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-tag.unpublished {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Actions buttons column styling */
+.actions-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+/* Base style for all action buttons */
+.actions-buttons button {
+    width: 100%;
+    text-align: center;
+    padding: 6px 12px;
+    border: 1px solid #dcdcdc; /* Lighter border for buttons */
+    border-radius: 4px;
+    background-color: #fcfcfc; /* Very light background from welcome message */
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+.actions-buttons button:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Specific styles for each button type */
+.actions-buttons .view-details-button {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.actions-buttons .edit-button {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.actions-buttons .delete-button {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.actions-buttons .approve-button {
+    color: #2980b9; /* Matches sidebar hover/active color */
+    border-color: #2980b9;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+    padding: 10px;
+    background-color: #f7f9fb;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.pagination-controls button {
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background-color: #2980b9;
+}
+
+.pagination-controls button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.pagination-controls span {
+    font-size: 15px;
+    color: #34495e;
+    font-weight: 500;
+}
