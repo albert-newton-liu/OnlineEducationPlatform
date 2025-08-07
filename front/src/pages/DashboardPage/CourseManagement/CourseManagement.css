@@ -95,23 +95,28 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    align-items: flex-start;
+    /* align-items: flex-start; */
 }
 
 /* Base style for all action buttons */
-.actions-buttons button {
-    width: 100%;
+.actions-buttons a,
+.actions-buttons button  {
+     width: 100%; /* This is the key change */
     text-align: center;
     padding: 6px 12px;
-    border: 1px solid #dcdcdc; /* Lighter border for buttons */
+    border: 1px solid #dcdcdc;
     border-radius: 4px;
-    background-color: #fcfcfc; /* Very light background from welcome message */
+    background-color: #fcfcfc;
     cursor: pointer;
     font-size: 13px;
     transition: all 0.2s ease;
     margin: 0;
+    text-decoration: none;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
+.actions-buttons a:hover,
 .actions-buttons button:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
@@ -122,6 +127,7 @@
     color: #28a745;
     border-color: #28a745;
 }
+
 
 .actions-buttons .edit-button {
     color: #007bff;

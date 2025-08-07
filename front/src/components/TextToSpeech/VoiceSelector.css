@@ -1,0 +1,102 @@
+/*
+ * --------------------------------------------------------
+ * Voice Selector Component Styles
+ * --------------------------------------------------------
+ */
+
+.voice-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    margin-left: 20px;
+}
+
+.voice-selector-label {
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.voice-selector-dropdown {
+    /* 移除默认样式 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* 盒子模型和布局 */
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f7f9fb;
+    color: #2c3e50;
+    cursor: pointer;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    
+    /* 添加自定义箭头 */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5"><path d="M0 0l5 5 5-5z" fill="%232c3e50"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 25px; /* 留出箭头空间 */
+    width: 180px; 
+}
+
+.voice-selector-dropdown:hover {
+    border-color: #3498db;
+    background-color: #f0f2f5;
+}
+
+.voice-selector-dropdown:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+
+.stop-button {
+    /* 移除默认样式 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    
+    /* 按钮样式 */
+    background-color: #e74c3c; /* 醒目的红色 */
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.stop-button:hover {
+    background-color: #c0392b; /* 悬停时颜色变深 */
+}
+
+.stop-button:active {
+    background-color: #a02d20; /* 点击时颜色更深 */
+    transform: scale(0.98);    /* 点击时轻微缩小，增加反馈感 */
+}
+
+.speech-params-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 20px;
+}
+
+.speech-params-controls span {
+    font-size: 12px;
+    color: #666;
+}
+
+.speech-params-controls input[type="range"] {
+    width: 80px;
+}

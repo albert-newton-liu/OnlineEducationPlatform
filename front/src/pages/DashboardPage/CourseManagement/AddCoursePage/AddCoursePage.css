@@ -47,6 +47,18 @@
     gap: 20px;
 }
 
+.header-view-mode-flex-container {
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
+    gap: 20px;          /* 在标题和选择器之间添加一些间距 */
+    margin-bottom: 10px;
+}
+
+.header-view-mode-flex-container h2 {
+    margin: 0; /* 移除 h2 的默认外边距 */
+}
+
+
 .add-page-button,
 .save-page-button,
 .delete-page-button,
@@ -235,11 +247,20 @@
 }
 
 .template-1-text-overlay textarea {
-     background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.6);
     border: 1px solid #ccc;
     padding: 10px;
     resize: both;
     overflow: auto;
+}
+
+.template-1-text-overlay .template-1-textarea {
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 1px solid #ccc;
+    padding: 10px;
+    resize: none;
+    overflow: auto;
+    line-height: 1.5;
 }
 
 
@@ -272,6 +293,16 @@
     resize: none;
 }
 
+.template-2-top .template-2-top-textarea {
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+    font-size: 1em;
+    line-height: 1.5;
+    resize: none;
+}
+
 .template-2-bottom {
     flex: 1;
     display: flex;
@@ -284,7 +315,8 @@
     flex-direction: column;
     gap: 10px;
     border: 1px dashed #e2e8f0;
-    padding: 0; /* Changed from padding-top: 20px */
+    padding: 0;
+    /* Changed from padding-top: 20px */
     padding-left: 0;
     padding-right: 20px;
     border-radius: 8px;
@@ -300,11 +332,14 @@
       growing beyond the parent's boundaries.
     */
     width: 100%;
-    max-width: 200px; /* Optional: Set a max width for aesthetic */
+    max-width: 200px;
+    /* Optional: Set a max width for aesthetic */
     box-sizing: border-box;
-    align-self: flex-start; /* Aligns the select to the start */
+    align-self: flex-start;
+    /* Aligns the select to the start */
     margin-top: 20px;
-    margin-bottom: 0; /* Add some space below the select */
+    margin-bottom: 0;
+    /* Add some space below the select */
 }
 
 .content-module textarea {
@@ -315,7 +350,18 @@
     border: 1px solid #ccc;
     padding: 10px;
     line-height: 1.5;
-    
+
+}
+
+.content-module .content-module-textarea {
+    /* flex: 1 tells the textarea to take up the remaining space */
+    flex: 1;
+    width: 100%;
+    resize: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    line-height: 1.5;
+
 }
 
 .content-module input[type="file"] {

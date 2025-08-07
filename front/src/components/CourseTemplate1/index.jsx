@@ -1,8 +1,15 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { uploadFile } from "../../constant/UploadFileUtils"
 
-const Template1 = ({ content, onContentChange }) => {
 
+
+
+
+const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
+    const location = useLocation();
+    const isViewMode = isReadOnly || location.pathname.includes('/view-course/');
 
     const textOverlayRef = useRef(null);
     const [fileInputKey, setFileInputKey] = useState(Date.now());
@@ -113,7 +120,7 @@ const Template1 = ({ content, onContentChange }) => {
         };
 
         textareaElement.addEventListener('mousedown', handleResizeStart);
-        window.addEventListener('mouseup', handleResizeEnd); 
+        window.addEventListener('mouseup', handleResizeEnd);
 
         const resizeObserver = new ResizeObserver(entries => {
             if (!isResizingByUserRef.current) return;
@@ -128,7 +135,7 @@ const Template1 = ({ content, onContentChange }) => {
                 const currentContent = contentRef.current;
                 const currentWidth = currentContent.textAreaSize?.width;
                 const currentHeight = currentContent.textAreaSize?.height;
-                
+
                 if (currentWidth !== newSize.width || currentHeight !== newSize.height) {
                     onContentChangeRef.current({
                         ...currentContent,
@@ -147,41 +154,75 @@ const Template1 = ({ content, onContentChange }) => {
         };
     }, []);
 
+     const handleTextClick = () => {
+        if (!isViewMode) return;
+
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+
+        if (selectedText.length > 0) {
+            // 如果有选中的文字，只发音选中的文字
+            speak(selectedText);
+        } else {
+            // 如果没有选中文字，可以取消当前发音
+            // 或者选择发音全部文本
+            speak(content.text);
+        }
+    };
+
 
 
     return (
 
         <div
             className="template-1-container"
-            style={{ backgroundImage: backgroundImage }}
+            style={{ backgroundImage: content.backgroundImage }}
         >
-            <input
-                key={fileInputKey}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="template-image-input"
-            />
+            {!isViewMode && (
+                <input
+                    key={fileInputKey}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="template-image-input"
+                />
+            )}
 
             <div
                 ref={textOverlayRef}
                 className="template-1-text-overlay"
-                style={{ 
+                style={{
                     transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))`
-                    
+
                 }}
-                onMouseDown={handleMouseDown}
+                onMouseDown={isViewMode ? null : handleMouseDown}
+
             >
-                <textarea
-                    value={text}
-                    onChange={handleTextChange}
-                    placeholder="Enter your text here..."
-                    style={{
-                        width: `${textAreaSize.width} `,
-                        height: `${textAreaSize.height} `,
-                        boxSizing: 'border-box'
-                    }}
-                />
+                {isViewMode ? (
+                    <div
+                        className="template-1-textarea"
+                        style={{
+                            width: content.textAreaSize?.width,
+                            height: content.textAreaSize?.height,
+                            whiteSpace: 'pre-wrap',
+                        }}
+                         onClick={handleTextClick} 
+                    >
+                        {content.text}
+                    </div>
+                ) : (
+                    <textarea
+                        value={text}
+                        onChange={handleTextChange}
+                        placeholder="Enter your text here..."
+                        style={{
+                            width: `${textAreaSize.width} `,
+                            height: `${textAreaSize.height} `,
+                            boxSizing: 'border-box'
+                        }}
+                    />
+                )}
+
             </div>
         </div>
     );

@@ -6,7 +6,9 @@ import DashboardPage from './pages/DashboardPage';
 // Import your child route components from their dedicated files
 import UserManagement from './pages/DashboardPage/UserManagement'; 
 import CourseManagement from './pages/DashboardPage/CourseManagement'; 
-import AddCoursePage from './pages/DashboardPage/CourseManagement/AddCoursePage'; // <-- Add this import
+import AddCoursePage from './pages/DashboardPage/CourseManagement/AddCoursePage'; 
+import ViewCoursePage from './pages/DashboardPage/CourseManagement/ViewCoursePage'; 
+
 
 // Temporary placeholders (replace with actual imports when you create these files)
 const Announcements = () => <div className="content-placeholder"><h2>Announcements Page</h2><p>Content for announcements.</p></div>;
@@ -45,7 +47,8 @@ function App() {
             <Route path="users" element={<UserManagement />} />
             <Route path="announcements" element={<Announcements />} />
             <Route path="courses" element={<CourseManagement />} />
-            <Route path="add-course" element={<AddCoursePage />} />  {/* <-- Add this new route for the new page */}
+            <Route path="add-course" element={<AddCoursePage />} />  
+            <Route path="view-course/:lessonId" element={<ViewCoursePage />} />
             <Route path="appointments" element={<AppointmentManagement />} />
             <Route path="my-courses" element={<MyCourses />} />
             <Route index element={<div className="content-placeholder"><h3>Welcome to your Dashboard!</h3><p>Please select an option from the sidebar.</p></div>} />

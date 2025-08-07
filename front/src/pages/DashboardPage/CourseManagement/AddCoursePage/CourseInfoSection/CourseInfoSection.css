@@ -1,0 +1,17 @@
+.read-only-field {
+    padding: 12px;
+    margin-bottom: 15px;
+    background-color: #f7f9fb; /* 浅灰色背景，与表格头部颜色一致 */
+    border: 1px solid #e0e0e0; /* 边框颜色与表格和容器一致 */
+    border-radius: 8px; /* 保持与容器相同的圆角 */
+    color: #4a5568; /* 深灰色文字，易于阅读 */
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* 增强字段标签（如 Title, Description）的样式 */
+.read-only-field strong {
+    color: #2c3e50; /* 标题文字颜色 */
+    font-weight: 600; /* 加粗 */
+    margin-right: 8px; /* 与内容保持间距 */
+}

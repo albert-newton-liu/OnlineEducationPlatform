@@ -57,8 +57,7 @@ function DashboardPage() {
         return [
           { name: 'User Management', path: 'users' },
           { name: 'Course Management', path: 'courses' },
-          { name: 'Announcements', path: 'announcements' },
-          { name: 'Add Course', path: 'add-course' }, // Add the new menu item
+          { name: 'Announcements', path: 'announcements' }
         ];
       case 1: // Teacher role
         return [
@@ -137,12 +136,12 @@ function DashboardPage() {
           <Outlet />
           
           {/* Corrected welcome message: only render if on the dashboard index page */}
-          {isDashboardIndex && (
+          {/* {isDashboardIndex && (
              <div className="welcome-message">
                <h3>Welcome to your Dashboard!</h3>
                <p>Select an option from the sidebar.</p>
              </div>
-          )}
+          )} */}
         </main>
       </div>
     </div>

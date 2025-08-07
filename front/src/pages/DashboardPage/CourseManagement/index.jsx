@@ -68,6 +68,16 @@ const CourseManagement = () => {
             //     headers: { Authorization: `Bearer ${token}` }
             // });
 
+             const response = await axios.post(
+                `${API_BASE_URL}/api/Lesson/approve/${lessonId}`,{},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Include JWT token
+                    }
+                }
+            );
+
+
             console.log(`Approving lesson: ${lessonId}`);
 
             // After a successful action, re-fetch the data to update the UI
@@ -122,7 +132,9 @@ const CourseManagement = () => {
                                 {isAdministrator && <td>{lesson.creator}</td>}
                                 <td>
                                     <div className="actions-buttons vertical-buttons">
-                                        <button className="view-details-button">View</button>
+                                        <Link to={`/dashboard/view-course/${lesson.lessonId}`} className="view-details-button">
+                                            View
+                                        </Link>
                                         <button className="edit-button">Edit</button>
                                         <button className="delete-button">Delete</button>
                                         {isAdministrator && !lesson.isPublished && (
