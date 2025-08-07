@@ -3,6 +3,7 @@ using OnlineEducation.Api.Response;
 using OnlineEducation.Core;
 using OnlineEducation.Data.Dao;
 using OnlineEducation.Model;
+using OnlineEducation.Utils;
 
 namespace OnlineEducation.Service;
 
@@ -22,6 +23,14 @@ public class LessonService : ILessonService
     {
         Lesson lesson = buildLesson(request);
         return await _lessonCoreSerice.InsertLesson(lesson);
+    }
+
+
+    public async Task Approve(string LessonId, string AdminId)
+    {
+        User? user = await _userCoreService.GetByIdAsync<User>(AdminId);
+        ArgumentNullException.ThrowIfNull(user);
+        await _lessonCoreSerice.Approve(LessonId);
     }
 
     public async Task<PaginatedResult<BasicLessonResponse>> GetPaginatedBasicLessonAsync(PaginationParams paginationParams)
@@ -91,6 +100,7 @@ public class LessonService : ILessonService
                     PageLayout = addPage.PageLayout,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
+                    
                 };
 
                 if (addPage.Elements != null && addPage.Elements.Count != 0)

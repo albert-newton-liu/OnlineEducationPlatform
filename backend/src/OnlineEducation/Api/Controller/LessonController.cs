@@ -44,6 +44,50 @@ public class LessonController : ControllerBase
         }
     }
 
+    [HttpPost("approve/{LessonId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Approve(string LessonId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            string token = string.Empty;
+            if (Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
+            {
+                var authHeader = value.FirstOrDefault();
+                if (authHeader != null && authHeader.StartsWith("Bearer "))
+                {
+                    token = authHeader.Substring("Bearer ".Length).Trim();
+                }
+            }
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(new { message = "Authorization token is missing or invalid." });
+            }
+
+            string AdminId = "115f62ab-82a3-41d4-af0c-1f02d449f043";
+
+            await _lessonService.Approve(LessonId, AdminId);
+            return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+        }
+
+    }
+
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]

@@ -8,6 +8,8 @@ public interface ILessonService
 {
     Task<string> Add(AddLessonRequest request);
 
+    Task Approve(string LessonId, string AdminId);
+
     Task<PaginatedResult<BasicLessonResponse>> GetPaginatedBasicLessonAsync(PaginationParams paginationParams);
 
     Task<Lesson> QueryByLessonId(string lessonId);

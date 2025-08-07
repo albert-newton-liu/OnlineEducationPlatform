@@ -108,6 +108,8 @@ public class LessonCoreSerice : ILessonCoreSerice
             lessonPages.Add(lessonPage);
         }
 
+        lessonPages = [.. lessonPages.OrderBy(x => x.PageNumber)];
+
         Lesson lesson = ConvertToBO(lessonDO);
         lesson.Pages = lessonPages;
         return lesson;
@@ -143,6 +145,15 @@ public class LessonCoreSerice : ILessonCoreSerice
          .ToListAsync();
 
         return new PaginatedResult<LessonDO>(lessons, totalCount, paginationParams.PageNumber, paginationParams.PageSize);
+    }
+
+
+    public async Task Approve(string lessonId)
+    {
+        LessonDO? lesson = await _lessonRepository.GetByIdAsync(lessonId);
+        ArgumentNullException.ThrowIfNull(lesson);
+        lesson.IsPublished = true;
+        await _lessonRepository.SaveChangesAsync();
     }
 
 
@@ -243,6 +254,5 @@ public class LessonCoreSerice : ILessonCoreSerice
             AdminReviewedAt = lesson.AdminReviewedAt
         };
     }
-
 
 }

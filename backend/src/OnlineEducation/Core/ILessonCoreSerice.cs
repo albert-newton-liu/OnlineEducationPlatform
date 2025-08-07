@@ -24,4 +24,6 @@ public interface ILessonCoreSerice
     Task<LessonPage> UpdatePage(LessonPage lessonPage);
     
     Task<PaginatedResult<LessonDO>> GetPaginatedBaseUsersAsync(PaginationParams paginationParams);
+    
+    Task Approve(string lessonId);
 }
