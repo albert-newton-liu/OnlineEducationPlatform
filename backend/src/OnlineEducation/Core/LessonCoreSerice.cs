@@ -135,9 +135,20 @@ public class LessonCoreSerice : ILessonCoreSerice
         throw new NotImplementedException();
     }
 
-    public async Task<PaginatedResult<LessonDO>> GetPaginatedBaseUsersAsync(PaginationParams paginationParams)
+    public async Task<PaginatedResult<LessonDO>> GetPaginatedBaseUsersAsync(PaginationParams paginationParams, LessonQueryConditon conditon)
     {
         var query = _dbContext.LessonDOs.AsQueryable();
+        if (conditon != null)
+        {
+            if (conditon.MustPublished)
+            {
+                query = query.Where(x => x.IsPublished);
+            }
+            if (conditon.TheacherId != null)
+            {
+                query = query.Where(x => x.TeacherId == conditon.TheacherId);
+            }
+        }
         var totalCount = await query.CountAsync();
         var lessons = await query.OrderByDescending(l => l.CreatedAt)
          .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
@@ -255,4 +266,10 @@ public class LessonCoreSerice : ILessonCoreSerice
         };
     }
 
+    public async Task<List<Lesson>> QueryByLessonIds(List<string> lessonIDs)
+    {
+        IEnumerable<LessonDO> lessonDOs = await _lessonRepository.GetAllAsync();
+        lessonDOs = lessonDOs.Where(u => lessonIDs.Contains(u.LessonId));
+        return [.. lessonDOs.Select(x => ConvertToBO(x))];
+    }
 }

@@ -29,12 +29,17 @@ builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ILessonPageRepository, LessonPageRepository>();
 builder.Services.AddScoped<ILessonPageElementRepository, LessonPageElementRepository>();
 
+builder.Services.AddScoped<ITeacherScheduleRepository, TeacherScheduleRepository>();
+builder.Services.AddScoped<IBookableSlotRepository, BookableSlotRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 builder.Services.AddScoped<IUserCoreService, UserCoreService>();
 builder.Services.AddScoped<ILessonCoreSerice, LessonCoreSerice>();
+builder.Services.AddScoped<IBookingCoreService, BookingCoreService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 // --- CORS Configuration Start ---
 builder.Services.AddCors(options =>

@@ -11,7 +11,7 @@ public class AddLessonRequest
     public string Description { get; set; } = string.Empty;
 
     public byte DifficultyLevel { get; set; }
-    
+
     public List<AddLessonPages>? Pages { get; set; } = null;
 }
 
@@ -37,5 +37,12 @@ public class AddLessonPageElement
 
     public ElementMetadata? ElementMetadata { get; set; }
 
+}
+
+public class LessonQueryConditon
+{
+    public bool MustPublished { get; set; }
+
+    public string? TheacherId { get; set; }
 }
 

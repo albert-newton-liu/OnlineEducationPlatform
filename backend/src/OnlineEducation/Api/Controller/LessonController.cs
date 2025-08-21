@@ -57,16 +57,7 @@ public class LessonController : ControllerBase
 
         try
         {
-            string token = string.Empty;
-            if (Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
-            {
-                var authHeader = value.FirstOrDefault();
-                if (authHeader != null && authHeader.StartsWith("Bearer "))
-                {
-                    token = authHeader.Substring("Bearer ".Length).Trim();
-                }
-            }
-
+            string token = GetToken();
             if (string.IsNullOrEmpty(token))
             {
                 return Unauthorized(new { message = "Authorization token is missing or invalid." });
@@ -90,7 +81,7 @@ public class LessonController : ControllerBase
 
 
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Lesson))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Lesson>> GetById(string id)
     {
@@ -122,6 +113,15 @@ public class LessonController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<PaginatedResult<BasicLessonResponse>>> GetPaginated([FromQuery] PaginationParams paginationParams)
     {
+        string token = GetToken();
+        if (string.IsNullOrEmpty(token))
+        {
+            return Unauthorized(new { message = "Authorization token is missing or invalid." });
+        }
+
+        var str = token.Split(',');
+
+
         if (paginationParams == null)
         {
             paginationParams = new PaginationParams();
@@ -131,9 +131,34 @@ public class LessonController : ControllerBase
             return BadRequest("PageNumber and PageSize must be greater than 0.");
         }
 
-        var paginatedLessons = await _lessonService.GetPaginatedBasicLessonAsync(paginationParams);
+        LessonQueryConditon conditon = new();
+        if (((int)UserRole.Student).ToString() == str[1])
+        {
+            conditon.MustPublished = true;
+        }
+        if (((int)UserRole.Teacher).ToString() == str[1])
+        {
+            conditon.TheacherId = str[2];
+        }
+
+
+        var paginatedLessons = await _lessonService.GetPaginatedBasicLessonAsync(paginationParams, conditon);
 
         return Ok(paginatedLessons);
+    }
+
+    private string GetToken()
+    {
+        string token = string.Empty;
+        if (Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
+        {
+            var authHeader = value.FirstOrDefault();
+            if (authHeader != null && authHeader.StartsWith("Bearer "))
+            {
+                token = authHeader.Substring("Bearer ".Length).Trim();
+            }
+        }
+        return token;
     }
 
 }

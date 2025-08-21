@@ -24,4 +24,6 @@ public interface IUserCoreService
 
     Task<IEnumerable<UserDO>> QueryUserByCondition(QueryUserCondition condition);
 
+    Task<List<User>> GetByIdListAsync(IEnumerable<string> ids);
+
 }

@@ -262,5 +262,16 @@ public class UserCoreService : IUserCoreService
         return adminDO;
     }
 
+    public async Task<List<User>> GetByIdListAsync(IEnumerable<string> ids)
+    {
+        IEnumerable<UserDO> users = await _userRepository.GetAllAsync();
+        users = users.Where(u => ids.Contains(u.UserId));
 
+        return [.. users.Select(u =>
+        {
+            var user = new User();
+            FillUser(u, user);
+            return user;
+        })];
+    }
 }

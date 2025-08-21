@@ -33,9 +33,9 @@ public class LessonService : ILessonService
         await _lessonCoreSerice.Approve(LessonId);
     }
 
-    public async Task<PaginatedResult<BasicLessonResponse>> GetPaginatedBasicLessonAsync(PaginationParams paginationParams)
+    public async Task<PaginatedResult<BasicLessonResponse>> GetPaginatedBasicLessonAsync(PaginationParams paginationParams, LessonQueryConditon conditon)
     {
-        PaginatedResult<LessonDO> paginatedResult = await _lessonCoreSerice.GetPaginatedBaseUsersAsync(paginationParams);
+        PaginatedResult<LessonDO> paginatedResult = await _lessonCoreSerice.GetPaginatedBaseUsersAsync(paginationParams, conditon);
         ArgumentNullException.ThrowIfNull(paginatedResult);
 
         IEnumerable<LessonDO> Items = paginatedResult.Items;
@@ -100,7 +100,7 @@ public class LessonService : ILessonService
                     PageLayout = addPage.PageLayout,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
-                    
+
                 };
 
                 if (addPage.Elements != null && addPage.Elements.Count != 0)

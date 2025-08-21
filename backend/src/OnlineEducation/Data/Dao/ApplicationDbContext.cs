@@ -47,5 +47,10 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<LessonPageElementDO> LessonPageElementDOs { get; set; }
 
+    public DbSet<TeacherScheduleDO> TeacherScheduleDOs { get; set; }
+
+    public DbSet<BookableSlotDO> BookableSlotDOs { get; set; }
+
+    public DbSet<BookingDO> BookingDOs { get; set; }
 
 }
