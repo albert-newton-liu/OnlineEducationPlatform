@@ -134,6 +134,12 @@
     border-color: #007bff;
 }
 
+.actions-buttons .book-button {
+    color: #007bff;
+    border-color: #007bff;
+    background-color: white;
+}
+
 .actions-buttons .delete-button {
     color: #dc3545;
     border-color: #dc3545;

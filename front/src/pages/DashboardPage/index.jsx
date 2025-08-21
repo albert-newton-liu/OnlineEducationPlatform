@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Outlet, Link, useLocation } from 'react-router-dom'; // Import useLocation
+import { useNavigate, Outlet, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { API_BASE_URL } from '../../constant/Constants'
+import { API_BASE_URL } from '../../constant/Constants';
 
-import './DashboardPage.css'; // We'll update this CSS
+import './DashboardPage.css';
 
 function DashboardPage() {
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location object
+  const location = useLocation();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  // New state to manage the collapsed status of submenus
+  const [collapsedItems, setCollapsedItems] = useState({});
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -51,6 +53,14 @@ function DashboardPage() {
     navigate('/login');
   };
 
+  // Function to toggle the collapse state of a menu item
+  const toggleCollapse = (path) => {
+    setCollapsedItems(prevState => ({
+      ...prevState,
+      [path]: !prevState[path]
+    }));
+  };
+
   const getMenuItems = (role) => {
     switch (role) {
       case 2: // Admin role
@@ -62,11 +72,19 @@ function DashboardPage() {
       case 1: // Teacher role
         return [
           { name: 'Course Management', path: 'courses' },
-          { name: 'Appointment Management', path: 'appointments' },
+          {
+            name: 'Appointment Management',
+            path: 'appointments',
+            subItems: [
+              { name: 'Schedule Management', path: 'schedule' },
+              { name: 'Appointment Records', path: 'records' }
+            ]
+          }
         ];
       case 0: // Student role
         return [
           { name: 'My Courses', path: 'my-courses' },
+          { name: 'View Courses', path: 'courses' },
         ];
       default:
         return [];
@@ -91,13 +109,10 @@ function DashboardPage() {
   }
 
   if (!userData) {
-    return null; 
+    return null;
   }
 
   const menuItems = getMenuItems(userData.role);
-  // Check if the current path is exactly the dashboard index page
-  const isDashboardIndex = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
-
 
   return (
     <div className="dashboard-layout">
@@ -117,31 +132,36 @@ function DashboardPage() {
           <h3>Menu</h3>
           <ul>
             {menuItems.map((item) => (
-              <li key={item.path}>
-                {/* Add a dynamic active class to the Link */}
-                <Link 
-                  to={item.path} 
-                  className={location.pathname.endsWith(item.path) ? 'active' : ''}
+              <li key={item.path} className="menu-item-with-submenu">
+                {/* A button to act as a collapsible trigger for submenus, or a direct link for regular items */}
+                <button
+                  onClick={() => item.subItems ? toggleCollapse(item.path) : navigate(item.path)}
+                  className={`menu-toggle-button ${location.pathname.startsWith(`/dashboard/${item.path}`) ? 'active' : ''} ${item.subItems ? 'has-submenu' : ''}`}
                 >
                   {item.name}
-                </Link>
+                </button>
+                {/* Only render the submenu if subItems exist and the item is not collapsed */}
+                {item.subItems && !collapsedItems[item.path] && (
+                  <ul className="submenu">
+                    {item.subItems.map((subItem) => (
+                      <li key={subItem.path}>
+                        <Link
+                          to={`${item.path}/${subItem.path}`}
+                          className={location.pathname.endsWith(subItem.path) ? 'active' : ''}
+                        >
+                          {subItem.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
         </nav>
 
-        {/* Page Content Area - Nested Routes will render here */}
         <main className="dashboard-content">
-          {/* Outlet is where the child route components will be rendered */}
           <Outlet />
-          
-          {/* Corrected welcome message: only render if on the dashboard index page */}
-          {/* {isDashboardIndex && (
-             <div className="welcome-message">
-               <h3>Welcome to your Dashboard!</h3>
-               <p>Select an option from the sidebar.</p>
-             </div>
-          )} */}
         </main>
       </div>
     </div>

@@ -30,6 +30,7 @@ function LoginPage({ onLoginSuccess }) { // <--- Added onLoginSuccess prop
       // Store user authentication token/data
       localStorage.setItem('userToken', response.data.token);
       localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('role', response.data.role);
 
       // --- CRITICAL CHANGE HERE ---
       // Call the onLoginSuccess function to update the parent App component's state.

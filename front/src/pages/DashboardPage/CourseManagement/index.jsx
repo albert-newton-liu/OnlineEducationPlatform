@@ -8,7 +8,7 @@ import './CourseManagement.css';
 const CourseManagement = () => {
     const [lessons, setLessons] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isAdministrator, setIsAdministrator] = useState(true);
+    const [role, setRole] = useState(() => localStorage.getItem('role'));
 
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +18,7 @@ const CourseManagement = () => {
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
 
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken') + `,${role},${localStorage.getItem('userId')}`;
 
     // Function to map the difficulty level byte to a string
     const getDifficultyText = (level) => {
@@ -68,8 +68,8 @@ const CourseManagement = () => {
             //     headers: { Authorization: `Bearer ${token}` }
             // });
 
-             const response = await axios.post(
-                `${API_BASE_URL}/api/Lesson/approve/${lessonId}`,{},
+            const response = await axios.post(
+                `${API_BASE_URL}/api/Lesson/approve/${lessonId}`, {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}` // Include JWT token
@@ -100,10 +100,18 @@ const CourseManagement = () => {
     return (
         <div className="course-management-container">
             <header className="course-management-header">
-                <h2>Course Management</h2>
-                <Link to="/dashboard/add-course" className="add-course-button">
-                    Add New Course
-                </Link>
+                {role == 1 ? (
+                    <>
+                        <h2>Course Management</h2>
+                        <Link to="/dashboard/add-course" className="add-course-button">
+                            Add New Course
+                        </Link>
+                    </>
+
+                ) : (
+                    <h2>Course Information</h2>
+                )}
+
             </header>
 
             <div className="table-container">
@@ -114,7 +122,7 @@ const CourseManagement = () => {
                             <th>Description</th>
                             <th>Difficulty</th>
                             <th>Status</th>
-                            {isAdministrator && <th>Creator</th>}
+                            {role != 1 && <th>Creator</th>}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -129,15 +137,17 @@ const CourseManagement = () => {
                                         {lesson.isPublished ? "Published" : "Unpublished"}
                                     </span>
                                 </td>
-                                {isAdministrator && <td>{lesson.creator}</td>}
+                                {role != 1 && <td>{lesson.creator}</td>}
                                 <td>
                                     <div className="actions-buttons vertical-buttons">
                                         <Link to={`/dashboard/view-course/${lesson.lessonId}`} className="view-details-button">
                                             View
                                         </Link>
-                                        <button className="edit-button">Edit</button>
-                                        <button className="delete-button">Delete</button>
-                                        {isAdministrator && !lesson.isPublished && (
+                                         {role == 0 && <button className="book-button">book</button>}
+                                        {role == 1 && <button className="edit-button">Edit</button>}
+
+                                        {role == 1 && <button className="delete-button">Delete</button>}
+                                        {role == 2 && !lesson.isPublished && (
                                             <button
                                                 className="approve-button"
                                                 onClick={() => handleApprove(lesson.lessonId)}

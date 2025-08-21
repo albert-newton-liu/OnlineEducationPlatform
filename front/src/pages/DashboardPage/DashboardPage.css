@@ -1,10 +1,10 @@
-/* General Layout and Base Styles */
+/* Overall Layout and Base Styles */
 body {
     margin: 0;
     font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #eef2f6; /* Light gray background for the entire page */
+    background-color: #eef2f6;
     color: #333;
 }
 
@@ -12,19 +12,19 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow: hidden; /* Prevent horizontal scroll from layout issues */
+    overflow: hidden;
 }
 
 /* --- Header Styling --- */
 .dashboard-header {
-    background-color: #2c3e50; /* Darker blue/grey for a professional look */
+    background-color: #2c3e50;
     color: white;
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* More prominent shadow */
-    z-index: 10; /* Ensure header stays on top */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
 }
 
 .dashboard-header h1 {
@@ -47,11 +47,11 @@ body {
 }
 
 .logout-button {
-    background-color: #e74c3c; /* Red color for logout */
+    background-color: #e74c3c;
     color: white;
     padding: 8px 18px;
     border: none;
-    border-radius: 25px; /* Pill shape */
+    border-radius: 25px;
     cursor: pointer;
     font-size: 15px;
     font-weight: 500;
@@ -61,29 +61,29 @@ body {
 
 .logout-button:hover {
     background-color: #c0392b;
-    transform: translateY(-1px); /* Slight lift effect */
+    transform: translateY(-1px);
 }
 
 /* --- Main Content Area (Sidebar + Content) --- */
 .dashboard-main {
     display: flex;
-    flex: 1; /* Allows main content to take remaining vertical space */
+    flex: 1;
 }
 
 /* --- Sidebar Styling --- */
 .dashboard-sidebar {
-    width: 260px; /* Slightly wider */
-    background-color: #ffffff; /* White background */
-    padding: 25px 0; /* Padding top/bottom, no horizontal padding from container */
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    width: 260px;
+    background-color: #ffffff;
+    padding: 25px 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
     border-right: 1px solid #e0e0e0;
     display: flex;
     flex-direction: column;
 }
 
 .dashboard-sidebar h3 {
-    color: #7f8c8d; /* Muted grey for section title */
-    margin: 0 25px 25px; /* Margin with side padding */
+    color: #7f8c8d;
+    margin: 0 25px 25px;
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 1.2px;
@@ -96,31 +96,76 @@ body {
     margin: 0;
 }
 
-.dashboard-sidebar li {
-    margin-bottom: 5px; /* Closer spacing between items */
+/* --- Collapsible Menu Item Styles --- */
+.menu-item-with-submenu {
+    margin-bottom: 5px;
 }
 
-.dashboard-sidebar a {
-    display: flex; /* Use flex for potential icons */
-    align-items: center;
-    padding: 12px 25px; /* More vertical padding */
-    text-decoration: none;
-    color: #34495e; /* Darker text for inactive links */
+/* The button that acts as the main menu item */
+.menu-toggle-button {
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    color: #34495e;
+    padding: 12px 25px;
+    font-size: 1rem;
+    cursor: pointer;
     font-weight: 500;
     transition: background-color 0.3s ease, color 0.3s ease;
-    border-left: 5px solid transparent; /* For active indicator */
+    border-left: 5px solid transparent;
 }
 
-.dashboard-sidebar a:hover {
-    background-color: #ecf0f1; /* Light hover background */
-    color: #2980b9; /* Blue on hover */
-    border-left-color: #3498db; /* Blue border on hover */
+/* Styles for a button that has a submenu */
+.menu-toggle-button.has-submenu::after {
+    content: '▼';
+    float: right;
+    font-size: 0.8em;
+    transition: transform 0.2s ease-in-out;
 }
 
-.dashboard-sidebar a.active { /* Class to be applied when the link is active/current route */
-    background-color: #eaf5ff; /* Lighter blue for active item */
+/* Rotate the arrow when the submenu is expanded */
+.menu-toggle-button.has-submenu.expanded::after {
+    transform: rotate(-180deg);
+}
+
+.menu-toggle-button:hover {
+    background-color: #ecf0f1;
     color: #2980b9;
-    border-left-color: #3498db; /* Distinct blue border for active */
+    border-left-color: #3498db;
+}
+
+.menu-toggle-button.active {
+    background-color: #eaf5ff;
+    color: #2980b9;
+    border-left-color: #3498db;
+    font-weight: 600;
+}
+
+/* Submenu container, initially hidden by default by the parent component's logic */
+.submenu {
+    list-style: none;
+    padding: 0;
+    background-color: #f7f9fb; /* Lighter background for the submenu */
+    border-left: 5px solid #dcdcdc; /* A subtle line to show it belongs to the parent */
+    margin-top: 0;
+}
+
+.submenu li a {
+    display: block;
+    color: #555;
+    padding: 10px 25px 10px 40px; /* Indent the sub-items */
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.submenu li a:hover {
+    background-color: #e0eaf2;
+}
+
+.submenu li a.active {
+    background-color: #eaf5ff;
+    color: #2980b9;
     font-weight: 600;
 }
 
@@ -128,68 +173,9 @@ body {
 .dashboard-content {
     flex: 1;
     padding: 30px;
-    background-color: #ffffff; /* White background for content */
-    border-radius: 8px; /* Slightly rounded corners for content area */
-    margin: 20px; /* Margin from edges of dashboard-main */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Soft shadow for content card */
-    overflow-y: auto; /* Allow scrolling if content is too long */
-}
-
-.welcome-message {
-    text-align: center;
-    padding: 80px 20px; /* More padding */
-    color: #666;
-    font-size: 1.5em; /* Larger font */
-    line-height: 1.6;
-    background-color: #fcfcfc;
+    background-color: #ffffff;
     border-radius: 8px;
-    border: 1px dashed #dcdcdc;
-    margin-top: 50px; /* Center in remaining space better */
-}
-
-.welcome-message h3 {
-    color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 2em;
-}
-
-/* --- Placeholder Component Styling --- */
-.content-placeholder {
-    background-color: #f7f9fb; /* Very light blue background */
-    border: 1px solid #dce4eb;
-    padding: 50px; /* More padding */
-    text-align: center;
-    color: #555;
-    border-radius: 8px;
-    min-height: 300px; /* Ensure some height for visibility */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.content-placeholder h2 {
-    margin-top: 0;
-    color: #2980b9; /* Match sidebar active color */
-    font-size: 2.2em;
-    margin-bottom: 15px;
-}
-
-.content-placeholder p {
-    font-size: 1.1em;
-    line-height: 1.6;
-}
-
-/* --- Error Message Styling --- */
-.error-message {
-    color: #c0392b; /* Darker red */
-    background-color: #fadde1; /* Lighter red background */
-    border: 1px solid #e74c3c;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 25px;
-    font-size: 15px;
-    font-weight: 500;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    margin: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow-y: auto;
 }

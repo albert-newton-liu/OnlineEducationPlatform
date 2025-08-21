@@ -1,0 +1,119 @@
+/* Container for the entire schedule page */
+.schedule-management-container {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Page header with title and action buttons */
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.schedule-header h2 {
+    color: #34495e;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Action buttons styling */
+.schedule-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.edit-button {
+    background-color: #3498db;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #2980b9;
+}
+
+.save-button {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.save-button:hover:not(:disabled) {
+    background-color: #27ae60;
+}
+
+.save-button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.cancel-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #c0392b;
+}
+
+/* --- Schedule Grid Layout --- */
+.schedule-grid {
+    display: grid;
+    /* First column for time labels, remaining columns for days of the week */
+    grid-template-columns: 80px repeat(5, 1fr);
+    gap: 2px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* Styles for all grid cells */
+.grid-cell {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-collapse: collapse;
+    box-sizing: border-box;
+}
+
+/* Header cells (Time and Day labels) */
+.header-cell {
+    background-color: #ecf0f1;
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* Time labels (leftmost column) */
+.time-label {
+    white-space: nowrap;
+    font-size: 0.9em;
+    padding-top: 15px; /* Adjust padding to align with slot cells */
+}
+
+/* Individual slot cells */
+.slot-cell {
+    background-color: #f7f9fb;
+    cursor: default;
+    transition: background-color 0.2s ease;
+    min-height: 40px;
+}
+
+/* Styles for selected slots */
+.slot-cell.selected {
+    background-color: #87ceeb; /* A nice, light blue for selected slots */
+}
+
+/* Styles for editable slots on hover */
+.slot-cell.editable:hover {
+    background-color: #aed6f1; /* Lighter blue on hover in edit mode */
+    cursor: pointer;
+}
