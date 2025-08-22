@@ -9,9 +9,9 @@ public class AddTeacherScheduleRequest
 
     public List<TeacherDaySchedule> TeacherDaySchedules { get; set; } = null!;
 
-    public DateTime EffectiveFromDate { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset EffectiveFromDate { get; set; } = DateTimeOffset.UtcNow;
 
-    public DateTime? EffectiveToDate { get; set; }
+    public DateTimeOffset? EffectiveToDate { get; set; }
 
 }
 
@@ -23,4 +23,9 @@ public class BookLessonRequest
 
     public string LessonId { get; set; } = null!;
 
+}
+
+public class GenerateBookableSlotRequest
+{
+    public string? TeacherId { get; set; }
 }

@@ -22,7 +22,7 @@ public class LessonController : ControllerBase
     [ProducesResponseType(typeof(AddLessonRequest), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterAdmin([FromBody] AddLessonRequest request)
+    public async Task<IActionResult> Addlesson([FromBody] AddLessonRequest request)
     {
         if (!ModelState.IsValid)
         {
@@ -66,6 +66,41 @@ public class LessonController : ControllerBase
             string AdminId = "115f62ab-82a3-41d4-af0c-1f02d449f043";
 
             await _lessonService.Approve(LessonId, AdminId);
+            return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+        }
+
+    }
+
+    [HttpDelete("delete/{LessonId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Delete(string LessonId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            string token = GetToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(new { message = "Authorization token is missing or invalid." });
+            }
+
+             var str = token.Split(',');
+
+            await _lessonService.Delete(LessonId, str[2]);
             return Ok();
         }
         catch (InvalidOperationException ex)

@@ -2,6 +2,7 @@ namespace OnlineEducation.Data.Repository;
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using OnlineEducation.Data.Dao;
 
 
@@ -66,5 +67,10 @@ public class Repository<T> : IRepository<T> where T : class
         T? t = await GetByIdAsync(id);
         if (t == null) return;
         Remove(t);
+    }
+
+    public Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return _context.Database.BeginTransactionAsync();
     }
 }

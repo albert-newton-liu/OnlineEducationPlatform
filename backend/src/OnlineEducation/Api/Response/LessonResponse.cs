@@ -12,5 +12,7 @@ public class BasicLessonResponse : BaseResponse
 
     public string Creator { get; set; } = null!;
 
+    public string CreatorId { get; set; } = null!;
+
     public bool IsPublished { get; set; }
 }

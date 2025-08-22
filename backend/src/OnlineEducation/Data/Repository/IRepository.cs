@@ -1,6 +1,7 @@
 namespace OnlineEducation.Data.Repository;
 
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 public interface IRepository<T> where T : class
 {
@@ -25,4 +26,6 @@ public interface IRepository<T> where T : class
     Task<int> SaveChangesAsync();
 
     Task removeById(string id);
+
+    Task<IDbContextTransaction> BeginTransactionAsync();
 }

@@ -17,6 +17,9 @@ public class BookableSlotDetail
 
     public byte DayOfWeek { get; set; }
 
+    public DateOnly? DateOnly { get; set; }
+
+
     public TimeSpan StartTime { get; set; }
 
     public TimeSpan EndTime { get; set; }
@@ -31,13 +34,13 @@ public class BookingDetail
 
     public string TeacherName { get; set; } = null!;
 
-     public string StudentName { get; set; } = null!;
+    public string StudentName { get; set; } = null!;
 
     public string LessonTitle { get; set; } = null!;
 
-    public DateTime StartTime { get; set; }
+    public DateTimeOffset StartTime { get; set; }
 
-    public DateTime EndTime { get; set; }
+    public DateTimeOffset EndTime { get; set; }
 
     public byte Status { get; set; }
 

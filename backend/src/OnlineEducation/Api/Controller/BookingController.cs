@@ -76,7 +76,7 @@ public class BookingController : ControllerBase
     [ProducesResponseType(typeof(ListResult<BookableSlotDetail>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ListResult<BookableSlotDetail>>> GetBookableSlot(string teacherId)
+    public async Task<ActionResult<ListResult<BookableSlotDetail>>> GetBookableSlot(string teacherId, string studentId)
     {
         if (!ModelState.IsValid)
         {
@@ -85,7 +85,7 @@ public class BookingController : ControllerBase
 
         try
         {
-            List<BookableSlotDetail> list = await _bookingService.GetBookableSlot(teacherId);
+            List<BookableSlotDetail> list = await _bookingService.GetBookableSlot(teacherId, studentId);
             return Ok(new ListResult<BookableSlotDetail>() { Items = list });
         }
         catch (InvalidOperationException ex)
@@ -186,12 +186,12 @@ public class BookingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> GenerateBookableSlot()
+    public async Task<ActionResult> GenerateBookableSlot([FromBody]GenerateBookableSlotRequest request)
     {
 
         try
         {
-            await _bookingService.GenerateBookableSlot();
+            await _bookingService.GenerateBookableSlot(request.TeacherId);
             return Ok();
         }
         catch (InvalidOperationException ex)

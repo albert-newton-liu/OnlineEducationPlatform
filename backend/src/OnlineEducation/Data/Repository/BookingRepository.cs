@@ -7,7 +7,7 @@ namespace OnlineEducation.Data.Repository;
 
 public class TeacherScheduleRepository : Repository<TeacherScheduleDO>, ITeacherScheduleRepository
 {
-    
+
     public TeacherScheduleRepository(ApplicationDbContext context) : base(context) { }
 
     public void DeleteByTeahcerId(string teacherId)
@@ -36,6 +36,10 @@ public class BookableSlotRepository : Repository<BookableSlotDO>, IBookableSlotR
         return await _dbSet.FirstOrDefaultAsync(u => u.BookableSlotId == id);
     }
 
+    public async Task<BookableSlotDO?> GetByIdForUpdateAsync(string id)
+    {
+        return await _dbSet.FromSqlRaw("SELECT * FROM \"bookable_slot\" WHERE \"bookable_slot_id\" = {0} FOR UPDATE", id).FirstOrDefaultAsync();
+    }
 }
 
 public class BookingRepository : Repository<BookingDO>, IBookingRepository

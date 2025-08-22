@@ -38,11 +38,11 @@ public class LessonCoreSerice : ILessonCoreSerice
             return;
         }
 
-        lessonPageDOs.ForEach(async x =>
+        foreach (var x in lessonPageDOs)
         {
             await _lessonPageElementRepository.DeleteByPageIdAsync(x.PageId);
             await _lessonPageRepository.removeById(x.PageId);
-        });
+        }
 
         await _lessonRepository.removeById(lessonId);
         await _lessonPageRepository.SaveChangesAsync();

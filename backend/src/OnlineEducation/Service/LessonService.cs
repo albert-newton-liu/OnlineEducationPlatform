@@ -33,6 +33,17 @@ public class LessonService : ILessonService
         await _lessonCoreSerice.Approve(LessonId);
     }
 
+    public async Task Delete(string lessonId, string teacherId)
+    {
+        Lesson lesson = await _lessonCoreSerice.QueryByLessonId(lessonId);
+        ArgumentNullException.ThrowIfNull(lesson);
+        if (lesson.TeacherId != teacherId)
+        {
+            throw new ArgumentException("Can not delete others lesson");
+        }
+        await _lessonCoreSerice.DeleteLesson(lessonId);
+    }
+
     public async Task<PaginatedResult<BasicLessonResponse>> GetPaginatedBasicLessonAsync(PaginationParams paginationParams, LessonQueryConditon conditon)
     {
         PaginatedResult<LessonDO> paginatedResult = await _lessonCoreSerice.GetPaginatedBaseUsersAsync(paginationParams, conditon);
@@ -60,7 +71,8 @@ public class LessonService : ILessonService
             Description = item.Description,
             DifficultyLevel = item.DifficultyLevel,
             IsPublished = item.IsPublished,
-            Creator = userMap.GetValueOrDefault(item.TeacherId, "Unknown User")
+            Creator = userMap.GetValueOrDefault(item.TeacherId, "Unknown User"),
+            CreatorId = item.TeacherId
         })];
 
 

@@ -30,6 +30,12 @@ public class BookingService : IBookingService
     public async Task AddSchedule(AddTeacherScheduleRequest request)
     {
         TeacherSchedule teacherSchedule = Convert(request);
+        // check repeated time
+        teacherSchedule.TeacherDaySchedules.ForEach(t =>
+        {
+            t.Duarations = [.. t.Duarations.Distinct()];
+
+        });
         await _bookingCoreService.AddSchedule(teacherSchedule);
     }
 
@@ -55,18 +61,20 @@ public class BookingService : IBookingService
         await _bookingCoreService.CancelBook(bookingId);
     }
 
-    public async Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId)
+    public async Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId, string studentId)
     {
-        List<BookableSlot> list = await _bookingCoreService.GetBookableSlot(teacherId);
+        List<BookableSlot> list = await _bookingCoreService.GetBookableSlot(teacherId, studentId);
         if (list == null || list.Count == 0)
         {
             return [];
         }
 
+
         return [.. list.OrderBy(x => x.DayOfWeek).ThenBy(x => x.StartTime)
          .Select(x => new BookableSlotDetail()
          {
              BookableSlotId = x.BookableSlotId,
+             DateOnly = x.DateOnly,
              DayOfWeek = x.DayOfWeek,
              StartTime = x.StartTime,
              EndTime = x.EndTime,
@@ -118,14 +126,14 @@ public class BookingService : IBookingService
         }
 
         return new TeacherScheduleResponse()
-            {
-                TeacherId = teacherSchedule.TeacherId,
-                TeacherDaySchedules = teacherSchedule.TeacherDaySchedules,
-            };
+        {
+            TeacherId = teacherSchedule.TeacherId,
+            TeacherDaySchedules = teacherSchedule.TeacherDaySchedules,
+        };
     }
 
-    public async Task GenerateBookableSlot()
+    public async Task GenerateBookableSlot(string? teacherId)
     {
-        await _bookingCoreService.GenerateBookableSlot();
+        await _bookingCoreService.GenerateBookableSlot(teacherId);
     }
 }

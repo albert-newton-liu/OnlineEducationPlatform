@@ -30,19 +30,19 @@ public class TeacherScheduleDO
 
     [Required]
     [Column("effective_from_date")]
-    public DateTime EffectiveFromDate { get; set; }
+    public DateTimeOffset EffectiveFromDate { get; set; }
 
     [Column("effective_to_date")]
-    public DateTime? EffectiveToDate { get; set; }
+    public DateTimeOffset? EffectiveToDate { get; set; }
 
     [Column("is_active")]
     public bool IsActive { get; set; } = true;
 
     [Column("created_at")]
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     [Column("updated_at")]
-    public DateTime UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }
 
 [Table("bookable_slot")]
@@ -61,21 +61,21 @@ public class BookableSlotDO
 
     [Required]
     [Column("start_time")]
-    public DateTime StartTime { get; set; }
+    public DateTimeOffset StartTime { get; set; }
 
     [Required]
     [Column("end_time")]
-    public DateTime EndTime { get; set; }
+    public DateTimeOffset EndTime { get; set; }
 
     [Required]
     [Column("is_booked")]
     public bool IsBooked { get; set; } = false;
 
     [Column("created_at")]
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     [Column("updated_at")]
-    public DateTime UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
 }
 
@@ -107,13 +107,11 @@ public class BookingDO
     public byte Status { get; set; }
 
     [Column("created_at")]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     [Column("updated_at")]
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public DateTime UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
-    [ForeignKey("bookable_slot_id")]
+    [ForeignKey(nameof(BookableSlotId))]
     public BookableSlotDO? BookableSlot { get; set; }
 }

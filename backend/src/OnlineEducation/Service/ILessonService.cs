@@ -10,6 +10,8 @@ public interface ILessonService
 
     Task Approve(string LessonId, string AdminId);
 
+    Task Delete(string lessonId, string teacherId);
+
     Task<PaginatedResult<BasicLessonResponse>> GetPaginatedBasicLessonAsync(PaginationParams paginationParams, LessonQueryConditon conditon);
 
     Task<Lesson> QueryByLessonId(string lessonId);

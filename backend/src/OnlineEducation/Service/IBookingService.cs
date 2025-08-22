@@ -11,9 +11,9 @@ public interface IBookingService
 
     Task Cancel(string bookingId);
 
-    Task GenerateBookableSlot();
+    Task GenerateBookableSlot(string? teacherId);
 
-    Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId);
+    Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId, string studentId);
 
     Task<List<BookingDetail>> GetBookingList(string? studentId, string? teacherId);
 

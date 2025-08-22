@@ -49,8 +49,8 @@ public class BookingCoreService : IBookingCoreService
                     EffectiveFromDate = schedule.EffectiveFromDate,
                     EffectiveToDate = schedule.EffectiveToDate,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    CreatedAt = DateTimeOffset.UtcNow,
+                    UpdatedAt = DateTimeOffset.UtcNow
                 };
 
                 teacherScheduleDOs.Add(teacherScheduleDO);
@@ -64,33 +64,54 @@ public class BookingCoreService : IBookingCoreService
 
     public async Task Book(string studentId, string lessonId, string bookableSlotId)
     {
-        BookableSlotDO? bookableSlotDO = await _bookableSlotRepository.GetByIdAsync(bookableSlotId);
-        ArgumentNullException.ThrowIfNull(bookableSlotDO);
-        if (bookableSlotDO.IsBooked)
+        // Begin a transaction to ensure atomicity
+        await using var transaction = await _bookingRepository.BeginTransactionAsync();
+
+        try
         {
-            throw new ArgumentException("Can not book this time");
+            // 1. Retrieve the bookable slot and lock it to prevent concurrent updates
+            //    (This can be implemented using SELECT ... FOR UPDATE or EF row-level locks)
+            BookableSlotDO? bookableSlotDO = await _bookableSlotRepository
+             .GetByIdForUpdateAsync(bookableSlotId);
+
+            ArgumentNullException.ThrowIfNull(bookableSlotDO);
+
+            // 2. Check if the slot is already booked
+            if (bookableSlotDO.IsBooked)
+            {
+                throw new InvalidOperationException("This time slot is already booked.");
+            }
+
+            // 3. Create a new booking entity
+            BookingDO bookingDO = new()
+            {
+                BookingId = Guid.NewGuid().ToString(),
+                StudentId = studentId,
+                TeacherId = bookableSlotDO.TeacherId ?? "",
+                BookableSlotId = bookableSlotId,
+                LessonId = lessonId,
+                Status = 0,
+                CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow,
+            };
+
+            await _bookingRepository.AddAsync(bookingDO);
+
+            // 4. Directly update the already retrieved slot entity
+            //    (Avoids EF Core tracking conflicts)
+            bookableSlotDO.IsBooked = true;
+
+            // 5. Save all changes within the same transaction
+            await _bookingRepository.SaveChangesAsync();
+
+            // 6. Commit the transaction
+            await transaction.CommitAsync();
         }
-
-        BookingDO bookingDO = new()
+        catch
         {
-            BookingId = Guid.NewGuid().ToString(),
-            StudentId = studentId,
-            TeacherId = bookableSlotDO.TeacherId ?? "",
-            BookableSlotId = bookableSlotId,
-            LessonId = lessonId,
-            Status = 0
-        };
-
-        BookableSlotDO updateDO = new()
-        {
-            BookableSlotId = bookableSlotId,
-            IsBooked = true
-        };
-
-        await _bookingRepository.AddAsync(bookingDO);
-        _bookableSlotRepository.Update(updateDO);
-
-        await _bookingRepository.SaveChangesAsync();
+            // Roll back the transaction if any error occurs
+            await transaction.RollbackAsync(); throw;
+        }
     }
 
     public async Task CancelBook(string bookingId)
@@ -114,10 +135,10 @@ public class BookingCoreService : IBookingCoreService
         await _bookingRepository.SaveChangesAsync();
     }
 
-    public async Task<List<BookableSlot>> GetBookableSlot(string teacherId)
+    public async Task<List<BookableSlot>> GetBookableSlot(string teacherId, string studentId)
     {
         Expression<Func<BookableSlotDO, bool>> predicate = slot =>
-        slot.TeacherId == teacherId && slot.StartTime > DateTime.UtcNow;
+        slot.TeacherId == teacherId && slot.StartTime > DateTimeOffset.UtcNow;
 
         IEnumerable<BookableSlotDO> bookableSlotDOs = await _bookableSlotRepository.FindAsync(predicate);
 
@@ -126,14 +147,24 @@ public class BookingCoreService : IBookingCoreService
             return [];
         }
 
+        List<DateTimeOffset> BookedDates = [];
+        List<Booking> bookings = await GetBookingList(studentId, null);
+        if (bookings != null && bookings.Count > 0)
+        {
+            BookedDates = [.. bookings.Select(book => book.StartTime)];
+        }
+
+        var auTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific/Auckland");
+
         return [.. bookableSlotDOs.Select(x =>
         new BookableSlot()
         {
             BookableSlotId = x.BookableSlotId,
-            DayOfWeek = (byte)x.StartTime.DayOfWeek,
-            StartTime = x.StartTime.TimeOfDay,
-            EndTime = x.EndTime.TimeOfDay,
-            IsBooked = x.IsBooked
+            DateOnly = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(x.StartTime, auTimeZone).DateTime),
+            DayOfWeek = (byte)((byte)TimeZoneInfo.ConvertTime(x.StartTime, auTimeZone).DayOfWeek - 1),
+            StartTime = TimeZoneInfo.ConvertTime(x.StartTime, auTimeZone).TimeOfDay,
+            EndTime = TimeZoneInfo.ConvertTime(x.EndTime, auTimeZone).TimeOfDay,
+            IsBooked = x.IsBooked || BookedDates.Contains(x.StartTime)
         }
     )];
     }
@@ -147,7 +178,7 @@ public class BookingCoreService : IBookingCoreService
 
         IEnumerable<BookingDO> bookingDOs = await _bookingRepository.FindAsync(predicate, b => b.BookableSlot!);
 
-        if (!bookingDOs.Any())
+        if (bookingDOs == null || !bookingDOs.Any())
         {
             return [];
         }
@@ -202,9 +233,12 @@ public class BookingCoreService : IBookingCoreService
         };
     }
 
-    public async Task GenerateBookableSlot()
+    public async Task GenerateBookableSlot(string? teacherId)
     {
-        IEnumerable<TeacherScheduleDO> teacherScheduleDOs = await _teacherScheduleRepository.FindAsync(x => x.IsActive);
+        Expression<Func<TeacherScheduleDO, bool>> predicate = (x) => x.IsActive
+                    && (teacherId == null || x.TeacherId == teacherId);
+
+        IEnumerable<TeacherScheduleDO> teacherScheduleDOs = await _teacherScheduleRepository.FindAsync(predicate);
         if (teacherScheduleDOs == null || !teacherScheduleDOs.Any())
         {
             return;
@@ -227,22 +261,29 @@ public class BookingCoreService : IBookingCoreService
             StartTime = GetNextWeekDate(teacherScheduleDO.DayOfWeek, teacherScheduleDO.StartTime),
             EndTime = GetNextWeekDate(teacherScheduleDO.DayOfWeek, teacherScheduleDO.EndTime),
             IsBooked = false,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow,
         };
 
         await _bookableSlotRepository.AddAsync(bookableSlotDO);
         await _bookableSlotRepository.SaveChangesAsync();
     }
 
-    private DateTime GetNextWeekDate(byte customDayOfWeek, TimeSpan time, string timeZoneId = "Pacific/Auckland")
+    private DateTimeOffset GetNextWeekDate(byte customDayOfWeek, TimeSpan time, string timeZoneId = "Pacific/Auckland")
     {
-        var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-        var todayLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz).Date;
-        int targetDotNetDay = (customDayOfWeek + 1) % 7;
-        int daysNextWeek = ((targetDotNetDay - (int)todayLocal.DayOfWeek + 7) % 7) + 7;
-        var localTarget = todayLocal.AddDays(daysNextWeek).Add(time);
-        return TimeZoneInfo.ConvertTimeToUtc(localTarget, tz);
+        var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        var now = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZone);
+        var today = now.Date;
+        int targetDotNetDay = (customDayOfWeek + 1) % 7; // dotnet sunday is 0
 
+        int todayDotNetDay = (int)today.DayOfWeek; // today 
+
+        int daysUntilNextWeekTarget = (targetDotNetDay - todayDotNetDay + 7) % 7;
+        if (daysUntilNextWeekTarget == 0)
+        {
+            daysUntilNextWeekTarget = 7;
+        }
+        var nextWeekDate = today.AddDays(daysUntilNextWeekTarget).Add(time);
+        return TimeZoneInfo.ConvertTimeToUtc(nextWeekDate, timeZone);
     }
 }

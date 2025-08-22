@@ -14,6 +14,18 @@ public class Duaration
     public TimeSpan StartTime { get; set; }
 
     public TimeSpan EndTime { get; set; }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Duaration other &&
+               StartTime == other.StartTime &&
+               EndTime == other.EndTime;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(StartTime, EndTime);
+    }
 }
 
 public class TeacherSchedule
@@ -23,9 +35,9 @@ public class TeacherSchedule
 
     public List<TeacherDaySchedule> TeacherDaySchedules { get; set; } = null!;
 
-    public DateTime EffectiveFromDate { get; set; }
+    public DateTimeOffset EffectiveFromDate { get; set; }
 
-    public DateTime? EffectiveToDate { get; set; }
+    public DateTimeOffset? EffectiveToDate { get; set; }
 
 }
 
@@ -35,6 +47,8 @@ public class BookableSlot
     public string BookableSlotId { get; set; } = null!;
 
     public byte DayOfWeek { get; set; }
+
+    public DateOnly? DateOnly{ get; set; }
 
     public TimeSpan StartTime { get; set; }
 
@@ -55,9 +69,9 @@ public class Booking
 
     public string LessonID { get; set; } = null!;
 
-    public DateTime StartTime { get; set; }
+    public DateTimeOffset StartTime { get; set; }
 
-    public DateTime EndTime { get; set; }
+    public DateTimeOffset EndTime { get; set; }
 
     public byte Status { get; set; }
 
