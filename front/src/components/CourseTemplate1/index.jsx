@@ -161,11 +161,10 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         const selectedText = selection.toString().trim();
 
         if (selectedText.length > 0) {
-            // 如果有选中的文字，只发音选中的文字
+            
             speak(selectedText);
         } else {
-            // 如果没有选中文字，可以取消当前发音
-            // 或者选择发音全部文本
+            
             speak(content.text);
         }
     };

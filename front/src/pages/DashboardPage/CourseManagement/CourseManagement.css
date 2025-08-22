@@ -1,8 +1,10 @@
 /* Container for the entire course management page, to be placed inside .dashboard-content */
 .course-management-container {
     padding: 20px;
-    background-color: #ffffff; /* White background to match the dashboard content area */
-    border-radius: 8px; /* Consistent rounded corners */
+    background-color: #ffffff;
+    /* White background to match the dashboard content area */
+    border-radius: 8px;
+    /* Consistent rounded corners */
 }
 
 /* Header section with title and "Add New Course" button */
@@ -11,22 +13,26 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
-    border-bottom: 1px solid #e0e0e0; /* Softer border color from sidebar */
+    border-bottom: 1px solid #e0e0e0;
+    /* Softer border color from sidebar */
     padding-bottom: 15px;
 }
 
 .course-management-header h2 {
     margin: 0;
     font-size: 24px;
-    color: #2c3e50; /* Match dashboard header text color */
+    color: #2c3e50;
+    /* Match dashboard header text color */
 }
 
 .add-course-button {
     padding: 8px 18px;
-    background-color: #3498db; /* A blue that aligns with your sidebar hover/active state */
+    background-color: #3498db;
+    /* A blue that aligns with your sidebar hover/active state */
     color: white;
     border: none;
-    border-radius: 25px; /* Pill shape to match logout button */
+    border-radius: 25px;
+    /* Pill shape to match logout button */
     cursor: pointer;
     font-size: 15px;
     font-weight: 500;
@@ -43,32 +49,38 @@
 .table-container {
     overflow-x: auto;
     border-radius: 8px;
-    border: 1px solid #e0e0e0; /* Border to contain the table, matching sidebar */
+    border: 1px solid #e0e0e0;
+    /* Border to contain the table, matching sidebar */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .lesson-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff; /* Table internal background is white */
+    background-color: #ffffff;
+    /* Table internal background is white */
     font-size: 14px;
 }
 
 .lesson-table thead tr {
-    background-color: #f7f9fb; /* Light blue from placeholder component */
-    color: #34495e; /* Darker text color from sidebar */
+    background-color: #f7f9fb;
+    /* Light blue from placeholder component */
+    color: #34495e;
+    /* Darker text color from sidebar */
     text-align: left;
 }
 
 .lesson-table th,
 .lesson-table td {
     padding: 15px;
-    border: 1px solid #e0e0e0; /* Border color from dashboard sidebar */
+    border: 1px solid #e0e0e0;
+    /* Border color from dashboard sidebar */
     vertical-align: top;
 }
 
 .lesson-table tbody tr:hover {
-    background-color: #f8fafc; /* Lighter hover background */
+    background-color: #f8fafc;
+    /* Lighter hover background */
 }
 
 /* Status tag for Published/Unpublished courses */
@@ -100,8 +112,9 @@
 
 /* Base style for all action buttons */
 .actions-buttons a,
-.actions-buttons button  {
-     width: 100%; /* This is the key change */
+.actions-buttons button {
+    width: 100%;
+    /* This is the key change */
     text-align: center;
     padding: 6px 12px;
     border: 1px solid #dcdcdc;
@@ -143,10 +156,13 @@
 .actions-buttons .delete-button {
     color: #dc3545;
     border-color: #dc3545;
+    background-color: white;
+
 }
 
 .actions-buttons .approve-button {
-    color: #2980b9; /* Matches sidebar hover/active color */
+    color: #2980b9;
+    /* Matches sidebar hover/active color */
     border-color: #2980b9;
 }
 
@@ -187,4 +203,177 @@
     font-size: 15px;
     color: #34495e;
     font-weight: 500;
+}
+
+/* Styles for the modal pop-up */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #34495e;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+.modal-body {
+    flex: 1;
+}
+
+.slot-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.slot-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.slot-item p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.book-now-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.book-now-button:hover {
+    background-color: #2980b9;
+}
+
+.error-message {
+    color: #e74c3c;
+    text-align: center;
+    font-weight: bold;
+}
+
+.success-message {
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+    margin-bottom: 20px;
+}
+
+.close-button-center {
+    display: block;
+    width: 100px;
+    margin: 0 auto;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.close-button-center:hover {
+    background-color: #2980b9;
+}
+
+/* Styles for a disabled/booked button */
+.booked-button {
+    background-color: #bdc3c7;
+    /* A neutral gray color */
+    cursor: not-allowed;
+    color: #555;
+    font-weight: bold;
+}
+
+.delete-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cancel-button,
+.confirm-delete-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.cancel-button {
+    background-color: #bdc3c7;
+    color: #34495e;
+}
+
+.cancel-button:hover {
+    background-color: #95a5a6;
+}
+
+.confirm-delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.confirm-delete-button:hover {
+    background-color: #c0392b;
 }
