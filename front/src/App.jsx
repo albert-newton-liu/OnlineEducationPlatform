@@ -10,11 +10,11 @@ import AddCoursePage from './pages/DashboardPage/CourseManagement/AddCoursePage'
 import ViewCoursePage from './pages/DashboardPage/CourseManagement/ViewCoursePage';
 import AppointmentManagement from './pages/DashboardPage/AppointmentManagement';
 import ScheduleManagementPage from './pages/DashboardPage/AppointmentManagement/ScheduleManagementPage';
-import AppointmentRecordPage from './pages/DashboardPage/AppointmentManagement/AppointmentRecordPage';
+import AppointmentRecordPage from './components/AppointmentRecordPage';
+import MyCourseManagement from './pages/DashboardPage/MyCourseManagement'
 
 // Temporary placeholders (replace with actual imports)
 const Announcements = () => <div className="content-placeholder"><h2>Announcements Page</h2><p>Content for announcements.</p></div>;
-const MyCourses = () => <div className="content-placeholder"><h2>My Courses Page</h2><p>Content for student's courses.</p></div>;
 
 function App() {
   // Use state to manage the login status. Initialize it by checking localStorage once.
@@ -36,7 +36,7 @@ function App() {
             {/* Direct child routes matching the sidebar menu items */}
             <Route path="users" element={<UserManagement />} />
             <Route path="announcements" element={<Announcements />} />
-            <Route path="my-courses" element={<MyCourses />} />
+            <Route path="my-courses" element={<MyCourseManagement />} />
 
             {/* Nested routes for Course Management (teacher/admin) */}
             <Route path="courses" element={<CourseManagement />} />

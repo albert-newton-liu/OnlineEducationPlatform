@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Outlet, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../../constant/Constants';
+import * as signalR from '@microsoft/signalr';
 
 import './DashboardPage.css';
 
@@ -11,9 +12,13 @@ function DashboardPage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  // New state to manage the collapsed status of submenus
   const [collapsedItems, setCollapsedItems] = useState({});
 
+  const [connection, setConnection] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  // Use a single useEffect for user data and SignalR connection
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem('userToken');
@@ -33,6 +38,38 @@ function DashboardPage() {
           }
         });
         setUserData(response.data);
+
+        // --- SignalR Connection Logic (Moved Here) ---
+        const newConnection = new signalR.HubConnectionBuilder()
+          .withUrl(`${API_BASE_URL}/notificationHub`, {
+            accessTokenFactory: () => token 
+          })
+          .withAutomaticReconnect()
+          .build();
+        
+        setConnection(newConnection);
+
+        newConnection.start()
+          .then(() => {
+            console.log('Connected to SignalR hub!');
+            newConnection.on('ReceiveNotification', (message) => {
+              setNotifications(prevNotifications => [...prevNotifications, message]);
+              console.log("message", message)
+            });
+          })
+          .catch(err => {
+            console.error('SignalR connection failed: ', err);
+            if (err.statusCode === 401) {
+              handleLogout(); // Log out on unauthorized connection
+            }
+          });
+
+        // Cleanup function for the SignalR connection
+        return () => {
+          newConnection.stop();
+        };
+        // --- End of SignalR Logic ---
+
       } catch (err) {
         console.error('Failed to fetch user data:', err);
         setError('Failed to load user data. Please try logging in again.');
@@ -45,11 +82,15 @@ function DashboardPage() {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate]); // The dependency is on 'navigate' only, as the fetchUserData logic is self-contained.
 
   const handleLogout = () => {
     localStorage.removeItem('userToken');
     localStorage.removeItem('userId');
+    // Stop the SignalR connection before navigating
+    if (connection) {
+        connection.stop();
+    }
     navigate('/login');
   };
 
@@ -117,10 +158,44 @@ function DashboardPage() {
   return (
     <div className="dashboard-layout">
       {/* Header */}
+    
       <header className="dashboard-header">
         <h1>Online Education Platform</h1>
         <div className="user-info">
-          <span>Welcome, {userData.username || 'User'} ({['Student', 'Teacher', 'Admin'][userData.role]})</span>
+          <span>Welcome, {userData?.username || 'User'} ({['Student', 'Teacher', 'Admin'][userData?.role]})</span>
+
+          {/* Notifications Icon and Count */}
+          <div className="notifications-container">
+            <button
+              className="notification-icon-button"
+              onClick={() => setIsDropdownVisible(!isDropdownVisible)}
+            >
+              🔔
+              {/* Show a badge with the count of new notifications */}
+              {notifications.length > 0 && (
+                <span className="notification-badge">{notifications.length}</span>
+              )}
+            </button>
+
+            {/* Notifications Dropdown/Modal */}
+            {isDropdownVisible && (
+              <div className="notifications-dropdown">
+                <h3>Notifications</h3>
+                {notifications.length > 0 ? (
+                  <ul>
+                    {notifications.map((msg, index) => (
+                      <li key={index} className="notification-item">
+                        {msg}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No new notifications.</p>
+                )}
+              </div>
+            )}
+          </div>
+
           <button onClick={handleLogout} className="logout-button">Logout</button>
         </div>
       </header>

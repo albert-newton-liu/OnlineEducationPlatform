@@ -1,0 +1,110 @@
+.appointment-records-container {
+    padding: 20px;
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-records-container h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.booking-table th,
+.booking-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.booking-table th {
+    background-color: #34495e;
+    color: white;
+    font-weight: bold;
+}
+
+.booking-table tr:hover {
+    background-color: #f1f4f9;
+}
+
+.action-button {
+    /* Main styles for the button */
+    background-color: #3498db;
+    color: black; /* Button text color */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+    text-align: center; /* Center the text */
+}
+
+.action-button:hover {
+    background-color: #2980b9;
+     color: white; 
+}
+
+.loading,
+.error-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.error-message {
+    color: #e74c3c;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-controls label {
+    font-weight: bold;
+    color: #34495e;
+}
+
+.filter-controls select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.filter-controls select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Styles for the vertical button stack */
+.actions-buttons.vertical-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
