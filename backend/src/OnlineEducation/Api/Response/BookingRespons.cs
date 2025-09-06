@@ -36,6 +36,8 @@ public class BookingDetail
 
     public string StudentName { get; set; } = null!;
 
+    public string LessonId { get; set; } = null!;
+
     public string LessonTitle { get; set; } = null!;
 
     public DateTimeOffset StartTime { get; set; }

@@ -3,10 +3,36 @@ using Microsoft.EntityFrameworkCore;
 using OnlineEducation.Data.Repository;
 using OnlineEducation.Core;
 using OnlineEducation.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using OnlineEducation.Utils;
+using System.IdentityModel.Tokens.Jwt;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,6 +67,26 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
+builder.Services.AddScoped<IJwtTokenHelper, JwtTokenHelper>();
+builder.Services.AddSingleton<JwtSecurityTokenHandler>();
+
+
+builder.Services.AddScoped<ITeacherBookSlotJob, TeacherBookSlotJob>();
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("teacherBookSlotJob");
+    q.AddJob<TeacherBookSlotJob>(opts => opts.WithIdentity(jobKey));
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("teacherBookSlot-trigger")
+        //  "0 0 0 ? * SUN *"
+        .WithCronSchedule("0 0 0 ? * SUN *")); 
+        // .WithCronSchedule("0 * * ? * *")); 
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+
+
 // --- CORS Configuration Start ---
 builder.Services.AddCors(options =>
 {
@@ -61,6 +107,10 @@ builder.Services.AddCors(options =>
 // --- CORS Configuration End ---
 
 
+
+builder.Services.AddSignalR();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -71,8 +121,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapControllers();
 app.UseCors("AllowSpecificOrigin");
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
+app.MapHub<NotificationHub>("/notificationHub").RequireAuthorization();
 
 app.Run();
 

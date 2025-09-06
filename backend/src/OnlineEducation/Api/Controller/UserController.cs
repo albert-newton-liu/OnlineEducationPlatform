@@ -3,6 +3,7 @@ using OnlineEducation.Api.Request;
 using OnlineEducation.Api.Response;
 using OnlineEducation.Model;
 using OnlineEducation.Service;
+using OnlineEducation.Utils;
 
 namespace OnlineEducation.Api.Controller;
 
@@ -13,9 +14,12 @@ public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
 
-    public UsersController(IUserService userService)
+    private readonly IJwtTokenHelper _jwtTokenHelper;
+
+    public UsersController(IUserService userService, IJwtTokenHelper jwtTokenHelper)
     {
         _userService = userService;
+         _jwtTokenHelper = jwtTokenHelper;
     }
 
     [HttpPost("register/admin")]
@@ -120,7 +124,8 @@ public class UsersController : ControllerBase
             {
                 response.Permissions = admin.Permissions;
             }
-            response.Token = "token";
+             var token = _jwtTokenHelper.GenerateToken(loggedInUser.UserId, loggedInUser.Role);
+            response.Token = token;
 
             return Ok(response);
         }

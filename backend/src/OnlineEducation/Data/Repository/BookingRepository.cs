@@ -40,6 +40,11 @@ public class BookableSlotRepository : Repository<BookableSlotDO>, IBookableSlotR
     {
         return await _dbSet.FromSqlRaw("SELECT * FROM \"bookable_slot\" WHERE \"bookable_slot_id\" = {0} FOR UPDATE", id).FirstOrDefaultAsync();
     }
+
+    public async Task<int> CountAsync(Expression<Func<BookableSlotDO, bool>> predicate)
+    {
+        return await _context.BookableSlotDOs.CountAsync(predicate);
+    }
 }
 
 public class BookingRepository : Repository<BookingDO>, IBookingRepository

@@ -98,7 +98,7 @@ public class LessonController : ControllerBase
                 return Unauthorized(new { message = "Authorization token is missing or invalid." });
             }
 
-             var str = token.Split(',');
+            var str = token.Split(',');
 
             await _lessonService.Delete(LessonId, str[2]);
             return Ok();
@@ -184,16 +184,10 @@ public class LessonController : ControllerBase
 
     private string GetToken()
     {
-        string token = string.Empty;
-        if (Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
-        {
-            var authHeader = value.FirstOrDefault();
-            if (authHeader != null && authHeader.StartsWith("Bearer "))
-            {
-                token = authHeader.Substring("Bearer ".Length).Trim();
-            }
-        }
-        return token;
+        var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            throw new Exception("token is null");
+        return authHeader.Substring("Bearer ".Length).Trim();
     }
 
 }

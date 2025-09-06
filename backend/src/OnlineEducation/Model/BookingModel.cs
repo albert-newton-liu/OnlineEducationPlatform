@@ -73,6 +73,10 @@ public class Booking
 
     public DateTimeOffset EndTime { get; set; }
 
+    // 0 Upcoming
+    // 1 Completed
+    // 2 Canceled
     public byte Status { get; set; }
 
 }
+

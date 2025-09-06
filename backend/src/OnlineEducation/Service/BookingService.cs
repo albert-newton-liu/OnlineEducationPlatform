@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.SignalR;
 using OnlineEducation.Api.Request;
 using OnlineEducation.Api.Response;
 using OnlineEducation.Core;
@@ -15,15 +16,19 @@ public class BookingService : IBookingService
 
     private readonly ILessonCoreSerice _lessonCoreSerice;
 
+    private readonly IHubContext<NotificationHub> _hubContext;
+
 
     public BookingService(IBookingCoreService bookingCoreService,
                             IUserCoreService userCoreService,
-                            ILessonCoreSerice lessonCoreSerice
+                            ILessonCoreSerice lessonCoreSerice,
+                            IHubContext<NotificationHub> hubContext
     )
     {
         _bookingCoreService = bookingCoreService;
         _userCoreService = userCoreService;
         _lessonCoreSerice = lessonCoreSerice;
+        _hubContext = hubContext;
     }
 
 
@@ -53,7 +58,16 @@ public class BookingService : IBookingService
 
     public async Task Book(BookLessonRequest request)
     {
-        await _bookingCoreService.Book(request.StudentId, request.LessonId, request.BookableSlotId);
+        Booking booking = await _bookingCoreService.Book(request.StudentId, request.LessonId, request.BookableSlotId);
+        var teacherId = booking.TeacherId;
+        string message = $"A new booking has been made for your slot by a student!";
+        await _hubContext.Clients.User(teacherId).SendAsync("ReceiveNotification", message);
+    }
+
+    public async Task TestMsg(string userId)
+    {
+        string message = $"A new booking has been made for your slot by a student!";
+        await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", message);
     }
 
     public async Task Cancel(string bookingId)
@@ -83,12 +97,12 @@ public class BookingService : IBookingService
 
     }
 
-    public async Task<List<BookingDetail>> GetBookingList(string? studentId, string? teacherId)
+    public async Task<List<BookingDetail>> GetBookingList(string? studentId, string? teacherId, int Status)
     {
 
         AssertUtil.AssertBothNotNull(studentId, teacherId);
 
-        List<Booking> bookings = await _bookingCoreService.GetBookingList(studentId, teacherId);
+        List<Booking> bookings = await _bookingCoreService.GetBookingList(studentId, teacherId, Status);
         if (bookings == null || bookings.Count == 0)
         {
             return [];
@@ -111,6 +125,7 @@ public class BookingService : IBookingService
             TeacherName = userIdToUsernameMap.GetValueOrDefault(x.TeacherId, ""),
             StudentName = userIdToUsernameMap.GetValueOrDefault(x.StudentId, ""),
             LessonTitle = lessonsMap.GetValueOrDefault(x.LessonID, ""),
+            LessonId = x.LessonID,
             StartTime = x.StartTime,
             EndTime = x.EndTime,
             Status = x.Status,

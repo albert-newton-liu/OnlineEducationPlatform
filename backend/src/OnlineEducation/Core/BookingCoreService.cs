@@ -62,7 +62,7 @@ public class BookingCoreService : IBookingCoreService
         return teacherScheduleDOs;
     }
 
-    public async Task Book(string studentId, string lessonId, string bookableSlotId)
+    public async Task<Booking> Book(string studentId, string lessonId, string bookableSlotId)
     {
         // Begin a transaction to ensure atomicity
         await using var transaction = await _bookingRepository.BeginTransactionAsync();
@@ -106,6 +106,8 @@ public class BookingCoreService : IBookingCoreService
 
             // 6. Commit the transaction
             await transaction.CommitAsync();
+
+            return Convert(bookingDO);
         }
         catch
         {
@@ -130,15 +132,17 @@ public class BookingCoreService : IBookingCoreService
             IsBooked = false
         };
 
-        await _bookingRepository.removeById(bookingId);
+        bookingDO.Status = 2;
+        _bookingRepository.Update(bookingDO);
         _bookableSlotRepository.Update(updateBookingDO);
         await _bookingRepository.SaveChangesAsync();
     }
 
     public async Task<List<BookableSlot>> GetBookableSlot(string teacherId, string studentId)
     {
+        DateTimeOffset NextMonday = GetNextMonday();
         Expression<Func<BookableSlotDO, bool>> predicate = slot =>
-        slot.TeacherId == teacherId && slot.StartTime > DateTimeOffset.UtcNow;
+        slot.TeacherId == teacherId && slot.StartTime > NextMonday;
 
         IEnumerable<BookableSlotDO> bookableSlotDOs = await _bookableSlotRepository.FindAsync(predicate);
 
@@ -148,7 +152,7 @@ public class BookingCoreService : IBookingCoreService
         }
 
         List<DateTimeOffset> BookedDates = [];
-        List<Booking> bookings = await GetBookingList(studentId, null);
+        List<Booking> bookings = await GetBookingList(studentId, null, 0);
         if (bookings != null && bookings.Count > 0)
         {
             BookedDates = [.. bookings.Select(book => book.StartTime)];
@@ -169,10 +173,10 @@ public class BookingCoreService : IBookingCoreService
     )];
     }
 
-    public async Task<List<Booking>> GetBookingList(string? studentId, string? teacherId)
+    public async Task<List<Booking>> GetBookingList(string? studentId, string? teacherId, int Status)
     {
 
-        Expression<Func<BookingDO, bool>> predicate = b => b.Status == 0
+        Expression<Func<BookingDO, bool>> predicate = b => b.Status == Status
                                                     && (studentId == null || b.StudentId == studentId)
                                                     && (teacherId == null || b.TeacherId == teacherId);
 
@@ -183,6 +187,8 @@ public class BookingCoreService : IBookingCoreService
             return [];
         }
 
+        var auTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific/Auckland");
+
 
         return [.. bookingDOs.Select(x => new Booking()
                     {
@@ -190,11 +196,27 @@ public class BookingCoreService : IBookingCoreService
                         TeacherId = x.TeacherId,
                         StudentId = x.StudentId,
                         LessonID = x.LessonId,
-                        StartTime = x.BookableSlot!.StartTime,
-                        EndTime = x.BookableSlot.EndTime,
+                        StartTime = TimeZoneInfo.ConvertTime(x.BookableSlot!.StartTime, auTimeZone),
+                        EndTime = TimeZoneInfo.ConvertTime(x.BookableSlot.EndTime, auTimeZone),
                         Status = x.Status
                     })];
 
+    }
+
+    private Booking Convert(BookingDO x)
+    {
+        var auTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific/Auckland");
+
+        return new Booking()
+        {
+            BookingId = x.BookingId,
+            TeacherId = x.TeacherId,
+            StudentId = x.StudentId,
+            LessonID = x.LessonId,
+            StartTime = TimeZoneInfo.ConvertTime(x.BookableSlot!.StartTime, auTimeZone),
+            EndTime = TimeZoneInfo.ConvertTime(x.BookableSlot.EndTime, auTimeZone),
+            Status = x.Status
+        };
     }
 
     public async Task<TeacherSchedule?> GetSchedule(string teacherId)
@@ -244,11 +266,26 @@ public class BookingCoreService : IBookingCoreService
             return;
         }
 
-        foreach (var item in teacherScheduleDOs)
-        {
-            await GenerateTeahcherSlot(item);
-        }
+        var grouped = teacherScheduleDOs.GroupBy(x => x.TeacherId)
+                         .ToDictionary(g => g.Key, g => g.ToList());
 
+        foreach (var item in grouped)
+        {
+            string TeacherId = item.Key;
+            DateTimeOffset NextMonday = GetNextMonday();
+            Expression<Func<BookableSlotDO, bool>> existPredicate = (x) => x.StartTime >= NextMonday
+                   && x.TeacherId == TeacherId;
+            int count = await _bookableSlotRepository.CountAsync(existPredicate);
+            if (count > 0)
+            {
+                continue;
+            }
+
+            foreach (var v in item.Value)
+            {
+                await GenerateTeahcherSlot(v);
+            }
+        }
     }
 
     private async Task GenerateTeahcherSlot(TeacherScheduleDO teacherScheduleDO)
@@ -267,6 +304,11 @@ public class BookingCoreService : IBookingCoreService
 
         await _bookableSlotRepository.AddAsync(bookableSlotDO);
         await _bookableSlotRepository.SaveChangesAsync();
+    }
+
+    private DateTimeOffset GetNextMonday()
+    {
+        return GetNextWeekDate(0, TimeSpan.Zero);
     }
 
     private DateTimeOffset GetNextWeekDate(byte customDayOfWeek, TimeSpan time, string timeZoneId = "Pacific/Auckland")

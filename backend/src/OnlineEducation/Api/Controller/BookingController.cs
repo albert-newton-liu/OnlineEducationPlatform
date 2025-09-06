@@ -1,7 +1,11 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineEducation.Api.Request;
 using OnlineEducation.Api.Response;
 using OnlineEducation.Service;
+using OnlineEducation.Utils;
 
 namespace OnlineEducation.Api.Controller;
 
@@ -12,9 +16,12 @@ public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
 
-    public BookingController(IBookingService bookingService)
+    private readonly IJwtTokenHelper _jwtTokenHelper;
+
+    public BookingController(IBookingService bookingService, IJwtTokenHelper jwtTokenHelper)
     {
         _bookingService = bookingService;
+        _jwtTokenHelper = jwtTokenHelper;
     }
 
     [HttpPost("addSchedule")]
@@ -131,7 +138,7 @@ public class BookingController : ControllerBase
     [ProducesResponseType(typeof(ListResult<BookingDetail>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ListResult<BookingDetail>>> GetBookingList(string? teacherId, string? studentId)
+    public async Task<ActionResult<ListResult<BookingDetail>>> GetBookingList(string? teacherId, string? studentId, int Status)
     {
         if (!ModelState.IsValid)
         {
@@ -140,7 +147,7 @@ public class BookingController : ControllerBase
 
         try
         {
-            List<BookingDetail> list = await _bookingService.GetBookingList(studentId, teacherId);
+            List<BookingDetail> list = await _bookingService.GetBookingList(studentId, teacherId, Status);
             return Ok(new ListResult<BookingDetail>() { Items = list });
         }
         catch (InvalidOperationException ex)
@@ -154,6 +161,7 @@ public class BookingController : ControllerBase
 
     }
 
+    [Authorize]
     [HttpPost("cancel/{bookingId}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -168,7 +176,13 @@ public class BookingController : ControllerBase
 
         try
         {
-            await _bookingService.Cancel(bookingId);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+
+
+
+            // await _bookingService.Cancel(bookingId);
             return Ok();
         }
         catch (InvalidOperationException ex)
@@ -186,7 +200,7 @@ public class BookingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> GenerateBookableSlot([FromBody]GenerateBookableSlotRequest request)
+    public async Task<ActionResult> GenerateBookableSlot([FromBody] GenerateBookableSlotRequest request)
     {
 
         try
@@ -204,5 +218,25 @@ public class BookingController : ControllerBase
         }
     }
 
+    private string GetToken()
+    {
+        var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            throw new Exception("token is null");
+        return authHeader.Substring("Bearer ".Length).Trim();
+    }
+
+
+
+    [HttpGet("testMsg/{userId}")]
+    [ProducesResponseType(typeof(ListResult<BookingDetail>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> TestMsg(string userId)
+    {
+        await _bookingService.TestMsg(userId);
+        return Ok();
+
+    }
 }
 

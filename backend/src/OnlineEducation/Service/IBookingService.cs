@@ -9,13 +9,15 @@ public interface IBookingService
 
     Task Book(BookLessonRequest request);
 
+    Task TestMsg(string userId);
+
     Task Cancel(string bookingId);
 
     Task GenerateBookableSlot(string? teacherId);
 
     Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId, string studentId);
 
-    Task<List<BookingDetail>> GetBookingList(string? studentId, string? teacherId);
+    Task<List<BookingDetail>> GetBookingList(string? studentId, string? teacherId, int Status);
 
     Task<TeacherScheduleResponse?> GetSchedule(string teacherId);
 }

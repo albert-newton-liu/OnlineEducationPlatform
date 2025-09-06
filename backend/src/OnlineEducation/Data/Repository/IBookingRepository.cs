@@ -14,6 +14,8 @@ public interface ITeacherScheduleRepository : IRepository<TeacherScheduleDO>
 public interface IBookableSlotRepository : IRepository<BookableSlotDO>
 {
     Task<BookableSlotDO?> GetByIdForUpdateAsync(string id);
+
+    Task<int> CountAsync(Expression<Func<BookableSlotDO, bool>> predicate);
 }
 
 public interface IBookingRepository : IRepository<BookingDO>
