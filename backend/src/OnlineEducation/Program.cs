@@ -29,6 +29,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                // Look for access_token in query string for SignalR
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+
+                if (!string.IsNullOrEmpty(accessToken) &&
+            (path.StartsWithSegments("/notificationHub") || path.StartsWithSegments("/chatHub")))
+
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
@@ -80,8 +98,8 @@ builder.Services.AddQuartz(q =>
         .ForJob(jobKey)
         .WithIdentity("teacherBookSlot-trigger")
         //  "0 0 0 ? * SUN *"
-        .WithCronSchedule("0 0 0 ? * SUN *")); 
-        // .WithCronSchedule("0 * * ? * *")); 
+        .WithCronSchedule("0 0 0 ? * SUN *"));
+    // .WithCronSchedule("0 * * ? * *")); 
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
@@ -127,6 +145,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapHub<NotificationHub>("/notificationHub").RequireAuthorization();
+app.MapHub<ChatHub>("/chatHub").RequireAuthorization();
 
 app.Run();
 

@@ -123,7 +123,9 @@ public class BookingService : IBookingService
         {
             BookingId = x.BookingId,
             TeacherName = userIdToUsernameMap.GetValueOrDefault(x.TeacherId, ""),
+            TeacherId = x.TeacherId,
             StudentName = userIdToUsernameMap.GetValueOrDefault(x.StudentId, ""),
+            StudentId = x.StudentId,
             LessonTitle = lessonsMap.GetValueOrDefault(x.LessonID, ""),
             LessonId = x.LessonID,
             StartTime = x.StartTime,

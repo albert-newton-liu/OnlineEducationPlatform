@@ -34,7 +34,13 @@ public class BookingDetail
 
     public string TeacherName { get; set; } = null!;
 
+    public string TeacherId { get; set; } = null!;
+
+
+
     public string StudentName { get; set; } = null!;
+
+    public string StudentId { get; set; } = null!;
 
     public string LessonId { get; set; } = null!;
 

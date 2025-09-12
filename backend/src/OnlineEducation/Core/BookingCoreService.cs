@@ -316,15 +316,12 @@ public class BookingCoreService : IBookingCoreService
         var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
         var now = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZone);
         var today = now.Date;
-        int targetDotNetDay = (customDayOfWeek + 1) % 7; // dotnet sunday is 0
 
-        int todayDotNetDay = (int)today.DayOfWeek; // today 
-
-        int daysUntilNextWeekTarget = (targetDotNetDay - todayDotNetDay + 7) % 7;
-        if (daysUntilNextWeekTarget == 0)
-        {
-            daysUntilNextWeekTarget = 7;
-        }
+        // customDayOfWeek: 0=Mon, 1=Tue, ..., 6=Sun
+        int targetDotNetDay = (customDayOfWeek + 1) % 7; // .NET: Sunday=0
+        int todayDotNetDay = (int)today.DayOfWeek;
+        int nextSunday = todayDotNetDay == 0 ? 0 : -todayDotNetDay + 7;
+        int daysUntilNextWeekTarget = nextSunday + targetDotNetDay;
         var nextWeekDate = today.AddDays(daysUntilNextWeekTarget).Add(time);
         return TimeZoneInfo.ConvertTimeToUtc(nextWeekDate, timeZone);
     }
