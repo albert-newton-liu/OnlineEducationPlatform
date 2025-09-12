@@ -15,7 +15,7 @@ const AppointmentRecordPage = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('userToken');
 
-    
+
     const fetchBookingRecords = async () => {
         setIsLoading(true);
         setError(null);
@@ -29,7 +29,7 @@ const AppointmentRecordPage = () => {
             const queryParams = role === '1'
                 ? `teacherId=${userId}`
                 : `studentId=${userId}`;
-            
+
             const response = await axios.get(
                 `${API_BASE_URL}/api/Booking/getBookingList?${queryParams}`,
                 {
@@ -94,9 +94,13 @@ const AppointmentRecordPage = () => {
         }
     };
 
-    const handleStart = (bookingId) => {
-        console.log(`Starting class for booking ID: ${bookingId}`);
-        alert(`Class for booking ${bookingId} has started!`);
+    const handleStart = (bookingId, recipientId, recipientName) => {
+        navigate(`/dashboard/chat/${recipientId}`, {
+            state: {
+                bookingId,
+                recipientName
+            }
+        });
     };
 
     if (isLoading) {
@@ -109,7 +113,7 @@ const AppointmentRecordPage = () => {
 
     return (
         <div className="appointment-records-container">
-           
+
             <div className="filter-controls">
                 <label htmlFor="status-filter">Filter by Status:</label>
                 <select id="status-filter" value={selectedStatus} onChange={handleStatusChange}>
@@ -142,14 +146,22 @@ const AppointmentRecordPage = () => {
                                     <td>{new Date(record.endTime).toLocaleString()}</td>
                                     <td>
                                         <div className="actions-buttons vertical-buttons">
-                                            <button 
+                                            <button
                                                 className="action-button"
                                                 onClick={() => handleView(record.lessonId)}
                                             >
                                                 View
                                             </button>
-                                             {record.status === 0 && role === '1' && <button className="action-button" onClick={() => handleStart(record.bookingId)}>Start</button>}
-                                             {role === '0' && record.status === 0 && <button className="action-button" onClick={() => handleCancel(record.bookingId)}>Cancel</button>}
+                                            {record.status === 0 && 
+                                                <button
+                                                    className="action-button"
+                                                    onClick={() => handleStart(record.bookingId,
+                                                        role === '1' ? record.studentId : record.teacherId,
+                                                        role === '1' ? record.studentName : record.teacherName)}
+                                                >
+                                                    Start
+                                                </button>}
+                                            {role === '0' && record.status === 0 && <button className="action-button" onClick={() => handleCancel(record.bookingId)}>Cancel</button>}
                                         </div>
                                     </td>
                                 </tr>

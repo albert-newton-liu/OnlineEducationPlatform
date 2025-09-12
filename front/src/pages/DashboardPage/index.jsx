@@ -42,46 +42,34 @@ function DashboardPage() {
         // --- SignalR Connection Logic (Moved Here) ---
         const newConnection = new signalR.HubConnectionBuilder()
           .withUrl(`${API_BASE_URL}/notificationHub`, {
-            accessTokenFactory: () => token 
+            accessTokenFactory: () => token
           })
           .withAutomaticReconnect()
           .build();
-        
+
         setConnection(newConnection);
 
-        newConnection.start()
-          .then(() => {
-            console.log('Connected to SignalR hub!');
-            newConnection.on('ReceiveNotification', (message) => {
-              setNotifications(prevNotifications => [...prevNotifications, message]);
-              console.log("message", message)
-            });
-          })
-          .catch(err => {
-            console.error('SignalR connection failed: ', err);
-            if (err.statusCode === 401) {
-              handleLogout(); // Log out on unauthorized connection
-            }
-          });
+        await newConnection.start();
+        console.log('Connected to SignalR hub');
 
-        // Cleanup function for the SignalR connection
-        return () => {
-          newConnection.stop();
-        };
-        // --- End of SignalR Logic ---
+        newConnection.on('ReceiveNotification', (message) => {
+          setNotifications(prev => [...prev, message]);
+        });
 
       } catch (err) {
-        console.error('Failed to fetch user data:', err);
-        setError('Failed to load user data. Please try logging in again.');
-        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          handleLogout();
-        }
+        console.error(err);
+        setError('Failed to load user data.');
+        handleLogout();
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
+
+    return () => {
+      if (connection) connection.stop();
+    };
   }, [navigate]); // The dependency is on 'navigate' only, as the fetchUserData logic is self-contained.
 
   const handleLogout = () => {
@@ -89,7 +77,7 @@ function DashboardPage() {
     localStorage.removeItem('userId');
     // Stop the SignalR connection before navigating
     if (connection) {
-        connection.stop();
+      connection.stop();
     }
     navigate('/login');
   };
@@ -158,7 +146,7 @@ function DashboardPage() {
   return (
     <div className="dashboard-layout">
       {/* Header */}
-    
+
       <header className="dashboard-header">
         <h1>Online Education Platform</h1>
         <div className="user-info">

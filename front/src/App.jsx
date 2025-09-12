@@ -12,6 +12,7 @@ import AppointmentManagement from './pages/DashboardPage/AppointmentManagement';
 import ScheduleManagementPage from './pages/DashboardPage/AppointmentManagement/ScheduleManagementPage';
 import AppointmentRecordPage from './components/AppointmentRecordPage';
 import MyCourseManagement from './pages/DashboardPage/MyCourseManagement'
+import Chat from './components/Chat';
 
 // Temporary placeholders (replace with actual imports)
 const Announcements = () => <div className="content-placeholder"><h2>Announcements Page</h2><p>Content for announcements.</p></div>;
@@ -25,7 +26,7 @@ function App() {
       <div className="App">
         <Routes>
           {/* Public route for the login page */}
-          <Route path="/login" element={<LoginPage />} />
+         <Route path="/login" element={<LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />} />
 
           {/* Protected route for the dashboard and its nested pages */}
           <Route
@@ -52,6 +53,8 @@ function App() {
               {/* Pathless route for the default content of the appointments page */}
               <Route index element={<h3>Please select an appointment management option from the sub-menu.</h3>} />
             </Route>
+
+             <Route path="chat/:recipientId" element={<Chat />} />
 
             {/* Default content for the /dashboard path */}
             <Route index element={<div className="content-placeholder"><h3>Welcome to your Dashboard!</h3><p>Please select an option from the sidebar.</p></div>} />
