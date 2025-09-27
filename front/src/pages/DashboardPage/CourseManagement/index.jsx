@@ -31,7 +31,7 @@ const CourseManagement = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [lessonToDelete, setLessonToDelete] = useState(null);
 
-    const token = localStorage.getItem('userToken') + `,${role},${localStorage.getItem('userId')}`;
+    const token = localStorage.getItem('userToken');
 
     const getDayName = (dayOfWeek) => {
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

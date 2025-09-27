@@ -53,4 +53,6 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<BookingDO> BookingDOs { get; set; }
 
+    public DbSet<AnnouncementDO> AnnouncementDOs { get; set; }
+
 }

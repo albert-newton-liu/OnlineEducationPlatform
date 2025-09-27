@@ -19,7 +19,6 @@ const PageEditorSection = ({
 
     const [currentVoice, setCurrentVoice] = useState(null);
 
-
     const currentPage = pages[currentPageIndex];
 
     const [speechParams, setSpeechParams] = useState({ rate: 1, pitch: 1 });
@@ -34,10 +33,10 @@ const PageEditorSection = ({
         setSpeechParams(params);
     }, []);
 
-    const speak = useCallback((text) =>
-        // 修正：调用 handleTextToSpeech 时传入语速和音高参数
-        handleTextToSpeech(text, currentVoice, speechParams.rate, speechParams.pitch)
-        , [currentVoice, speechParams]);
+    const speak = useCallback(
+        (text) =>handleTextToSpeech(text, currentVoice, speechParams.rate, speechParams.pitch), 
+        [currentVoice, speechParams]
+    );
 
 
 

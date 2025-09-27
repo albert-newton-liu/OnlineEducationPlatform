@@ -9,14 +9,13 @@ const AppointmentRecordPage = () => {
     const [bookingRecords, setBookingRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState('0');
-
+    const [selectedStatus, setSelectedStatus] = useState('0'); // Default to "Upcoming"
     const role = localStorage.getItem('role');
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('userToken');
 
 
-    const fetchBookingRecords = async () => {
+    const fetchBookingRecords = async (status = 0) => {
         setIsLoading(true);
         setError(null);
         try {
@@ -31,7 +30,7 @@ const AppointmentRecordPage = () => {
                 : `studentId=${userId}`;
 
             const response = await axios.get(
-                `${API_BASE_URL}/api/Booking/getBookingList?${queryParams}`,
+                `${API_BASE_URL}/api/Booking/getBookingList?${queryParams}&status=${status}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -53,21 +52,12 @@ const AppointmentRecordPage = () => {
     }, [userId, token, role]);
 
     const handleStatusChange = (event) => {
-        setSelectedStatus(event.target.value);
+        let value = event.target.value
+        fetchBookingRecords(value);
+        setSelectedStatus(value);
     };
 
-    const filteredRecords = bookingRecords.filter(record => {
-        if (selectedStatus === '0') {
-            return record.status === 0;
-        }
-        if (selectedStatus === '1') {
-            return record.status === 2;
-        }
-        if (selectedStatus === '2') {
-            return record.status === 3;
-        }
-        return true;
-    });
+
 
     const handleView = (lessonId) => {
         navigate(`/dashboard/view-course/${lessonId}`);
@@ -94,11 +84,13 @@ const AppointmentRecordPage = () => {
         }
     };
 
-    const handleStart = (bookingId, recipientId, recipientName) => {
-        navigate(`/dashboard/chat/${recipientId}`, {
+    const handleStart = (bookingId, lessonId, recipientId, recipientName) => {
+        // Navigate to the new combined page
+        navigate(`/dashboard/lesson-session/${bookingId}`, {
             state: {
-                bookingId,
-                recipientName
+                lessonId,
+                recipientId,
+                recipientName,
             }
         });
     };
@@ -123,7 +115,7 @@ const AppointmentRecordPage = () => {
                 </select>
             </div>
 
-            {filteredRecords.length > 0 ? (
+            {bookingRecords.length > 0 ? (
                 <div className="table-container">
                     <table className="booking-table">
                         <thead>
@@ -137,7 +129,7 @@ const AppointmentRecordPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredRecords.map(record => (
+                            {bookingRecords.map(record => (
                                 <tr key={record.bookingId}>
                                     <td>{record.lessonTitle}</td>
                                     {role === '0' && <td>{record.teacherName}</td>}
@@ -152,10 +144,10 @@ const AppointmentRecordPage = () => {
                                             >
                                                 View
                                             </button>
-                                            {record.status === 0 && 
+                                            {record.status === 0 &&
                                                 <button
                                                     className="action-button"
-                                                    onClick={() => handleStart(record.bookingId,
+                                                    onClick={() => handleStart(record.bookingId, record.lessonId,
                                                         role === '1' ? record.studentId : record.teacherId,
                                                         role === '1' ? record.studentName : record.teacherName)}
                                                 >

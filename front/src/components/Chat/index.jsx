@@ -5,9 +5,8 @@ import { API_BASE_URL } from '../../constant/Constants';
 import './Chat.css';
 
 const Chat = () => {
-    const { recipientId } = useParams();
     const location = useLocation();
-    const { bookingId, recipientName } = location.state || {};
+    const {recipientId, bookingId, recipientName } = location.state || {};
 
     const currentUserId = localStorage.getItem('userId');
     const token = localStorage.getItem('userToken');

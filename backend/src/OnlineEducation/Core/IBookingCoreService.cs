@@ -10,6 +10,8 @@ public interface IBookingCoreService
 
     Task CancelBook(string bookingId);
 
+    Task Complete(string bookingId);
+
     Task GenerateBookableSlot(string? teacherId);
 
     Task<List<BookableSlot>> GetBookableSlot(string teacherId, string studentId);

@@ -138,6 +138,20 @@ public class BookingCoreService : IBookingCoreService
         await _bookingRepository.SaveChangesAsync();
     }
 
+     public async Task Complete(string bookingId)
+    {
+        BookingDO? bookingDO = await _bookingRepository.GetByIdAsync(bookingId);
+        ArgumentNullException.ThrowIfNull(bookingDO);
+        // 0 Upcoming 1 Completed  2 Canceled
+        if (bookingDO.Status == 2)
+        {
+            throw new ArgumentException("Can not complete after canceled");
+        }
+        bookingDO.Status = 1;
+        _bookingRepository.Update(bookingDO);
+        await _bookingRepository.SaveChangesAsync();
+    }
+
     public async Task<List<BookableSlot>> GetBookableSlot(string teacherId, string studentId)
     {
         DateTimeOffset NextMonday = GetNextMonday();

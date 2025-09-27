@@ -18,6 +18,8 @@ function DashboardPage() {
   const [notifications, setNotifications] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
+  const [isMenuHidden, setMenuHidden] = useState(false);
+
   // Use a single useEffect for user data and SignalR connection
   useEffect(() => {
     const fetchUserData = async () => {
@@ -50,7 +52,6 @@ function DashboardPage() {
         setConnection(newConnection);
 
         await newConnection.start();
-        console.log('Connected to SignalR hub');
 
         newConnection.on('ReceiveNotification', (message) => {
           setNotifications(prev => [...prev, message]);
@@ -96,7 +97,7 @@ function DashboardPage() {
         return [
           { name: 'User Management', path: 'users' },
           { name: 'Course Management', path: 'courses' },
-          { name: 'Announcements', path: 'announcements' }
+          { name: 'Announcement', path: 'announcement' }
         ];
       case 1: // Teacher role
         return [
@@ -108,7 +109,8 @@ function DashboardPage() {
               { name: 'Schedule Management', path: 'schedule' },
               { name: 'Appointment Records', path: 'records' }
             ]
-          }
+          },
+          { name: 'Announcement', path: 'announcement' }
         ];
       case 0: // Student role
         return [
@@ -191,7 +193,7 @@ function DashboardPage() {
       {/* Main Content Area: Sidebar and Page Content */}
       <div className="dashboard-main">
         {/* Sidebar */}
-        <nav className="dashboard-sidebar">
+        <nav className={`dashboard-sidebar ${isMenuHidden ? 'hidden' : ''}`}>
           <h3>Menu</h3>
           <ul>
             {menuItems.map((item) => (
@@ -223,8 +225,8 @@ function DashboardPage() {
           </ul>
         </nav>
 
-        <main className="dashboard-content">
-          <Outlet />
+        <main className={`dashboard-content ${isMenuHidden ? 'full-width' : ''}`}>
+          <Outlet context={{ setMenuHidden }} />
         </main>
       </div>
     </div>

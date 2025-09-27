@@ -1,8 +1,11 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineEducation.Api.Request;
 using OnlineEducation.Api.Response;
 using OnlineEducation.Model;
 using OnlineEducation.Service;
+using OnlineEducation.Utils;
 
 namespace OnlineEducation.Api.Controller;
 
@@ -44,6 +47,7 @@ public class LessonController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPost("approve/{LessonId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,14 +61,8 @@ public class LessonController : ControllerBase
 
         try
         {
-            string token = GetToken();
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized(new { message = "Authorization token is missing or invalid." });
-            }
-
-            string AdminId = "115f62ab-82a3-41d4-af0c-1f02d449f043";
-
+            var AdminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ArgumentNullException.ThrowIfNull(AdminId);
             await _lessonService.Approve(LessonId, AdminId);
             return Ok();
         }
@@ -92,15 +90,9 @@ public class LessonController : ControllerBase
 
         try
         {
-            string token = GetToken();
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized(new { message = "Authorization token is missing or invalid." });
-            }
-
-            var str = token.Split(',');
-
-            await _lessonService.Delete(LessonId, str[2]);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ArgumentNullException.ThrowIfNull(userId);
+            await _lessonService.Delete(LessonId, userId);
             return Ok();
         }
         catch (InvalidOperationException ex)
@@ -148,13 +140,10 @@ public class LessonController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<PaginatedResult<BasicLessonResponse>>> GetPaginated([FromQuery] PaginationParams paginationParams)
     {
-        string token = GetToken();
-        if (string.IsNullOrEmpty(token))
-        {
-            return Unauthorized(new { message = "Authorization token is missing or invalid." });
-        }
 
-        var str = token.Split(',');
+
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
 
         if (paginationParams == null)
@@ -167,13 +156,13 @@ public class LessonController : ControllerBase
         }
 
         LessonQueryConditon conditon = new();
-        if (((int)UserRole.Student).ToString() == str[1])
+        if (((int)UserRole.Student).ToString() == role)
         {
             conditon.MustPublished = true;
         }
-        if (((int)UserRole.Teacher).ToString() == str[1])
+        if (((int)UserRole.Teacher).ToString() == role)
         {
-            conditon.TheacherId = str[2];
+            conditon.TheacherId = userId;
         }
 
 

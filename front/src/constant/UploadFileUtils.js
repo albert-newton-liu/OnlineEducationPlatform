@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./Constants";
+
 export const uploadFile = async (file) => {
 
     if (!file) return;
@@ -5,7 +7,7 @@ export const uploadFile = async (file) => {
     formData.append('file', file);
 
     try {
-        const response = await fetch('http://localhost:8081/api/upload', {
+        const response = await fetch(`${API_BASE_URL}/api/Upload/upload`, {
             method: 'POST',
             body: formData,
         });
@@ -15,10 +17,8 @@ export const uploadFile = async (file) => {
         }
 
         const data = await response.json();
-        console.log(data.filename)
-        const imageUrl = `http://localhost:8081/api/files/${data.filename}`;
-
-        return imageUrl;
+    
+        return data.accessUrl;
 
     } catch (error) {
         console.error('Error uploading image:', error);

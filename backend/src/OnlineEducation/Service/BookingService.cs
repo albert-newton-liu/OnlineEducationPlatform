@@ -75,6 +75,11 @@ public class BookingService : IBookingService
         await _bookingCoreService.CancelBook(bookingId);
     }
 
+    public async Task Complete(string bookingId)
+    {
+        await _bookingCoreService.Complete(bookingId);
+    }
+
     public async Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId, string studentId)
     {
         List<BookableSlot> list = await _bookingCoreService.GetBookableSlot(teacherId, studentId);

@@ -2,7 +2,7 @@ let availableVoices = [];
 
 const populateVoiceList = () => {
     availableVoices = window.speechSynthesis.getVoices();
-    console.log("Available voices loaded:", availableVoices);
+    // console.log("Available voices loaded:", availableVoices);
 };
 
 if ('speechSynthesis' in window) {

@@ -4,13 +4,17 @@ import axios from 'axios';
 import CourseInfoSection from '../AddCoursePage/CourseInfoSection';
 import PageEditorSection from '../AddCoursePage/PageEditorSection';
 import { API_BASE_URL } from '../../../../constant/Constants'
-import {TextType, ImageType} from '../../../../constant/Constants'
+import { TextType, ImageType } from '../../../../constant/Constants'
 
 import '../AddCoursePage/AddCoursePage.css'
 import './ViewCoursePage.css'
 
-const ViewCoursePage = () => {
-    const { lessonId } = useParams();
+const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
+    console.log("ViewCoursePage bookingId prop:", bookingId);
+
+    const { lessonId: paramLessonId } = useParams();
+    const lessonId = propLessonId || paramLessonId;
+
     const navigate = useNavigate();
 
     const [courseInfo, setCourseInfo] = useState(null);
@@ -48,15 +52,15 @@ const ViewCoursePage = () => {
                 });
 
                 const formattedPages = lessonData.pages.map(page => {
-                   
+
                     const pageContent = {};
                     if (page.pageLayout.templateId === 1) {
-                         pageContent.backgroundImage = `url(${page.elements.find(e => e.elementType === ImageType)?.contentUrl || ''})`;
-                         const textElement = page.elements.find(e => e.elementType === TextType);
+                        pageContent.backgroundImage = `url(${page.elements.find(e => e.elementType === ImageType)?.contentUrl || ''})`;
+                        const textElement = page.elements.find(e => e.elementType === TextType);
 
-                         pageContent.text = textElement?.contentText || '';
-                         pageContent.position = textElement?.elementMetadata.contentPosition || { x: 250, y: 200 };
-                         pageContent.textAreaSize = textElement?.elementMetadata.contentSize || { width: '200px', height: '200px' };
+                        pageContent.text = textElement?.contentText || '';
+                        pageContent.position = textElement?.elementMetadata.contentPosition || { x: 250, y: 200 };
+                        pageContent.textAreaSize = textElement?.elementMetadata.contentSize || { width: '200px', height: '200px' };
                     } else if (page.pageLayout.templateId === 2) {
                         const topTextElement = page.elements.find(e => e.elementMetadata?.valueKey === 'topText');
                         const leftContentElement = page.elements.find(e => e.elementMetadata?.valueKey === 'leftContent');
@@ -82,7 +86,7 @@ const ViewCoursePage = () => {
                         content: pageContent
                     };
                 });
-                
+
                 setPages(formattedPages);
 
             } catch (err) {
@@ -106,6 +110,39 @@ const ViewCoursePage = () => {
         }
     };
 
+    
+    const complete = async () => {
+        if (!bookingId) {
+            console.error("Cannot complete lesson: bookingId is missing.");
+            navigate('/dashboard/courses');
+            return;
+        }
+
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        try {
+            await axios.post(
+                `${API_BASE_URL}/api/Booking/complete/${bookingId}`, 
+                {}, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            alert("Lesson session completed successfully!");
+            navigate('/dashboard/courses');
+        } catch (error) {
+            console.error(`Failed to complete lesson session ${bookingId}:`, error);
+            alert("Failed to complete lesson session. Please try again."); 
+        }
+    };
+    
+
     if (isLoading) {
         return <div className="add-course-container">Loading course details...</div>;
     }
@@ -122,25 +159,37 @@ const ViewCoursePage = () => {
         <div className="add-course-container">
             <CourseInfoSection
                 courseInfo={courseInfo}
-                onInfoChange={() => {}} // Pass an empty function for read-only mode
+                onInfoChange={() => { }} // Pass an empty function for read-only mode
                 isReadOnly={true} // New prop to disable editing
             />
 
             <PageEditorSection
                 pages={pages}
                 currentPageIndex={currentPageIndex}
-                onContentChange={() => {}}
+                onContentChange={() => { }}
                 onPageNavigation={handlePageNavigation}
                 isReadOnly={true} // New prop to disable editing
             />
 
             {/* No buttons for saving or editing */}
-            
-            <div className="save-course-section">
-                <button onClick={() => navigate('/dashboard/courses')} className="back-button">
-                    Back to Courses
-                </button>
-            </div>
+
+            {started ? (
+                // If started is true: Show Complete button
+                <div className="save-course-section">
+                    <button onClick={() => complete()} className="back-button">
+                        Complete to Courses
+                    </button>
+                </div>
+            ) : (
+                // If started is false: Show Back button
+                <div className="save-course-section">
+                    <button onClick={() => navigate('/dashboard/courses')} className="back-button">
+                        Back to Courses
+                    </button>
+                </div>
+            )}
+
+
         </div>
     );
 };

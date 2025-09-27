@@ -12,10 +12,12 @@ import AppointmentManagement from './pages/DashboardPage/AppointmentManagement';
 import ScheduleManagementPage from './pages/DashboardPage/AppointmentManagement/ScheduleManagementPage';
 import AppointmentRecordPage from './components/AppointmentRecordPage';
 import MyCourseManagement from './pages/DashboardPage/MyCourseManagement'
-import Chat from './components/Chat';
 
-// Temporary placeholders (replace with actual imports)
-const Announcements = () => <div className="content-placeholder"><h2>Announcements Page</h2><p>Content for announcements.</p></div>;
+
+import LessonSessionPage from './pages/DashboardPage/LessonSessionPage';
+import Announcement from './pages/DashboardPage/Announcement';
+
+
 
 function App() {
   // Use state to manage the login status. Initialize it by checking localStorage once.
@@ -26,7 +28,7 @@ function App() {
       <div className="App">
         <Routes>
           {/* Public route for the login page */}
-         <Route path="/login" element={<LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />} />
+          <Route path="/login" element={<LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />} />
 
           {/* Protected route for the dashboard and its nested pages */}
           <Route
@@ -36,7 +38,7 @@ function App() {
           >
             {/* Direct child routes matching the sidebar menu items */}
             <Route path="users" element={<UserManagement />} />
-            <Route path="announcements" element={<Announcements />} />
+            <Route path="announcement" element={<Announcement />} />
             <Route path="my-courses" element={<MyCourseManagement />} />
 
             {/* Nested routes for Course Management (teacher/admin) */}
@@ -44,6 +46,7 @@ function App() {
             <Route path="add-course" element={<AddCoursePage />} />
             <Route path="view-course/:lessonId" element={<ViewCoursePage />} />
 
+            <Route path="lesson-session/:bookingId" element={<LessonSessionPage />} />
 
             {/* Nested routes for Appointment Management (teacher) */}
             <Route path="appointments" element={<AppointmentManagement />} >
@@ -54,7 +57,7 @@ function App() {
               <Route index element={<h3>Please select an appointment management option from the sub-menu.</h3>} />
             </Route>
 
-             <Route path="chat/:recipientId" element={<Chat />} />
+            {/* <Route path="chat/:recipientId" element={<Chat />} /> */}
 
             {/* Default content for the /dashboard path */}
             <Route index element={<div className="content-placeholder"><h3>Welcome to your Dashboard!</h3><p>Please select an option from the sidebar.</p></div>} />

@@ -138,7 +138,7 @@ public class BookingController : ControllerBase
     [ProducesResponseType(typeof(ListResult<BookingDetail>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ListResult<BookingDetail>>> GetBookingList(string? teacherId, string? studentId, int Status)
+    public async Task<ActionResult<ListResult<BookingDetail>>> GetBookingList(string? teacherId, string? studentId, int status)
     {
         if (!ModelState.IsValid)
         {
@@ -147,7 +147,7 @@ public class BookingController : ControllerBase
 
         try
         {
-            List<BookingDetail> list = await _bookingService.GetBookingList(studentId, teacherId, Status);
+            List<BookingDetail> list = await _bookingService.GetBookingList(studentId, teacherId, status);
             return Ok(new ListResult<BookingDetail>() { Items = list });
         }
         catch (InvalidOperationException ex)
@@ -177,12 +177,39 @@ public class BookingController : ControllerBase
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            AssertUtil.AssertNotNull(userId);
 
+            await _bookingService.Cancel(bookingId);
+            return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+        }
+    }
 
+    [Authorize]
+    [HttpPost("complete/{bookingId}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Complete(string bookingId)
+    {
 
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
-            // await _bookingService.Cancel(bookingId);
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            AssertUtil.AssertNotNull(userId);
+            await _bookingService.Complete(bookingId);
             return Ok();
         }
         catch (InvalidOperationException ex)
@@ -216,14 +243,6 @@ public class BookingController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
         }
-    }
-
-    private string GetToken()
-    {
-        var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            throw new Exception("token is null");
-        return authHeader.Substring("Bearer ".Length).Trim();
     }
 
 

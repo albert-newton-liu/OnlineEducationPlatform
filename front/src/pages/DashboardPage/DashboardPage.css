@@ -180,6 +180,13 @@ body {
     overflow-y: auto;
 }
 
+.dashboard-sidebar.hidden {
+    width: 0;
+    padding: 0;
+    margin-right: 0;
+    overflow: hidden;
+}
+
 .notifications-container {
   position: relative;
   display: inline-block;
