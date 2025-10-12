@@ -1,11 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-
 import { uploadFile } from "../../constant/UploadFileUtils"
-
-
-
-
 
 const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
     const location = useLocation();
@@ -154,17 +149,17 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         };
     }, []);
 
-     const handleTextClick = () => {
+    const handleTextClick = () => {
         if (!isViewMode) return;
 
         const selection = window.getSelection();
         const selectedText = selection.toString().trim();
 
         if (selectedText.length > 0) {
-            
+
             speak(selectedText);
         } else {
-            
+
             speak(content.text);
         }
     };
@@ -205,7 +200,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
                             height: content.textAreaSize?.height,
                             whiteSpace: 'pre-wrap',
                         }}
-                         onClick={handleTextClick} 
+                        onClick={handleTextClick}
                     >
                         {content.text}
                     </div>

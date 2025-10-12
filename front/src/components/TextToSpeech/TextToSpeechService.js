@@ -22,14 +22,14 @@ export const handleTextToSpeech = (text, voice = null, rate = 1, pitch = 1) => {
         }
 
         const utterance = new SpeechSynthesisUtterance(text);
-        
+
         if (voice) {
             utterance.voice = voice;
             utterance.lang = voice.lang;
         }
 
-        utterance.rate = rate; // 修正：使用传入的 rate 参数
-        utterance.pitch = pitch; // 修正：使用传入的 pitch 参数
+        utterance.rate = rate; 
+        utterance.pitch = pitch; 
 
         window.speechSynthesis.speak(utterance);
     } else {
@@ -39,21 +39,20 @@ export const handleTextToSpeech = (text, voice = null, rate = 1, pitch = 1) => {
 };
 
 
-// 新增：暂停播放功能
 export const pauseSpeech = () => {
     if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
         window.speechSynthesis.pause();
     }
 };
 
-// 新增：继续播放功能
+
 export const resumeSpeech = () => {
     if ('speechSynthesis' in window && window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
     }
 };
 
-// 新增：停止播放功能
+
 export const cancelSpeech = () => {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();

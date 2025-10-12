@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import {API_BASE_URL} from '../../../constant/Constants';
+import { API_BASE_URL } from '../../../constant/Constants';
 
-import './Announcements.css'; 
+import './Announcements.css';
 
 const PAGE_SIZE_DEFAULT = 5;
 
-const TOAST_DISPLAY_TIME = 3000; 
+const TOAST_DISPLAY_TIME = 3000;
 
 const Announcements = () => {
     // --- State Management ---
-    
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -26,7 +26,7 @@ const Announcements = () => {
         totalPages: 1,
     });
 
-    const [role] = useState(localStorage.getItem('role')); 
+    const [role] = useState(localStorage.getItem('role'));
 
     // --- Data Fetching Function ---
     const fetchAnnouncements = useCallback(async (pageNumber, pageSize) => {
@@ -86,12 +86,12 @@ const Announcements = () => {
 
         try {
             await axios.post(`${API_BASE_URL}/api/Announcement/addAnnouncement`, formData);
-            
+
             setShowSuccessToast(true);
-            
+
             setFormData({ title: '', content: '' });
-            setIsModalVisible(false); 
-            
+            setIsModalVisible(false);
+
             fetchAnnouncements(1, pagination.pageSize);
 
         } catch (err) {
@@ -99,7 +99,7 @@ const Announcements = () => {
             setError('Failed to add announcement. Check server response.');
         }
     };
-    
+
     useEffect(() => {
         if (showSuccessToast) {
             const timer = setTimeout(() => {
@@ -110,7 +110,7 @@ const Announcements = () => {
         }
     }, [showSuccessToast]);
 
-    
+
     // --- Pagination Rendering ---
 
     const renderPagination = () => {
@@ -140,19 +140,19 @@ const Announcements = () => {
     return (
         <div className="container">
             <h2 className="header">Announcement Management</h2>
-            
+
             {/* Add Button */}
-            { role == '2' && 
-            <button 
-                className="btn primary-btn"
-                onClick={() => {
-                    setIsModalVisible(true);
-                    setError(null); 
-                }}
-            >
-                + Add Announcement
-            </button> }
-            
+            {role == '2' &&
+                <button
+                    className="btn primary-btn"
+                    onClick={() => {
+                        setIsModalVisible(true);
+                        setError(null);
+                    }}
+                >
+                    + Add Announcement
+                </button>}
+
             {/* Error Display (for general/fetch errors) */}
             {error && !isModalVisible && <div className="error-message">{error}</div>}
 
@@ -204,32 +204,31 @@ const Announcements = () => {
                             {/* Title Field */}
                             <div className="form-group">
                                 <label className="label" htmlFor="title">Title</label>
-                                <input 
-                                    className="input" 
-                                    type="text" 
-                                    id="title" 
-                                    name="title" 
-                                    value={formData.title} 
-                                    onChange={handleInputChange} 
+                                <input
+                                    className="input"
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleInputChange}
                                     required
                                 />
                             </div>
-                            
+
                             {/* Content Field */}
                             <div className="form-group">
                                 <label className="label" htmlFor="content">Content</label>
-                                <textarea 
-                                    className="input textarea" 
-                                    id="content" 
-                                    name="content" 
-                                    value={formData.content} 
-                                    onChange={handleInputChange} 
+                                <textarea
+                                    className="input textarea"
+                                    id="content"
+                                    name="content"
+                                    value={formData.content}
+                                    onChange={handleInputChange}
                                     required
                                 />
                             </div>
 
                             {/* Error Message in Modal */}
-                            {/* 注意：這裡的 error 可能是表單驗證錯誤或提交失敗錯誤 */}
                             {error && <div className="error-message">{error}</div>}
 
                             {/* Buttons */}

@@ -9,7 +9,6 @@ using OnlineEducation.Utils;
 
 namespace OnlineEducation.Api.Controller;
 
-
 [ApiController]
 [Route("api/[controller]")]
 public class BookingController : ControllerBase

@@ -7,7 +7,7 @@
     align-items: center;
     min-height: 100vh;
     /* Match the body background color from dashboard's App.css */
-    background-color: #eef2f6; 
+    background-color: #eef2f6;
     /* Match the font family from dashboard's App.css */
     font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -16,16 +16,18 @@
 
 /* Styling for the main login form card */
 .login-form {
-    background: #ffffff; /* White background for the form card */
+    background: #ffffff;
+    /* White background for the form card */
     padding: 40px;
     /* Match dashboard's content card border-radius */
-    border-radius: 8px; 
+    border-radius: 8px;
     /* Shadow similar to dashboard-content card */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     width: 100%;
     max-width: 400px;
     text-align: center;
-    transition: transform 0.3s ease; /* Subtle animation */
+    transition: transform 0.3s ease;
+    /* Subtle animation */
 }
 
 /* Subtle hover effect for the form card */
@@ -36,8 +38,9 @@
 .login-form h2 {
     margin-bottom: 25px;
     /* Darker text color similar to dashboard h1 */
-    color: #2c3e50; 
-    font-size: 26px; /* Similar to dashboard header h1 */
+    color: #2c3e50;
+    font-size: 26px;
+    /* Similar to dashboard header h1 */
     font-weight: 600;
 }
 
@@ -52,28 +55,32 @@
     margin-bottom: 8px;
     font-weight: 600;
     /* Text color for labels, similar to sidebar h3 or link text */
-    color: #34495e; 
-    font-size: 15px; /* Consistent font size */
+    color: #34495e;
+    font-size: 15px;
+    /* Consistent font size */
 }
 
 .form-group input[type="text"],
 .form-group input[type="password"] {
     width: 100%;
-    padding: 12px 15px; /* Consistent padding with dashboard inputs if any */
-    border: 1px solid #d1d5db; /* Lighter, subtle border */
+    padding: 12px 15px;
+    /* Consistent padding with dashboard inputs if any */
+    border: 1px solid #d1d5db;
+    /* Lighter, subtle border */
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 16px;
-    color: #333; /* Standard text color */
+    color: #333;
+    /* Standard text color */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-group input:focus {
     /* Focus color matching dashboard active/hover states (e.g., sidebar links) */
-    border-color: #3498db; 
+    border-color: #3498db;
     outline: none;
     /* Consistent focus glow with dashboard elements */
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25); 
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
 }
 
 /* Primary submit button styling */
@@ -81,28 +88,32 @@ button[type="submit"] {
     width: 100%;
     padding: 12px;
     /* Background color similar to dashboard sidebar active/hover or a slightly darker blue */
-    background-color: #2980b9; 
+    background-color: #2980b9;
     color: white;
     border: none;
-    border-radius: 25px; /* Pill shape like logout button */
+    border-radius: 25px;
+    /* Pill shape like logout button */
     font-size: 18px;
-    font-weight: 500; /* Consistent font weight */
+    font-weight: 500;
+    /* Consistent font weight */
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
     /* Shadow consistent with dashboard buttons */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 button[type="submit"]:hover:not(:disabled) {
     /* Hover color matching dashboard sidebar link active/hover color */
-    background-color: #2563eb; 
+    background-color: #2563eb;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly more pronounced hover shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /* Slightly more pronounced hover shadow */
 }
 
 button[type="submit"]:disabled {
     background-color: #cccccc;
-    color: #95a5a6; /* Muted text color for disabled state */
+    color: #95a5a6;
+    /* Muted text color for disabled state */
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -110,14 +121,18 @@ button[type="submit"]:disabled {
 
 /* Error message styling - directly matching the dashboard's error-message */
 .error-message {
-    color: #c0392b; /* Darker red */
-    background-color: #fadde1; /* Lighter red background */
+    color: #c0392b;
+    /* Darker red */
+    background-color: #fadde1;
+    /* Lighter red background */
     border: 1px solid #e74c3c;
-    border-radius: 8px; /* Consistent border-radius */
+    border-radius: 8px;
+    /* Consistent border-radius */
     padding: 15px;
     margin-bottom: 25px;
     font-size: 15px;
     font-weight: 500;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Consistent shadow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    /* Consistent shadow */
 }

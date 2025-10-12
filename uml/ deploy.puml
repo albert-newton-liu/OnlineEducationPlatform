@@ -1,0 +1,44 @@
+@startuml Deployment Diagram
+
+
+' Define the main deployment node as an AWS EC2 Instance
+node "AWS EC2 Instance (Docker Host)" as EC2 {
+    ' Docker Engine is installed on the EC2 instance
+    artifact "Docker Engine" as DE
+    ' Docker Compose is the orchestrator artifact
+    artifact "Docker Compose" as DC
+    
+    ' Docker Engine runs Docker Compose and the containers
+    DE ..> DC : <<runs>>
+
+    ' Define the Front-end service container
+    component "Frontend Service\n(Container)" as Frontend
+    ' Define the Back-end service container
+    component "Backend Service\n(Container)" as Backend
+    ' Define the Database service container
+    component "PostgreSQL DB\n(Container)" as DB
+    
+    ' Deployment relationship: Docker Compose manages all services
+    DC ..> Frontend : <<manages>>
+    DC ..> Backend : <<manages>>
+    DC ..> DB : <<manages>>
+}
+
+' Define External Infrastructure Node
+node "AWS (Amazon Web Services)" as AWS {
+    ' S3 is an external storage service
+    component "S3 Storage" as S3
+}
+
+' Define Communication Relationships
+
+' 1. Frontend communicates with Backend via API calls
+Frontend --> Backend : REST/HTTP API
+
+' 2. Backend communicates with the database for data operations
+Backend <--> DB : Read/Write Data (EF Core)
+
+' 3. Backend communicates with S3 for file storage
+Backend <--> S3 : Store/Retrieve Files (AWS SDK)
+
+@enduml

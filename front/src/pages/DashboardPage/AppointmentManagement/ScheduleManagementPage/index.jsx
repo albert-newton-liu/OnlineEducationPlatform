@@ -19,7 +19,7 @@ const generateTimeSlots = () => {
 
             const end = new Date(start);
             end.setMinutes(start.getMinutes() + SLOT_DURATION_MINUTES);
-            
+
             slots.push({
                 startTime: start.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
                 endTime: end.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
@@ -42,18 +42,18 @@ const getDayName = (dayOfWeek) => DAYS_OF_WEEK[dayOfWeek];
 const convertToTimeSpanFormat = (timeString) => {
     const [time, period] = timeString.split(' ');
     let [hours, minutes] = time.split(':');
-    
+
     hours = parseInt(hours);
-    
+
     if (period === 'PM' && hours !== 12) {
         hours += 12;
     } else if (period === 'AM' && hours === 12) {
         hours = 0; // Midnight case
     }
-    
+
     const formattedHours = String(hours).padStart(2, '0');
     const formattedMinutes = String(minutes).padStart(2, '0');
-    
+
     return `${formattedHours}:${formattedMinutes}:00`;
 };
 
@@ -76,7 +76,7 @@ export default function ScheduleManagementPage() {
         try {
             setLoading(true);
             const response = await axios.get(`${API_BASE_URL}/api/Booking/getSchedule/${teacherId}`);
-            
+
             const apiSchedule = response.data;
             if (apiSchedule && apiSchedule.teacherDaySchedules) {
                 const newSchedule = {};
@@ -86,7 +86,7 @@ export default function ScheduleManagementPage() {
                         // The backend may return 'HH:mm:ss' which needs to be converted back
                         // to 'h:mm AM/PM' for display.
                         newSchedule[dayName] = daySchedule.duarations.map(d => {
-                             // Assuming backend returns HH:mm:ss, convert to h:mm AM/PM
+                            // Assuming backend returns HH:mm:ss, convert to h:mm AM/PM
                             const [hours, minutes] = d.startTime.split(':');
                             const date = new Date();
                             date.setHours(hours, minutes, 0, 0);
@@ -122,7 +122,7 @@ export default function ScheduleManagementPage() {
         const slotString = `${slot.startTime} - ${slot.endTime}`;
         const newSchedule = { ...schedule };
         const daySlots = newSchedule[day] || [];
-        
+
         if (daySlots.includes(slotString)) {
             newSchedule[day] = daySlots.filter(s => s !== slotString);
         } else {
@@ -214,13 +214,13 @@ export default function ScheduleManagementPage() {
                 {DAYS_OF_WEEK.map(day => (
                     <div key={day} className="grid-cell day-of-week header-cell">{day}</div>
                 ))}
-                
+
                 {timeSlots.map(slot => (
                     <React.Fragment key={slot.startTime}>
                         <div className="grid-cell time-label header-cell">
                             {slot.startTime}
                         </div>
-                        
+
                         {DAYS_OF_WEEK.map(day => {
                             const isSelected = (schedule[day] || []).includes(`${slot.startTime} - ${slot.endTime}`);
                             return (

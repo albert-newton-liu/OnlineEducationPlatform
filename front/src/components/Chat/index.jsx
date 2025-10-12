@@ -6,7 +6,7 @@ import './Chat.css';
 
 const Chat = () => {
     const location = useLocation();
-    const {recipientId, bookingId, recipientName } = location.state || {};
+    const { recipientId, bookingId, recipientName } = location.state || {};
 
     const currentUserId = localStorage.getItem('userId');
     const token = localStorage.getItem('userToken');
@@ -18,12 +18,10 @@ const Chat = () => {
     const [messageInput, setMessageInput] = useState('');
     const [isConnected, setIsConnected] = useState(false);
 
-    
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    
     useEffect(() => {
         if (!token) return;
 
@@ -37,7 +35,7 @@ const Chat = () => {
                 console.log('✅ Connected to Chat Hub!');
                 setIsConnected(true);
 
-                
+
                 connection.on('ReceiveMessage', (senderId, senderUsername, message) => {
                     if (message) {
                         setMessages(prev => [...prev, { senderId, senderUsername, message }]);
@@ -51,14 +49,14 @@ const Chat = () => {
 
         connectionRef.current = connection;
 
-       
+
         return () => {
             connection.off('ReceiveMessage');
-            connection.stop().catch(() => {});
+            connection.stop().catch(() => { });
         };
     }, [token]);
 
-   
+
     const sendMessage = useCallback(async () => {
         const connection = connectionRef.current;
         const trimmedMessage = messageInput.trim();
@@ -90,7 +88,7 @@ const Chat = () => {
                         key={index}
                         className={`chat-message ${msg.senderId === currentUserId ? 'chat-message-me' : 'chat-message-other'}`}
                     >
-                     {msg.message}
+                        {msg.message}
                     </div>
                 ))}
                 <div ref={messagesEndRef} />

@@ -1,0 +1,102 @@
+@startuml OnlineEducationPlatformSimplifiedClassDiagram
+
+skinparam classAttributeIconSize 0
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2F6C8F
+    BorderColor #2F6C8F
+    HeaderBackgroundColor #AADDEE
+    AttributeFontColor Black
+    StereotypeFontColor Gray
+}
+skinparam arrow {
+    Color #2F6C8F
+    Thickness 1
+}
+
+' --- User Management ---
+class Users {
+
+}
+
+class Students {
+
+}
+
+class Teachers {
+
+}
+
+class Admins {
+
+}
+
+' --- Lesson Content Management ---
+class Lessons {
+
+}
+
+class LessonPages {
+
+}
+
+class LessonPageElements {
+   
+}
+
+
+' --- Booking System ---
+class TeacherSchedule {
+
+}
+
+class BookableSlots {
+   
+}
+
+class Bookings {
+   
+}
+
+
+' --- Notifications ---
+class Notifications {
+
+}
+
+' --- Relationships ---
+
+' User Hierarchy
+Users <|-- Students : extends
+Users <|-- Teachers : extends
+Users <|-- Admins : extends
+
+' Teacher creates Lessons
+Teachers "1" -- "0..*" Lessons : creates
+
+' Lessons contain Pages
+Lessons "1" -- "1..*" LessonPages : contains
+
+' LessonPages contain Elements
+LessonPages "1" -- "0..*" LessonPageElements : contains
+
+
+' Teacher Availability and Bookings
+Teachers "1" -- "0..*" TeacherSchedule : defines
+TeacherSchedule "1" -- "0..*" BookableSlots : generates
+Teachers "1" -- "0..*" BookableSlots : owns
+Students "1" -- "0..*" Bookings : makes
+Teachers "1" -- "0..*" Bookings : receives
+BookableSlots "1" -- "1" Bookings : is booked for >
+
+
+
+
+' Notifications target Users
+Users "1" -- "0..*" Notifications : receives
+
+Admins "1" -- "0..*" Notifications : Creates
+
+@enduml

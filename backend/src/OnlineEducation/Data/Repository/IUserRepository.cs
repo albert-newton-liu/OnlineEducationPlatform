@@ -12,19 +12,14 @@ public interface IUserRepository : IRepository<UserDO>
 public interface IStudentRepository : IRepository<StudentDO>
 {
 
-
-
 }
 
 public interface ITeacherRepository : IRepository<TeacherDO>
 {
 
-
-
 }
 
 public interface IAdminRepository : IRepository<AdminDO>
 {
-
 
 }

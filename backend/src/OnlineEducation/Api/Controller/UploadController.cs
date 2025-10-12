@@ -21,10 +21,9 @@ public class UploadController : ControllerBase
     [HttpPost("upload")]
     [DisableRequestSizeLimit]
     [Consumes("multipart/form-data")]
-    [ApiExplorerSettings(IgnoreApi = true)] 
+    [ApiExplorerSettings(IgnoreApi = true)]
     public async Task<IActionResult> UploadFile([FromForm] IFormFile file)
     {
-        // 直接使用 file
         if (file == null || file.Length == 0)
         {
             return BadRequest("Please select a file to upload.");

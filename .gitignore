@@ -57,3 +57,5 @@ nunit-*.xml
 
 
 backend/src/OnlineEducation/Migrations/
+
+backend/src/OnlineEducation/uploads

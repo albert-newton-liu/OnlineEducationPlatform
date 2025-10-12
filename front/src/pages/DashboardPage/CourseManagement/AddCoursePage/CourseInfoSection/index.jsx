@@ -1,7 +1,7 @@
 import React from 'react';
 import './CourseInfoSection.css'
 
-const CourseInfoSection = ({ courseInfo, onInfoChange ,isReadOnly = false}) => {
+const CourseInfoSection = ({ courseInfo, onInfoChange, isReadOnly = false }) => {
     return (
         <div className="course-info-section">
             <h2>Course Details</h2>
@@ -19,7 +19,7 @@ const CourseInfoSection = ({ courseInfo, onInfoChange ,isReadOnly = false}) => {
                     disabled={isReadOnly}
                 />
             )}
-            
+
             {isReadOnly ? (
                 <div className="read-only-field">
                     <strong>Description:</strong> {courseInfo.description}

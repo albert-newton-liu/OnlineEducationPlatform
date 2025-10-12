@@ -3,7 +3,6 @@ using OnlineEducation.Data.Dao;
 
 namespace OnlineEducation.Data.Repository;
 
-
 public interface ITeacherScheduleRepository : IRepository<TeacherScheduleDO>
 {
     void DeleteByTeahcerId(string teacherId);
@@ -23,7 +22,6 @@ public interface IBookingRepository : IRepository<BookingDO>
 
     Task<IEnumerable<BookingDO>> FindAsync(Expression<Func<BookingDO, bool>> predicate,
                 params Expression<Func<BookingDO, object>>[] includes);
-
 
 
 }

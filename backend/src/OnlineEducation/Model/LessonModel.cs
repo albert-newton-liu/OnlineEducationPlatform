@@ -1,10 +1,6 @@
-
-
 using OnlineEducation.Data.Dao;
 
 namespace OnlineEducation.Model;
-
-
 
 public class Lesson
 {
@@ -41,20 +37,15 @@ public class Lesson
 public class LessonPage
 {
 
-
     public string PageId { get; set; } = null!;
-
 
     public string LessonId { get; set; } = string.Empty;
 
-
     public int PageNumber { get; set; }
-
 
     public PageLayout PageLayout { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
 
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
@@ -62,12 +53,10 @@ public class LessonPage
 }
 
 
-
 public class LessonPageElement
 {
 
     public string ElementId { get; set; } = null!;
-
 
     public string PageId { get; set; } = string.Empty;
 
@@ -89,10 +78,7 @@ public class LessonPageElement
 public enum ElementTypeEnum : byte
 {
     Text = 0,
-
     Image = 1,
-
     Audio = 2,
-
     Video = 3,
 }

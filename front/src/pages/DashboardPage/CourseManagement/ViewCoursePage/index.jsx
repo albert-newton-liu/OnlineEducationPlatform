@@ -110,7 +110,7 @@ const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
         }
     };
 
-    
+
     const complete = async () => {
         if (!bookingId) {
             console.error("Cannot complete lesson: bookingId is missing.");
@@ -126,8 +126,8 @@ const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
 
         try {
             await axios.post(
-                `${API_BASE_URL}/api/Booking/complete/${bookingId}`, 
-                {}, 
+                `${API_BASE_URL}/api/Booking/complete/${bookingId}`,
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -138,10 +138,10 @@ const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
             navigate('/dashboard/courses');
         } catch (error) {
             console.error(`Failed to complete lesson session ${bookingId}:`, error);
-            alert("Failed to complete lesson session. Please try again."); 
+            alert("Failed to complete lesson session. Please try again.");
         }
     };
-    
+
 
     if (isLoading) {
         return <div className="add-course-container">Loading course details...</div>;

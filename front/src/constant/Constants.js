@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:5166';
+export const API_BASE_URL = import.meta.env.VITE_BACKEND_DOMAIN;
 
 
 export const TextType = 0;

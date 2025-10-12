@@ -6,11 +6,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Dark semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensure modal is on top of everything */
+    z-index: 1000;
+    /* Ensure modal is on top of everything */
 }
 
 .modal-content {
@@ -19,10 +21,14 @@
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 500px; /* Max width for modals */
-    animation: fadeIn 0.3s ease-out; /* Simple fade-in animation */
-    max-height: 90vh; /* Limit height to prevent overflow on small screens */
-    overflow-y: auto; /* Allow scrolling within modal if content is long */
+    max-width: 500px;
+    /* Max width for modals */
+    animation: fadeIn 0.3s ease-out;
+    /* Simple fade-in animation */
+    max-height: 90vh;
+    /* Limit height to prevent overflow on small screens */
+    overflow-y: auto;
+    /* Allow scrolling within modal if content is long */
 }
 
 .modal-header {
@@ -72,7 +78,8 @@
 .form-group input[type="url"],
 .form-group select,
 .form-group textarea {
-    width: calc(100% - 24px); /* Full width minus padding */
+    width: calc(100% - 24px);
+    /* Full width minus padding */
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -89,7 +96,8 @@
 }
 
 .form-group textarea {
-    resize: vertical; /* Allow vertical resizing */
+    resize: vertical;
+    /* Allow vertical resizing */
 }
 
 .modal-actions {
@@ -113,7 +121,8 @@
 }
 
 .modal-actions button[type="submit"] {
-    background-color: #3498db; /* Blue submit button */
+    background-color: #3498db;
+    /* Blue submit button */
     color: white;
 }
 
@@ -129,7 +138,8 @@
 }
 
 .modal-actions .secondary-button {
-    background-color: #bdc3c7; /* Gray cancel button */
+    background-color: #bdc3c7;
+    /* Gray cancel button */
     color: #333;
 }
 
@@ -140,6 +150,13 @@
 
 /* Fade-in animation for modal */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

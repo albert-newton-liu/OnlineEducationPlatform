@@ -1,5 +1,3 @@
-
-
 using Microsoft.AspNetCore.Mvc;
 using OnlineEducation.Api.Request;
 using OnlineEducation.Api.Response;
@@ -77,4 +75,3 @@ public class AnnouncementController : ControllerBase
 
 
 }
-

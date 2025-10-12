@@ -14,7 +14,6 @@ const AppointmentRecordPage = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('userToken');
 
-
     const fetchBookingRecords = async (status = 0) => {
         setIsLoading(true);
         setError(null);
@@ -56,7 +55,6 @@ const AppointmentRecordPage = () => {
         fetchBookingRecords(value);
         setSelectedStatus(value);
     };
-
 
 
     const handleView = (lessonId) => {

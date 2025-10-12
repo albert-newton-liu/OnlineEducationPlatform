@@ -4,5 +4,5 @@ namespace OnlineEducation.Core;
 
 public interface ITeacherBookSlotJob : IJob
 {
-    
+
 }

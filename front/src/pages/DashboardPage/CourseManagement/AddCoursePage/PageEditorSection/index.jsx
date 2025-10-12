@@ -34,7 +34,7 @@ const PageEditorSection = ({
     }, []);
 
     const speak = useCallback(
-        (text) =>handleTextToSpeech(text, currentVoice, speechParams.rate, speechParams.pitch), 
+        (text) => handleTextToSpeech(text, currentVoice, speechParams.rate, speechParams.pitch),
         [currentVoice, speechParams]
     );
 

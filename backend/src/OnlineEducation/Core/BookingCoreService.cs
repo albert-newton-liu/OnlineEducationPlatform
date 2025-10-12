@@ -138,7 +138,7 @@ public class BookingCoreService : IBookingCoreService
         await _bookingRepository.SaveChangesAsync();
     }
 
-     public async Task Complete(string bookingId)
+    public async Task Complete(string bookingId)
     {
         BookingDO? bookingDO = await _bookingRepository.GetByIdAsync(bookingId);
         ArgumentNullException.ThrowIfNull(bookingDO);

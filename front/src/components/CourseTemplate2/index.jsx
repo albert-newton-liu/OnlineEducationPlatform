@@ -81,10 +81,10 @@ const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         const selectedText = selection.toString().trim();
 
         if (selectedText.length > 0) {
-            
+
             speak(selectedText);
         } else {
-           
+
             speak(content.text);
         }
     };
@@ -100,7 +100,7 @@ const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
                         <div
                             className="template-2-top-textarea"
                             style={{ whiteSpace: 'pre-wrap', }}
-                            onClick={handleTextClick} 
+                            onClick={handleTextClick}
                         >
                             {content.topText}
                         </div>
@@ -133,7 +133,7 @@ const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
                             <div
                                 className="content-module-textarea"
                                 style={{ whiteSpace: 'pre-wrap', }}
-                                onClick={handleTextClick} 
+                                onClick={handleTextClick}
                             >
                                 {content.leftContent?.text}
                             </div>
@@ -179,7 +179,7 @@ const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
                             <div
                                 className="content-module-textarea"
                                 style={{ whiteSpace: 'pre-wrap', }}
-                                onClick={handleTextClick} 
+                                onClick={handleTextClick}
                             >
                                 {content.rightContent?.text}
                             </div>

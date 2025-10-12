@@ -10,30 +10,26 @@ actor Student as student
 package "Online Education Platform" {
     usecase "Login" as UC1
     usecase "Logout" as UC2
-    usecase "Browse Teachers" as UC3
+    usecase "Browse Course" as UC3
     usecase "Book Lesson" as UC4
     usecase "View Lesson" as UC5
-    usecase "Interact with Lesson" as UC6
-    usecase "Click to Pronounce" as UC7
+    usecase "Cancel Lesson" as UC6
+    usecase "Enter Classroom" as UC7
 
-    usecase "Receive Booking Notification" as UC8
-    usecase "View Bookings" as UC9
-    usecase "Join Live Class" as UC10
-    usecase "Participate in Video Chat" as UC11
-    usecase "View Profile" as UC12
+    usecase "Chat" as UC8
+    usecase "View Notification" as UC9
 }
 
 student --> UC1
 student --> UC2
 student --> UC3
-student --> UC4
+UC3 ..> UC4 : <<include>>
+
 student --> UC5
 UC5 ..> UC6 : <<include>>
 UC5 ..> UC7 : <<include>>
-student --> UC8
+UC7 ..> UC8 : <<include>>
 student --> UC9
-student --> UC10
-UC10 ..> UC11 : <<include>>
-student --> UC12
+
 
 @enduml

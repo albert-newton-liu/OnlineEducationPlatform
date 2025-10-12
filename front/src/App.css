@@ -6,17 +6,25 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased; /* Improves font rendering on macOS */
-  -moz-osx-font-smoothing: grayscale; /* Improves font rendering on macOS */
-  background-color: #f8f9fa; /* A very light gray background for the whole page */
-  color: #333; /* Default text color */
+  -webkit-font-smoothing: antialiased;
+  /* Improves font rendering on macOS */
+  -moz-osx-font-smoothing: grayscale;
+  /* Improves font rendering on macOS */
+  background-color: #f8f9fa;
+  /* A very light gray background for the whole page */
+  color: #333;
+  /* Default text color */
 }
 
 /* Ensure the root div of your React app (usually 'App') fills the screen */
-#root, .App {
-  min-height: 100vh; /* Minimum height of 100% of the viewport height */
-  display: flex; /* Use flexbox to center content if needed, or manage layout */
-  flex-direction: column; /* Arrange children in a column */
+#root,
+.App {
+  min-height: 100vh;
+  /* Minimum height of 100% of the viewport height */
+  display: flex;
+  /* Use flexbox to center content if needed, or manage layout */
+  flex-direction: column;
+  /* Arrange children in a column */
   /* Remove these if you want content to flow naturally or use specialized layouts */
   /* justify-content: center; */
   /* align-items: center; */
@@ -31,12 +39,15 @@ ul {
 
 /* Basic styling for links */
 a {
-  color: #007bff; /* Primary blue color */
-  text-decoration: none; /* Remove underline */
+  color: #007bff;
+  /* Primary blue color */
+  text-decoration: none;
+  /* Remove underline */
 }
 
 a:hover {
-  text-decoration: underline; /* Add underline on hover */
+  text-decoration: underline;
+  /* Add underline on hover */
 }
 
 /* You can add more global styles here, e.g., for headers, paragraphs, etc. */

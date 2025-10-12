@@ -5,7 +5,7 @@ import './VoiceSelector.css'
 const VoiceSelector = ({ onVoiceChange, onParamsChange }) => {
     const [voices, setVoices] = useState([]);
     const [selectedVoice, setSelectedVoice] = useState(null);
-    const [rate, setRate] = useState(1);   
+    const [rate, setRate] = useState(1);
     const [pitch, setPitch] = useState(1);
 
     useEffect(() => {
@@ -79,22 +79,22 @@ const VoiceSelector = ({ onVoiceChange, onParamsChange }) => {
             </select>
             <div className="speech-params-controls">
                 <span>Rate: {rate.toFixed(1)}</span>
-                <input 
-                    type="range" 
-                    min="0.5" 
-                    max="2" 
-                    step="0.1" 
-                    value={rate} 
-                    onChange={handleRateChange} 
+                <input
+                    type="range"
+                    min="0.5"
+                    max="2"
+                    step="0.1"
+                    value={rate}
+                    onChange={handleRateChange}
                 />
                 <span>Pitch: {pitch.toFixed(1)}</span>
-                <input 
-                    type="range" 
-                    min="0" 
-                    max="2" 
-                    step="0.1" 
-                    value={pitch} 
-                    onChange={handlePitchChange} 
+                <input
+                    type="range"
+                    min="0"
+                    max="2"
+                    step="0.1"
+                    value={pitch}
+                    onChange={handlePitchChange}
                 />
             </div>
             <button onClick={stopSpeack} className="stop-button">Stop</button>

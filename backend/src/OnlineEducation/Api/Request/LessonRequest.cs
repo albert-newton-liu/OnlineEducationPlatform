@@ -44,5 +44,5 @@ public class LessonQueryConditon
     public bool MustPublished { get; set; }
 
     public string? TheacherId { get; set; }
+    
 }
-

@@ -16,7 +16,7 @@ const LessonSessionPage = () => {
 
     const { setMenuHidden } = useOutletContext();
 
-     // Use useEffect to manage menu visibility on mount and unmount
+    // Use useEffect to manage menu visibility on mount and unmount
     useEffect(() => {
         // Hide the menu when the component first loads
         setMenuHidden(true);

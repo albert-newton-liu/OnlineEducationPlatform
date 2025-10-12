@@ -44,19 +44,21 @@
 .action-button {
     /* Main styles for the button */
     background-color: #3498db;
-    color: black; /* Button text color */
+    color: black;
+    /* Button text color */
     border: none;
     padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.3s;
-    text-align: center; /* Center the text */
+    text-align: center;
+    /* Center the text */
 }
 
 .action-button:hover {
     background-color: #2980b9;
-     color: white; 
+    color: white;
 }
 
 .loading,

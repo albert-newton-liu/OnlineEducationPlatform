@@ -1,9 +1,9 @@
 // src/pages/Admin/UpdateUserModal.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {API_BASE_URL} from '../../../../constant/Constants'
+import { API_BASE_URL } from '../../../../constant/Constants'
 
-import '../Modal.css'; 
+import '../Modal.css';
 
 function UpdateUserModal({ user, onClose }) {
   // Common fields

@@ -18,7 +18,6 @@ public class BookingService : IBookingService
 
     private readonly IHubContext<NotificationHub> _hubContext;
 
-
     public BookingService(IBookingCoreService bookingCoreService,
                             IUserCoreService userCoreService,
                             ILessonCoreSerice lessonCoreSerice,

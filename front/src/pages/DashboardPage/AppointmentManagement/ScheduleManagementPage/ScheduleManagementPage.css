@@ -96,7 +96,8 @@
 .time-label {
     white-space: nowrap;
     font-size: 0.9em;
-    padding-top: 15px; /* Adjust padding to align with slot cells */
+    padding-top: 15px;
+    /* Adjust padding to align with slot cells */
 }
 
 /* Individual slot cells */
@@ -109,11 +110,13 @@
 
 /* Styles for selected slots */
 .slot-cell.selected {
-    background-color: #87ceeb; /* A nice, light blue for selected slots */
+    background-color: #87ceeb;
+    /* A nice, light blue for selected slots */
 }
 
 /* Styles for editable slots on hover */
 .slot-cell.editable:hover {
-    background-color: #aed6f1; /* Lighter blue on hover in edit mode */
+    background-color: #aed6f1;
+    /* Lighter blue on hover in edit mode */
     cursor: pointer;
 }

@@ -23,7 +23,8 @@
 }
 
 .add-user-button {
-    background-color: #28a745; /* Green for add */
+    background-color: #28a745;
+    /* Green for add */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -41,7 +42,8 @@
 }
 
 .table-responsive {
-    overflow-x: auto; /* Makes table scrollable on smaller screens */
+    overflow-x: auto;
+    /* Makes table scrollable on smaller screens */
 }
 
 table {
@@ -50,7 +52,8 @@ table {
     margin-bottom: 20px;
 }
 
-table th, table td {
+table th,
+table td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -69,7 +72,8 @@ table tbody tr:hover {
 }
 
 .actions-cell {
-    white-space: nowrap; /* Prevents buttons from wrapping */
+    white-space: nowrap;
+    /* Prevents buttons from wrapping */
 }
 
 .action-button {
@@ -78,12 +82,14 @@ table tbody tr:hover {
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
-    margin-right: 8px; /* Spacing between buttons */
+    margin-right: 8px;
+    /* Spacing between buttons */
     transition: background-color 0.2s ease;
 }
 
 .update-button {
-    background-color: #007bff; /* Blue for update */
+    background-color: #007bff;
+    /* Blue for update */
     color: white;
 }
 
@@ -92,7 +98,8 @@ table tbody tr:hover {
 }
 
 .delete-button {
-    background-color: #dc3545; /* Red for delete */
+    background-color: #dc3545;
+    /* Red for delete */
     color: white;
 }
 
@@ -124,8 +131,10 @@ table tbody tr:hover {
     background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-    gap: 15px; /* Spacing between elements */
-    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 15px;
+    /* Spacing between elements */
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
 }
 
 .pagination-button {
@@ -133,7 +142,8 @@ table tbody tr:hover {
     color: white;
     padding: 10px 18px;
     border: none;
-    border-radius: 20px; /* Rounded buttons */
+    border-radius: 20px;
+    /* Rounded buttons */
     cursor: pointer;
     font-size: 15px;
     font-weight: 500;
@@ -162,7 +172,8 @@ table tbody tr:hover {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: 20px; /* Separate from prev/next buttons */
+    margin-left: 20px;
+    /* Separate from prev/next buttons */
 }
 
 .page-size-selector label {

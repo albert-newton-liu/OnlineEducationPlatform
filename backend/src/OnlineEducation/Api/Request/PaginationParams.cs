@@ -1,4 +1,3 @@
-// In a new folder like OnlineEducation.Shared.Request (or your existing Request folder)
 namespace OnlineEducation.Api.Request;
 
 public class PaginationParams

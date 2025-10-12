@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 
-// Import your child route components
 import UserManagement from './pages/DashboardPage/UserManagement';
 import CourseManagement from './pages/DashboardPage/CourseManagement';
 import AddCoursePage from './pages/DashboardPage/CourseManagement/AddCoursePage';
@@ -12,8 +11,6 @@ import AppointmentManagement from './pages/DashboardPage/AppointmentManagement';
 import ScheduleManagementPage from './pages/DashboardPage/AppointmentManagement/ScheduleManagementPage';
 import AppointmentRecordPage from './components/AppointmentRecordPage';
 import MyCourseManagement from './pages/DashboardPage/MyCourseManagement'
-
-
 import LessonSessionPage from './pages/DashboardPage/LessonSessionPage';
 import Announcement from './pages/DashboardPage/Announcement';
 

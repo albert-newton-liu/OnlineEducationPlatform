@@ -2,19 +2,22 @@
 
 .lesson-session-container {
     display: flex;
-    height: calc(100vh - 80px); /* Adjust based on your header/footer height */
+    height: calc(100vh - 80px);
+    /* Adjust based on your header/footer height */
     width: 100%;
 }
 
 .course-viewer-pane {
-    flex: 2; /* Takes up 2/3 of the space */
+    flex: 2;
+    /* Takes up 2/3 of the space */
     padding: 20px;
     border-right: 1px solid #ddd;
     overflow-y: auto;
 }
 
 .chat-pane {
-    flex: 1; /* Takes up 1/3 of the space */
+    flex: 1;
+    /* Takes up 1/3 of the space */
     padding: 20px;
     display: flex;
     flex-direction: column;

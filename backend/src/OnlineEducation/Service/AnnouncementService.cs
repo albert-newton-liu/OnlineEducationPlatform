@@ -5,11 +5,8 @@ using OnlineEducation.Model;
 
 namespace OnlineEducation.Service;
 
-
-
 public class AnnouncementService : IAnnouncementService
 {
-
 
     private readonly IAnnouncementCoreService _announcementCoreService;
 

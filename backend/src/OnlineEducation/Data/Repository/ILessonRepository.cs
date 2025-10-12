@@ -15,6 +15,7 @@ public interface ILessonPageRepository : IRepository<LessonPageDO>
 
 
 }
+
 public interface ILessonPageElementRepository : IRepository<LessonPageElementDO>
 {
     Task<List<LessonPageElementDO>?> QueryByPageIdAsync(string PageId);

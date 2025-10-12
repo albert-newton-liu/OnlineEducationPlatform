@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import {API_BASE_URL} from '../../../../constant/Constants'
+import { API_BASE_URL } from '../../../../constant/Constants'
 
-import '../Modal.css'; 
+import '../Modal.css';
 
 function AddUserModal({ onClose }) {
   const [username, setUsername] = useState('');
@@ -76,7 +76,7 @@ function AddUserModal({ onClose }) {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       onClose(true); // Close modal and refresh user list
     } catch (err) {
       console.error('Failed to add user:', err.response?.data || err.message);

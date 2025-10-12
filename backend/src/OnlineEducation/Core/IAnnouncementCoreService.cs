@@ -4,8 +4,6 @@ using OnlineEducation.Model;
 
 namespace OnlineEducation.Core;
 
-
-
 public interface IAnnouncementCoreService
 {
     Task AddAnnouncement(Announcement announcement);

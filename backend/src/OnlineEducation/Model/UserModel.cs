@@ -76,6 +76,5 @@ public class QueryUserCondition
 {
     public byte? Role { get; set; } = null;
 
-
     public bool? IsActive { get; set; } = null;
 }

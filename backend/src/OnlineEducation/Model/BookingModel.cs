@@ -1,6 +1,5 @@
 namespace OnlineEducation.Model;
 
-
 public class TeacherDaySchedule
 {
     public byte DayOfWeek { get; set; }
@@ -48,7 +47,7 @@ public class BookableSlot
 
     public byte DayOfWeek { get; set; }
 
-    public DateOnly? DateOnly{ get; set; }
+    public DateOnly? DateOnly { get; set; }
 
     public TimeSpan StartTime { get; set; }
 

@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
     public UsersController(IUserService userService, IJwtTokenHelper jwtTokenHelper)
     {
         _userService = userService;
-         _jwtTokenHelper = jwtTokenHelper;
+        _jwtTokenHelper = jwtTokenHelper;
     }
 
     [HttpPost("register/admin")]
@@ -124,7 +124,7 @@ public class UsersController : ControllerBase
             {
                 response.Permissions = admin.Permissions;
             }
-             var token = _jwtTokenHelper.GenerateToken(loggedInUser.UserId, loggedInUser.Role);
+            var token = _jwtTokenHelper.GenerateToken(loggedInUser.UserId, loggedInUser.Role);
             response.Token = token;
 
             return Ok(response);
@@ -153,8 +153,8 @@ public class UsersController : ControllerBase
 
         return Ok(user);
     }
-    
-    [HttpGet()] 
+
+    [HttpGet()]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResult<UserQueryResponse>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

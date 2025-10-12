@@ -9,7 +9,7 @@ import { TextType, ImageType } from '../../../../constant/Constants'
 import './AddCoursePage.css';
 
 const AddCoursePage = () => {
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [courseInfo, setCourseInfo] = useState({
         title: '',
@@ -191,8 +191,8 @@ const AddCoursePage = () => {
 
             const response = await axios.post(
                 `${API_BASE_URL}/api/Lesson/addlesson`,
-                lessonData, 
-                {           
+                lessonData,
+                {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

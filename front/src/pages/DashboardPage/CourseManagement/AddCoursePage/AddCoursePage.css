@@ -49,13 +49,13 @@
 
 .header-view-mode-flex-container {
     display: flex;
-    align-items: center; /* 垂直居中对齐 */
-    gap: 20px;          /* 在标题和选择器之间添加一些间距 */
+    align-items: center;
+    gap: 20px;
     margin-bottom: 10px;
 }
 
 .header-view-mode-flex-container h2 {
-    margin: 0; /* 移除 h2 的默认外边距 */
+    margin: 0;
 }
 
 

@@ -1,4 +1,3 @@
-
 namespace OnlineEducation.Api.Request;
 
 public class StudentAddRequst

@@ -4,7 +4,7 @@ import axios from 'axios';
 import AddUserModal from './AddUserModal'; // We'll create this next
 import UpdateUserModal from './UpdateUserModal'; // We'll create this next
 
-import {API_BASE_URL} from '../../../constant/Constants'
+import { API_BASE_URL } from '../../../constant/Constants'
 
 
 import './UserManagement.css'; // Create this CSS file for styling
@@ -72,9 +72,9 @@ function UserManagement() {
         // After deletion, refresh the current page's data
         // If the last item on a page was deleted, consider moving to the previous page
         if (users.length === 1 && currentPage > 1) {
-            setCurrentPage(prevPage => prevPage - 1);
+          setCurrentPage(prevPage => prevPage - 1);
         } else {
-            fetchUsers(); // Refresh current page
+          fetchUsers(); // Refresh current page
         }
       } catch (err) {
         console.error('Failed to delete user:', err.response?.data || err.message);
@@ -112,8 +112,8 @@ function UserManagement() {
   };
 
   const handlePageSizeChange = (e) => {
-      setPageSize(parseInt(e.target.value));
-      setCurrentPage(1); // Reset to first page when page size changes
+    setPageSize(parseInt(e.target.value));
+    setCurrentPage(1); // Reset to first page when page size changes
   };
 
   if (loading) {
@@ -163,8 +163,8 @@ function UserManagement() {
                     <td>{user.email}</td>
                     <td>
                       {user.role === 0 ? 'Student' :
-                       user.role === 1 ? 'Teacher' :
-                       user.role === 2 ? 'Admin' : 'Unknown'}
+                        user.role === 1 ? 'Teacher' :
+                          user.role === 2 ? 'Admin' : 'Unknown'}
                     </td>
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td className="actions-cell">
@@ -202,14 +202,14 @@ function UserManagement() {
             </button>
 
             <div className="page-size-selector">
-                <label htmlFor="pageSize">Items per page:</label>
-                <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
-                    <option value={2}>2</option>
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                </select>
+              <label htmlFor="pageSize">Items per page:</label>
+              <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
+                <option value={2}>2</option>
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
             </div>
           </div>
         </>

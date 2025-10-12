@@ -23,12 +23,9 @@
 }
 
 .voice-selector-dropdown {
-    /* 移除默认样式 */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-
-    /* 盒子模型和布局 */
     padding: 6px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -38,13 +35,11 @@
     font-size: 14px;
     outline: none;
     transition: all 0.2s ease;
-    
-    /* 添加自定义箭头 */
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5"><path d="M0 0l5 5 5-5z" fill="%232c3e50"/></svg>');
     background-repeat: no-repeat;
     background-position: right 8px center;
-    padding-right: 25px; /* 留出箭头空间 */
-    width: 180px; 
+    padding-right: 25px;
+    width: 180px;
 }
 
 .voice-selector-dropdown:hover {
@@ -59,14 +54,11 @@
 
 
 .stop-button {
-    /* 移除默认样式 */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     border: none;
-    
-    /* 按钮样式 */
-    background-color: #e74c3c; /* 醒目的红色 */
+    background-color: #e74c3c;
     color: #ffffff;
     font-size: 14px;
     font-weight: 500;
@@ -77,12 +69,12 @@
 }
 
 .stop-button:hover {
-    background-color: #c0392b; /* 悬停时颜色变深 */
+    background-color: #c0392b;
 }
 
 .stop-button:active {
-    background-color: #a02d20; /* 点击时颜色更深 */
-    transform: scale(0.98);    /* 点击时轻微缩小，增加反馈感 */
+    background-color: #a02d20;
+    transform: scale(0.98);
 }
 
 .speech-params-controls {
