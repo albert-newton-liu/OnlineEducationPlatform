@@ -44,6 +44,11 @@ public class PaginatedResult<T>
     /// <summary>
     /// Initializes a new instance of the <see cref="PaginatedResult{T}"/> class.
     /// </summary>
+    public PaginatedResult() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaginatedResult{T}"/> class.
+    /// </summary>
     /// <param name="items">The items on the current page.</param>
     /// <param name="count">The total number of items.</param>
     /// <param name="pageNumber">The current page number.</param>
@@ -55,4 +60,6 @@ public class PaginatedResult<T>
         PageNumber = pageNumber;
         PageSize = pageSize;
     }
+
+
 }
