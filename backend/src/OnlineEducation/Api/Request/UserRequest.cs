@@ -113,3 +113,27 @@ public class LoginRequest
     /// </summary>
     public string Password { get; set; } = null!;
 }
+
+public class StudentUpdateRequest
+{
+    /// <summary>
+    /// UserId
+    /// </summary>
+    public string UserId { get; set; } = null!;
+
+    /// <summary>
+    /// The email address of the student's parent (optional).
+    /// </summary>
+    public string? ParentEmail { get; set; }
+
+    /// <summary>
+    /// The date of birth of the student.
+    /// </summary>
+    public DateTime DateOfBirth { get; set; }
+
+    /// <summary>
+    /// The URL of the student's avatar (optional).
+    /// </summary>
+    public string? AvatarUrl { get; set; }
+
+}

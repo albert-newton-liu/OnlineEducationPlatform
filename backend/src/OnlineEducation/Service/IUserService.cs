@@ -39,4 +39,13 @@ public interface IUserService
     /// </summary>
     Task<PaginatedResult<UserQueryResponse>> GetPaginatedUsersAsync(PaginationParams paginationParams);
 
+    /// <summary>
+    /// Deletes a user by their unique identifier.
+    /// </summary>
+    Task Delete(string id);
+
+    /// <summary>
+    /// Update user
+    /// </summary>
+    Task Update(User user);
 }

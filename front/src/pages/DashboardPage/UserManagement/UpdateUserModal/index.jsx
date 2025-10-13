@@ -7,6 +7,8 @@ import '../Modal.css';
 
 // UpdateUserModal component for updating an existing user (Student, Teacher, Admin)
 function UpdateUserModal({ user, onClose }) {
+  console.log('UpdateUserModal user prop:', user); // Debugging line
+
   // Common fields
   const [username, setUsername] = useState(user.username || '');
   const [email, setEmail] = useState(user.email || '');
@@ -45,7 +47,7 @@ function UpdateUserModal({ user, onClose }) {
     setError('');
 
     let requestData = {
-      id: user.id, // Include user ID for update
+      userId: user.userId, // Include user ID for update
       username,
       email,
       // NOTE: Password update is usually handled by a separate "change password" flow
@@ -62,7 +64,7 @@ function UpdateUserModal({ user, onClose }) {
           dateOfBirth: dateOfBirth ? new Date(dateOfBirth).toISOString() : null,
           avatarUrl: avatarUrl || null,
         };
-        endpoint = `${API_BASE_URL}/api/Users/update/student`; // Assuming an endpoint for updating students
+        endpoint = `${API_BASE_URL}/api/Users/UpdateStudent`; // Assuming an endpoint for updating students
         break;
       case 1: // Teacher
         requestData = {
@@ -71,14 +73,14 @@ function UpdateUserModal({ user, onClose }) {
           profilePictureUrl: profilePictureUrl || null,
           teachingLanguages: teachingLanguages.split(',').map(lang => lang.trim()).filter(lang => lang !== ''),
         };
-        endpoint = `${API_BASE_URL}/api/Users/update/teacher`; // Assuming an endpoint for updating teachers
+        endpoint = `${API_BASE_URL}/api/Users/UpdateTeacher`; // Assuming an endpoint for updating teachers
         break;
       case 2: // Admin
         requestData = {
           ...requestData,
           permissions: permissions.split(',').map(perm => perm.trim()).filter(perm => perm !== ''),
         };
-        endpoint = `${API_BASE_URL}/api/Users/update/admin`; // Assuming an endpoint for updating admins
+        endpoint = `${API_BASE_URL}/api/Users/UpdateAdmin`; // Assuming an endpoint for updating admins
         break;
       default:
         setError('Unknown user role. Cannot update.');
@@ -90,7 +92,7 @@ function UpdateUserModal({ user, onClose }) {
       const token = localStorage.getItem('userToken');
       // For PUT or PATCH, typically the ID is in the URL or the body.
       // If your backend expects a PUT request with ID in URL: `${API_BASE_URL}/User/${user.id}`
-      await axios.put(endpoint, requestData, { // Assuming PUT method for update
+      await axios.post(endpoint, requestData, { // Assuming PUT method for update
         headers: {
           Authorization: `Bearer ${token}`
         }

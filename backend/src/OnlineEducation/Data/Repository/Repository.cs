@@ -2,6 +2,8 @@ namespace OnlineEducation.Data.Repository;
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using OnlineEducation.Data.Dao;
 
@@ -133,5 +135,54 @@ public class Repository<T> : IRepository<T> where T : class
     public Task<IDbContextTransaction> BeginTransactionAsync()
     {
         return _context.Database.BeginTransactionAsync();
+    }
+
+
+    /// <summary>
+    /// Updates the trackedEntity with non-null properties from the detachedEntity.
+    /// </summary>
+    public void UpdatePartial(T trackedEntity, T detachedEntity)
+    {
+        // Get the EntityEntry for the entity already being tracked
+        EntityEntry<T> entry = _context.Entry(trackedEntity);
+        var primaryKey = entry.Metadata.FindPrimaryKey();
+        var keyProperties = new List<IProperty>();
+        if (primaryKey != null && primaryKey.Properties != null)
+        {
+            keyProperties = primaryKey.Properties.ToList();
+        }
+
+        // Iterate through all properties managed by EF Core for this entity
+        foreach (var property in entry.Properties)
+        {
+            if (keyProperties.Contains(property.Metadata))
+            {
+                continue; // Skip key properties
+            }
+
+            // Get the value of this property from the detached source entity
+            // Using reflection to get the value dynamically
+            object? newValue = typeof(T).GetProperty(property.Metadata.Name)?.GetValue(detachedEntity);
+
+            // 1. Check if the new value is NULL (the client did not supply it)
+            if (newValue == null)
+            {
+                // Ignore this property, leaving the original value intact.
+                continue;
+            }
+
+            // Check 2: If the new value is the same as the current tracked value, skip (optional, good practice)
+            if (Equals(newValue, property.CurrentValue))
+            {
+                continue;
+            }
+
+            // If new value is NOT NULL and is NOT a key, assign it
+            property.CurrentValue = newValue;
+            property.IsModified = true;
+        }
+
+        // Ensure the entire entity state is not accidentally set to Unchanged
+        entry.State = EntityState.Modified;
     }
 }

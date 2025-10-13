@@ -90,6 +90,16 @@ public class UserService : IUserService
     }
 
     /// <summary>
+    /// Deletes a user by their unique identifier.
+    /// </summary>
+    public async Task Delete(string id)
+    {
+        User user = await QueryById(id);
+        await _userCoreService.DeleteUser(user.Username);
+
+    }
+
+    /// <summary>
     /// Get Paginated Users from the platform.
     /// </summary>
     public async Task<PaginatedResult<UserQueryResponse>> GetPaginatedUsersAsync(PaginationParams paginationParams)
@@ -143,5 +153,13 @@ public class UserService : IUserService
     {
         User user = await _userCoreService.GetByIdAsync<User>(id) ?? throw new UnauthorizedAccessException("Invalid username or password.");
         return user;
+    }
+
+    /// <summary>
+    /// Update user
+    /// </summary>
+    public async Task Update(User user)
+    {
+        await _userCoreService.UpdateUser(user);
     }
 }

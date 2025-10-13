@@ -57,11 +57,11 @@ function UserManagement() {
     fetchUsers();
   }, [fetchUsers]); // fetchUsers is a dependency here because it's memoized by useCallback
 
-  const handleDeleteUser = async (userId) => {
-    if (window.confirm(`Are you sure you want to delete user with ID: ${userId}?`)) {
+  const handleDeleteUser = async (user) => {
+    if (window.confirm(`Are you sure you want to delete user: ${user.username}?`)) {
       try {
         const token = localStorage.getItem('userToken');
-        await axios.delete(`${API_BASE_URL}/User/${userId}`, { // Assuming DELETE /api/User/{id}
+        await axios.delete(`${API_BASE_URL}/api/Users/${user.userId}`, { // Assuming DELETE /api/User/{id}
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -81,8 +81,18 @@ function UserManagement() {
     }
   };
 
-  const handleUpdateUser = (user) => {
-    setSelectedUser(user);
+  const handleUpdateUser = async (user) => {
+    const token = localStorage.getItem('userToken');
+    const response = await axios.get(
+        `${API_BASE_URL}/api/Users/${user.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Include JWT token
+          }
+        }
+      );
+    console.log('Fetched user data for update:', response.data); // Debugging line
+    setSelectedUser(response.data);
     setIsUpdateModalOpen(true);
   };
 
@@ -169,7 +179,7 @@ function UserManagement() {
                       <button className="action-button update-button" onClick={() => handleUpdateUser(user)}>
                         Update
                       </button>
-                      <button className="action-button delete-button" onClick={() => handleDeleteUser(user.id)}>
+                      <button className="action-button delete-button" onClick={() => handleDeleteUser(user)}>
                         Delete
                       </button>
                     </td>

@@ -77,4 +77,10 @@ public interface IRepository<T> where T : class
     /// </summary>
     /// <returns>The database context transaction.</returns>
     Task<IDbContextTransaction> BeginTransactionAsync();
+
+    /// <summary>
+    /// Updates a tracked entity by selectively applying properties from a detached entity.
+    /// Only non-null values from the detached entity will be copied and marked as Modified.
+    /// </summary>
+    void UpdatePartial(T trackedEntity, T detachedEntity);
 }

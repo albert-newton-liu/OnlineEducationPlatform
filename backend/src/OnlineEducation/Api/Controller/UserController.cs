@@ -5,7 +5,8 @@ using OnlineEducation.Model;
 using OnlineEducation.Service;
 using OnlineEducation.Utils;
 using System.Security.Claims; // Added for ClaimTypes if used internally
-using System; // Added for Exception
+using System;
+using Microsoft.AspNetCore.Authorization; // Added for Exception
 
 namespace OnlineEducation.Api.Controller;
 
@@ -205,7 +206,25 @@ public class UsersController : ControllerBase
             return NotFound($"User with ID '{id}' not found.");
         }
 
+        user.PasswordHash = ""; // Do not expose password hash
+
         return Ok(user);
+    }
+
+    /// <summary>
+    /// Deletes a user by their unique identifier.
+    /// </summary>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+    [Authorize]
+    public async Task<ActionResult> Delete(string id)
+    {
+        var AdminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        ArgumentNullException.ThrowIfNull(AdminId);
+
+        await _userService.Delete(id);
+
+        return Ok();
     }
 
     /// <summary>
@@ -235,6 +254,98 @@ public class UsersController : ControllerBase
         var paginatedUsers = await _userService.GetPaginatedUsersAsync(paginationParams);
 
         return Ok(paginatedUsers);
+    }
+
+
+
+    [HttpPost("UpdateAdmin")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateAdmin([FromBody] Admin admin)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _userService.Update(admin);
+            return Ok();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during Update Admin." });
+        }
+    }
+
+
+    [HttpPost("UpdateTeacher")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateTeacher([FromBody] Teacher teacher)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _userService.Update(teacher);
+            return Ok();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during Update Teacher." });
+        }
+    }
+
+    [HttpPost("UpdateStudent")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateStudent([FromBody] StudentUpdateRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            Student student = new Student()
+            {
+                UserId = request.UserId,
+                ParentEmail = request.ParentEmail,
+                DateOfBirth = request.DateOfBirth,
+                AvatarUrl = request.AvatarUrl,
+            };
+
+            await _userService.Update(student);
+            return Ok();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during Update Student." });
+        }
     }
 
 }

@@ -194,6 +194,8 @@ public class UserCoreService : IUserCoreService
         ArgumentNullException.ThrowIfNull(dbUser);
 
         UserDO userDO = Convert(user);
+        _userRepository.UpdatePartial(dbUser, userDO);
+
         if (user is Student student)
         {
             StudentDO studentDO = Convert(student, user.UserId);
@@ -212,11 +214,9 @@ public class UserCoreService : IUserCoreService
             _adminRepository.Update(adminDO);
         }
 
-        _userRepository.Update(userDO);
-
         await _userRepository.SaveChangesAsync();
 
-        return await GetUserByUsernameAsync<TUser>(user.Username);
+        return await GetUserByUsernameAsync<TUser>(dbUser.Username);
     }
 
     /// <summary>
@@ -293,7 +293,7 @@ public class UserCoreService : IUserCoreService
         userDO.Email = user.Email;
         userDO.PasswordHash = user.PasswordHash;
         userDO.Role = user.Role;
-        userDO.CreatedAt = user.CreatedAt ?? DateTime.Now;
+        userDO.CreatedAt = user.CreatedAt ?? DateTime.UtcNow;
         userDO.IsActive = user.IsActive;
         return userDO;
     }

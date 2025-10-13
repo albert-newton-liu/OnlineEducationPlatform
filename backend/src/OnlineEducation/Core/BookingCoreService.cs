@@ -159,15 +159,22 @@ public class BookingCoreService : IBookingCoreService
             throw new ArgumentException("Can not cancel after started or canceled");
         }
 
+        BookableSlotDO? dbSlotDO = await _bookableSlotRepository.GetByIdForUpdateAsync(bookingDO.BookableSlotId);
+        ArgumentNullException.ThrowIfNull(dbSlotDO);
+
         BookableSlotDO updateBookingDO = new()
         {
             BookableSlotId = bookingDO.BookableSlotId,
-            IsBooked = false
+            IsBooked = false,
+            StartTime = dbSlotDO.StartTime,
+            EndTime = dbSlotDO.EndTime,
+            CreatedAt = dbSlotDO.CreatedAt,
+            UpdatedAt = DateTime.UtcNow,
         };
 
         bookingDO.Status = 2;
         _bookingRepository.Update(bookingDO);
-        _bookableSlotRepository.Update(updateBookingDO);
+        _bookableSlotRepository.UpdatePartial(dbSlotDO, updateBookingDO);
         await _bookingRepository.SaveChangesAsync();
     }
 
