@@ -1,5 +1,9 @@
 namespace OnlineEducation.Api.Request;
 
+
+/// <summary>
+/// Parameters for paginated requests
+/// </summary>
 public class PaginationParams
 {
     // The default page size if not specified by the client

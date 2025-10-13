@@ -2,6 +2,9 @@ using BCrypt.Net; // Correct namespace for BCrypt.Net-Next
 
 namespace OnlineEducation.Utils;
 
+/// <summary>
+/// Helper class for hashing and verifying passwords using BCrypt.
+/// </summary>
 public class BCryptPasswordHasher
 {
     public static string HashPassword(string password)

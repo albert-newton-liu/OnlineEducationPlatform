@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { uploadFile } from "../../constant/UploadFileUtils"
 
+// Template1 component for course content with draggable and resizable text overlay
 const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
     const location = useLocation();
     const isViewMode = isReadOnly || location.pathname.includes('/view-course/');
@@ -16,6 +17,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         position = { x: 2500, y: 250 }
     } = content;
 
+    
     const [isDragging, setIsDragging] = useState(false);
     const [startMousePosition, setStartMousePosition] = useState({ x: 0, y: 0 });
 
@@ -55,6 +57,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         }
     };
 
+    // Handle text area content change
     const handleTextChange = (e) => {
         const newText = e.target.value;
         onContentChangeRef.current({
@@ -63,6 +66,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         });
     };
 
+    // Handle dragging of the text overlay
     const handleMouseMove = useCallback((e) => {
         if (isDragging) {
             const dx = e.clientX - startMousePosition.x;
@@ -84,6 +88,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         setIsDragging(false);
     }, []);
 
+    // Start dragging when mouse is down on the text overlay (but not on the textarea itself)
     const handleMouseDown = useCallback((e) => {
         if (e.target.tagName !== 'TEXTAREA') {
             setIsDragging(true);
@@ -103,6 +108,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         };
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
+    // Observe textarea size changes
     useEffect(() => {
         const textareaElement = textOverlayRef.current.querySelector('textarea');
         if (!textareaElement) return;
@@ -149,6 +155,7 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         };
     }, []);
 
+    // Handle text click for speech synthesis
     const handleTextClick = () => {
         if (!isViewMode) return;
 
@@ -163,7 +170,6 @@ const Template1 = ({ content, onContentChange, speak, isReadOnly = false }) => {
             speak(content.text);
         }
     };
-
 
 
     return (

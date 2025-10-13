@@ -1,6 +1,7 @@
 import React from 'react';
 import './CourseInfoSection.css'
 
+// Component for displaying and editing course information
 const CourseInfoSection = ({ courseInfo, onInfoChange, isReadOnly = false }) => {
     return (
         <div className="course-info-section">

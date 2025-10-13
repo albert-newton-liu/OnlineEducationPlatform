@@ -8,6 +8,7 @@ import { TextType, ImageType } from '../../../../constant/Constants'
 
 import './AddCoursePage.css';
 
+// Utility function to handle logout
 const AddCoursePage = () => {
     const navigate = useNavigate();
 
@@ -23,12 +24,14 @@ const AddCoursePage = () => {
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+    // handle course info change
     const handleCourseInfoChange = (e) => {
         const { name, value } = e.target;
         setCourseInfo(prev => ({ ...prev, [name]: value }));
         // setHasUnsavedChanges(true);
     };
 
+    // Handle content changes in the current page
     const handleContentChange = (newContent) => {
 
         const updatedPages = [...pages];
@@ -39,7 +42,6 @@ const AddCoursePage = () => {
     };
 
     const handleSavePage = () => {
-        console.log(`Saving page ${currentPageIndex + 1}...`);
         setHasUnsavedChanges(false);
     };
 
@@ -186,7 +188,6 @@ const AddCoursePage = () => {
 
         const token = localStorage.getItem('userToken');
 
-        console.log("Submitting the following course data to the server:", lessonData);
         try {
 
             const response = await axios.post(
@@ -198,7 +199,6 @@ const AddCoursePage = () => {
                     }
                 }
             );
-            console.log(response.data);
             navigate('/dashboard/courses')
 
         } catch (err) {

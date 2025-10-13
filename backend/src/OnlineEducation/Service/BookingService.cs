@@ -7,6 +7,10 @@ using OnlineEducation.Utils;
 
 namespace OnlineEducation.Service;
 
+/// <summary>
+/// Service for managing bookings in the online education platform.
+/// Implements the <see cref="IBookingService"/> interface.
+/// </summary>
 public class BookingService : IBookingService
 {
 
@@ -31,6 +35,9 @@ public class BookingService : IBookingService
     }
 
 
+    /// <summary>
+    /// Adds a new teacher schedule to the platform.
+    /// </summary>  
     public async Task AddSchedule(AddTeacherScheduleRequest request)
     {
         TeacherSchedule teacherSchedule = Convert(request);
@@ -43,6 +50,9 @@ public class BookingService : IBookingService
         await _bookingCoreService.AddSchedule(teacherSchedule);
     }
 
+    /// <summary>
+    /// Converts an <see cref="AddTeacherScheduleRequest"/> to a <see cref="TeacherSchedule"/>.
+    /// </summary>
     private TeacherSchedule Convert(AddTeacherScheduleRequest request)
     {
         TeacherSchedule schedule = new()
@@ -55,6 +65,9 @@ public class BookingService : IBookingService
         return schedule;
     }
 
+    /// <summary>
+    /// Books a lesson for a student and notifies the teacher.
+    /// </summary>
     public async Task Book(BookLessonRequest request)
     {
         Booking booking = await _bookingCoreService.Book(request.StudentId, request.LessonId, request.BookableSlotId);
@@ -63,22 +76,34 @@ public class BookingService : IBookingService
         await _hubContext.Clients.User(teacherId).SendAsync("ReceiveNotification", message);
     }
 
+    /// <summary>
+    /// Sends a test message to a user.
+    /// </summary>
     public async Task TestMsg(string userId)
     {
         string message = $"A new booking has been made for your slot by a student!";
         await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", message);
     }
 
+    /// <summary>
+    /// Cancels a booking by its unique identifier.
+    /// </summary>
     public async Task Cancel(string bookingId)
     {
         await _bookingCoreService.CancelBook(bookingId);
     }
 
+    /// <summary>
+    /// Completes a booking by its unique identifier.
+    /// </summary>
     public async Task Complete(string bookingId)
     {
         await _bookingCoreService.Complete(bookingId);
     }
 
+    /// <summary>
+    /// Retrieves bookable slots for a given teacher and student.
+    /// </summary>
     public async Task<List<BookableSlotDetail>> GetBookableSlot(string teacherId, string studentId)
     {
         List<BookableSlot> list = await _bookingCoreService.GetBookableSlot(teacherId, studentId);
@@ -101,6 +126,9 @@ public class BookingService : IBookingService
 
     }
 
+    /// <summary>
+    /// Retrieves a list of bookings based on student ID, teacher ID, and status.
+    /// </summary>
     public async Task<List<BookingDetail>> GetBookingList(string? studentId, string? teacherId, int Status)
     {
 
@@ -138,6 +166,9 @@ public class BookingService : IBookingService
         })];
     }
 
+    /// <summary>
+    /// Retrieves the schedule for a given teacher.
+    /// </summary>
     public async Task<TeacherScheduleResponse?> GetSchedule(string teacherId)
     {
         TeacherSchedule? teacherSchedule = await _bookingCoreService.GetSchedule(teacherId);
@@ -153,6 +184,9 @@ public class BookingService : IBookingService
         };
     }
 
+    /// <summary>
+    /// Generates bookable slots for a given teacher or all teachers if no ID is provided.
+    /// </summary>
     public async Task GenerateBookableSlot(string? teacherId)
     {
         await _bookingCoreService.GenerateBookableSlot(teacherId);

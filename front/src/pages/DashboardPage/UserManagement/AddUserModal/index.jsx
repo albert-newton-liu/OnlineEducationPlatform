@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../../../constant/Constants'
 
 import '../Modal.css';
 
+// AddUserModal component for adding a new user (Student, Teacher, Admin)
 function AddUserModal({ onClose }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

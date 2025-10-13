@@ -14,8 +14,10 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddControllers();
 
+// Add JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -51,6 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// add authorization
 builder.Services.AddAuthorization();
 
 
@@ -62,12 +65,14 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnlineEduAPI", Version = "v1" });
 });
 
+// Add DbContext and Repositories
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
 
+// Register components start ==========================
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
@@ -114,7 +119,7 @@ builder.Services.AddQuartz(q =>
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
-
+// Register components end ==========================
 
 // --- CORS Configuration Start ---
 builder.Services.AddCors(options =>
@@ -136,12 +141,13 @@ builder.Services.AddCors(options =>
 // --- CORS Configuration End ---
 
 
-
+// Add SignalR
 builder.Services.AddSignalR();
 
 
 var app = builder.Build();
 
+// Configure static file serving for uploads
 const string UPLOAD_DIR = "uploads";
 var uploadPath = Path.Combine(app.Environment.ContentRootPath, UPLOAD_DIR);
 if (!Directory.Exists(uploadPath))
@@ -163,6 +169,7 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlineEduAPI");
     });
 }
+
 
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");

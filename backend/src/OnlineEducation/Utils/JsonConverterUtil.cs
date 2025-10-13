@@ -5,8 +5,14 @@ using OnlineEducation.Data.Dao;
 
 namespace OnlineEducation.Utils;
 
+/// <summary>
+/// Custom JSON converter for Dictionary<string, int>.
+/// </summary>  
 public class DictionaryIntConverter : JsonConverter<Dictionary<string, int>>
 {
+    /// <summary>
+    /// Reads and converts the JSON to a Dictionary<string, int>.
+    /// </summary>
     public override Dictionary<string, int>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject) throw new JsonException();
@@ -25,6 +31,9 @@ public class DictionaryIntConverter : JsonConverter<Dictionary<string, int>>
         return dictionary;
     }
 
+    /// <summary>
+    /// Writes the Dictionary<string, int> as JSON.
+    /// </summary>
     public override void Write(Utf8JsonWriter writer, Dictionary<string, int> value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
@@ -33,8 +42,14 @@ public class DictionaryIntConverter : JsonConverter<Dictionary<string, int>>
     }
 }
 
+/// <summary>
+/// Custom JSON converter for Dictionary<string, string>.
+/// </summary>
 public class DictionaryStringsConverter : JsonConverter<Dictionary<string, string>>
 {
+    /// <summary>
+    /// Reads and converts the JSON to a Dictionary<string, string>.
+    /// </summary>
     public override Dictionary<string, string>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject) throw new JsonException();
@@ -53,6 +68,9 @@ public class DictionaryStringsConverter : JsonConverter<Dictionary<string, strin
         return dictionary;
     }
 
+    /// <summary>
+    /// Writes the Dictionary<string, string> as JSON.
+    /// </summary>
     public override void Write(Utf8JsonWriter writer, Dictionary<string, string> value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

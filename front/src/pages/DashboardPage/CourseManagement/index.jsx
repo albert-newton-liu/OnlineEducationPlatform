@@ -5,6 +5,8 @@ import { API_BASE_URL } from '../../../constant/Constants';
 
 import './CourseManagement.css';
 
+
+// Main Course Management Component
 const CourseManagement = () => {
     const [lessons, setLessons] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -81,7 +83,6 @@ const CourseManagement = () => {
                     }
                 }
             );
-            console.log(`Approving lesson: ${lessonId}`);
             fetchLessons();
         } catch (error) {
             console.error(`Failed to approve lesson ${lessonId}:`, error);
@@ -168,7 +169,6 @@ const CourseManagement = () => {
                     }
                 }
             );
-            console.log(`Successfully deleted lesson: ${lessonToDelete}`);
             fetchLessons();
         } catch (error) {
             console.error("Failed to delete lesson:", error);

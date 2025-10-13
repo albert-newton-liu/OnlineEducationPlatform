@@ -9,6 +9,9 @@ using OnlineEducation.Utils;
 
 namespace OnlineEducation.Api.Controller;
 
+/// <summary>
+/// Controller for managing lessons, including creation, retrieval, approval, and deletion.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class LessonController : ControllerBase
@@ -16,13 +19,26 @@ public class LessonController : ControllerBase
 
     private readonly ILessonService _lessonService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LessonController"/> class.
+    /// </summary>
+    /// <param name="service">The service responsible for lesson business logic.</param>
     public LessonController(ILessonService service)
     {
         _lessonService = service;
     }
 
+    /// <summary>
+    /// Adds a new lesson to the system.
+    /// </summary>
+    /// <param name="request">The request containing the lesson details.</param>
+    /// <returns>
+    /// A 200 OK result containing the ID of the newly created lesson on success,
+    /// a 400 Bad Request if the model state is invalid or a business rule is violated,
+    /// or a 500 Internal Server Error for unexpected exceptions.
+    /// </returns>
     [HttpPost("addlesson")]
-    [ProducesResponseType(typeof(AddLessonRequest), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Addlesson([FromBody] AddLessonRequest request)
@@ -43,10 +59,19 @@ public class LessonController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during Add lesson." });
         }
     }
 
+    /// <summary>
+    /// Approves a specific lesson. This endpoint requires authorization, typically for an Admin role.
+    /// </summary>
+    /// <param name="LessonId">The unique identifier of the lesson to approve.</param>
+    /// <returns>
+    /// A 200 OK result on successful approval,
+    /// a 400 Bad Request if the model state is invalid or the lesson is already approved/cannot be approved,
+    /// or a 500 Internal Server Error for unexpected exceptions.
+    /// </returns>
     [Authorize]
     [HttpPost("approve/{LessonId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -72,11 +97,20 @@ public class LessonController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during Approve Lesson." });
         }
 
     }
 
+    /// <summary>
+    /// Deletes a specific lesson.
+    /// </summary>
+    /// <param name="LessonId">The unique identifier of the lesson to delete.</param>
+    /// <returns>
+    /// A 200 OK result on successful deletion,
+    /// a 400 Bad Request if the model state is invalid or the user is not authorized to delete the lesson,
+    /// or a 500 Internal Server Error for unexpected exceptions.
+    /// </returns>
     [HttpDelete("delete/{LessonId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,12 +135,22 @@ public class LessonController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during Delete Lesson." });
         }
 
     }
 
 
+    /// <summary>
+    /// Retrieves a lesson by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the lesson.</param>
+    /// <returns>
+    /// A 200 OK result containing the lesson object if found,
+    /// a 404 Not Found if no lesson matches the ID,
+    /// a 400 Bad Request for invalid operation exceptions,
+    /// or a 500 Internal Server Error for unexpected exceptions.
+    /// </returns>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Lesson))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -128,12 +172,22 @@ public class LessonController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during admin registration." });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred during query Lesson by id." });
         }
 
     }
 
 
+    /// <summary>
+    /// Retrieves a paginated list of basic lesson information, filtered based on the user's role.
+    /// Students only see published lessons. Teachers only see their own lessons. Admins see all.
+    /// </summary>
+    /// <param name="paginationParams">Parameters for pagination, including page number and page size.</param>
+    /// <returns>
+    /// A 200 OK result containing the paginated list of lessons,
+    /// a 400 Bad Request if pagination parameters are invalid,
+    /// a 401 Unauthorized or 403 Forbidden if authentication fails or user lacks permission.
+    /// </returns>
     [HttpGet()]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResult<BasicLessonResponse>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -169,14 +223,6 @@ public class LessonController : ControllerBase
         var paginatedLessons = await _lessonService.GetPaginatedBasicLessonAsync(paginationParams, conditon);
 
         return Ok(paginatedLessons);
-    }
-
-    private string GetToken()
-    {
-        var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            throw new Exception("token is null");
-        return authHeader.Substring("Bearer ".Length).Trim();
     }
 
 }

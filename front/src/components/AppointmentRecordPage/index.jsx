@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../constant/Constants';
 import './AppointmentRecordPage.css';
 
+// Component to display and manage appointment records
 const AppointmentRecordPage = () => {
     const navigate = useNavigate();
     const [bookingRecords, setBookingRecords] = useState([]);
@@ -14,6 +15,7 @@ const AppointmentRecordPage = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('userToken');
 
+    // Fetch booking records based on user role and selected status
     const fetchBookingRecords = async (status = 0) => {
         setIsLoading(true);
         setError(null);
@@ -57,10 +59,12 @@ const AppointmentRecordPage = () => {
     };
 
 
+    // Navigate to the lesson view page
     const handleView = (lessonId) => {
         navigate(`/dashboard/view-course/${lessonId}`);
     };
 
+    // Cancel a booking
     const handleCancel = async (bookingId) => {
         if (window.confirm("Are you sure you want to cancel this booking?")) {
             try {
@@ -82,6 +86,7 @@ const AppointmentRecordPage = () => {
         }
     };
 
+    // Start a lesson session
     const handleStart = (bookingId, lessonId, recipientId, recipientName) => {
         // Navigate to the new combined page
         navigate(`/dashboard/lesson-session/${bookingId}`, {

@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace OnlineEducation.Core;
 
+/// <summary>
+/// ChatHub provides real-time messaging capabilities between authenticated users.
+/// It leverages SignalR for WebSocket communication and ensures that only authorized users can send and receive messages.
+/// </summary>
 [Authorize]
 public class ChatHub : Hub
 {

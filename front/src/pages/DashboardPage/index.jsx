@@ -6,6 +6,7 @@ import * as signalR from '@microsoft/signalr';
 
 import './DashboardPage.css';
 
+// Main DashboardPage component that includes header, sidebar, and main content area
 function DashboardPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,7 +28,6 @@ function DashboardPage() {
       const userId = localStorage.getItem('userId');
 
       if (!token || !userId) {
-        console.log("No token or userId found, redirecting to login.");
         navigate('/login');
         return;
       }

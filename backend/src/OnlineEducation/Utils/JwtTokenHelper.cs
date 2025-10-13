@@ -6,13 +6,24 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace OnlineEducation.Utils;
 
+/// <summary>
+/// Helper class for generating and validating JWT tokens.
+/// </summary>
 public interface IJwtTokenHelper
 {
+    /// <summary>
+    /// Generates a JWT token for the given user ID and role.
+    /// </summary>
     string GenerateToken(string userId, int role, int expireMinutes = 60);
 
+    /// <summary>
+    /// Parses and validates the JWT token, returning the user ID and role if valid.
     (string? userId, int? role)? ParseToken(string token);
 }
 
+/// <summary>
+/// Implementation of IJwtTokenHelper using symmetric key signing.
+/// </summary>
 public class JwtTokenHelper : IJwtTokenHelper
 {
     private readonly string _secretKey;
@@ -29,6 +40,9 @@ public class JwtTokenHelper : IJwtTokenHelper
         _tokenHandler = tokenHandler;
     }
 
+    /// <summary>
+    /// Generates a JWT token for the given user ID and role.
+    /// </summary>
     public string GenerateToken(string userId, int role, int expireMinutes = 60)
     {
         var claims = new[]
@@ -52,6 +66,9 @@ public class JwtTokenHelper : IJwtTokenHelper
         return _tokenHandler.WriteToken(token);
     }
 
+    /// <summary>
+    /// Parses and validates the JWT token, returning the user ID and role if valid.
+    /// </summary>
     public (string? userId, int? role)? ParseToken(string token)
     {
         var principal = ValidateToken(token);
@@ -66,6 +83,9 @@ public class JwtTokenHelper : IJwtTokenHelper
         return (userId, role);
     }
 
+    /// <summary>
+    /// Validates the JWT token and returns the ClaimsPrincipal if valid.
+    /// </summary>
     private ClaimsPrincipal? ValidateToken(string token)
     {
         var key = Encoding.UTF8.GetBytes(_secretKey);

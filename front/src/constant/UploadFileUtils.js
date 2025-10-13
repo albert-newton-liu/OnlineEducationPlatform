@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "./Constants";
 
+// Utility function to upload a file and return its accessible URL
 export const uploadFile = async (file) => {
 
     if (!file) return;
@@ -17,8 +18,8 @@ export const uploadFile = async (file) => {
         }
 
         const data = await response.json();
-    
-        return data.accessUrl;
+
+        return `${API_BASE_URL + data.accessUrl}`;
 
     } catch (error) {
         console.error('Error uploading image:', error);

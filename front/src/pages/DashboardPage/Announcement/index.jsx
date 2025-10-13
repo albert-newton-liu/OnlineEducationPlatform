@@ -10,6 +10,7 @@ const PAGE_SIZE_DEFAULT = 5;
 
 const TOAST_DISPLAY_TIME = 3000;
 
+// Main Announcements Component
 const Announcements = () => {
     // --- State Management ---
 
@@ -69,12 +70,12 @@ const Announcements = () => {
 
 
     // --- Add Modal/Form Handlers ---
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // Handle form submission for adding a new announcement
     const handleAddSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -112,7 +113,6 @@ const Announcements = () => {
 
 
     // --- Pagination Rendering ---
-
     const renderPagination = () => {
         const pages = [];
         for (let i = 1; i <= pagination.totalPages; i++) {

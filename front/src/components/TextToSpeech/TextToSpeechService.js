@@ -2,7 +2,6 @@ let availableVoices = [];
 
 const populateVoiceList = () => {
     availableVoices = window.speechSynthesis.getVoices();
-    // console.log("Available voices loaded:", availableVoices);
 };
 
 if ('speechSynthesis' in window) {
@@ -15,6 +14,7 @@ const getVoiceByLang = (lang) => {
     return voice || availableVoices.find(v => v.lang === lang) || null;
 };
 
+// Main function to handle text-to-speech
 export const handleTextToSpeech = (text, voice = null, rate = 1, pitch = 1) => {
     if ('speechSynthesis' in window) {
         if (window.speechSynthesis.speaking) {

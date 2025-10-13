@@ -9,8 +9,9 @@ import { TextType, ImageType } from '../../../../constant/Constants'
 import '../AddCoursePage/AddCoursePage.css'
 import './ViewCoursePage.css'
 
+
+// ViewCoursePage component for viewing course details in read-only mode
 const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
-    console.log("ViewCoursePage bookingId prop:", bookingId);
 
     const { lessonId: paramLessonId } = useParams();
     const lessonId = propLessonId || paramLessonId;
@@ -43,7 +44,6 @@ const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
                 );
 
                 const lessonData = response.data;
-                console.log(lessonData);
 
                 setCourseInfo({
                     title: lessonData.title,
@@ -55,7 +55,12 @@ const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
 
                     const pageContent = {};
                     if (page.pageLayout.templateId === 1) {
-                        pageContent.backgroundImage = `url(${page.elements.find(e => e.elementType === ImageType)?.contentUrl || ''})`;
+
+                        let tmpUrl = page.elements.find(e => e.elementType === ImageType)?.contentUrl
+                        if (tmpUrl) {
+                            let index = tmpUrl.indexOf("/files")
+                            pageContent.backgroundImage = `url(${API_BASE_URL + tmpUrl.substring(index)})`;
+                        }
                         const textElement = page.elements.find(e => e.elementType === TextType);
 
                         pageContent.text = textElement?.contentText || '';
@@ -69,13 +74,26 @@ const ViewCoursePage = ({ lessonId: propLessonId, started, bookingId }) => {
                         pageContent.topText = topTextElement?.contentText || '';
                         pageContent.leftContentType = leftContentElement?.elementType;
                         pageContent.rightContentType = rightContentElement?.elementType;
+
+                        let tmpLeftUrl = leftContentElement?.contentUrl;
+                        if (ImageType == pageContent.leftContentType) {
+                            let index = tmpLeftUrl.indexOf("/files")
+                            tmpLeftUrl = `${API_BASE_URL + tmpLeftUrl.substring(index)}`;
+                        }
+
+                        let tmpRightUrl = rightContentElement?.contentUrl;
+                        if (ImageType == pageContent.rightContentType) {
+                            let index = tmpRightUrl.indexOf("/files")
+                            tmpRightUrl = `${API_BASE_URL + tmpRightUrl.substring(index)}`;
+                        }
+
                         pageContent.leftContent = {
                             text: leftContentElement?.contentText,
-                            image: leftContentElement?.contentUrl,
+                            image: tmpLeftUrl,
                         };
                         pageContent.rightContent = {
                             text: rightContentElement?.contentText,
-                            image: rightContentElement?.contentUrl,
+                            image: tmpRightUrl,
                         };
                     }
 

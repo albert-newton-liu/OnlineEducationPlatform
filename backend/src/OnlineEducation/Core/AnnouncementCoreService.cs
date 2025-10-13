@@ -7,18 +7,34 @@ using OnlineEducation.Model;
 
 namespace OnlineEducation.Core;
 
+/// <summary>
+/// Core service for managing announcements in the Online Education Platform.
+/// Provides methods to add announcements and retrieve paginated lists of active announcements.
+/// </summary>
 public class AnnouncementCoreService : IAnnouncementCoreService
 {
+    // Repository for accessing announcement data
     protected readonly IAnnouncementRepository _announcementRepository;
 
+    // Database context for direct data access
     private readonly ApplicationDbContext _dbContext;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AnnouncementCoreService"/> class.
+    /// </summary>
+    /// <param name="announcementRepository">The repository for announcement data access.</param>
+    /// <param name="dbContext">The database context for direct data access.</param>
     public AnnouncementCoreService(IAnnouncementRepository announcementRepository, ApplicationDbContext dbContext)
     {
         _announcementRepository = announcementRepository;
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Adds a new announcement to the system.
+    /// </summary>
+    /// <param name="announcement">The announcement to add.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the announcement is null.</exception>
     public async Task AddAnnouncement(Announcement announcement)
     {
         if (announcement == null)
@@ -42,6 +58,14 @@ public class AnnouncementCoreService : IAnnouncementCoreService
 
     }
 
+    /// <summary>
+    /// Retrieves a paginated list of active announcements.
+    /// </summary>
+    /// <param name="paginationParams">Pagination parameters for the query.</param>
+    /// <returns>
+    /// A <see cref="PaginatedResult{Announcement}"/> containing the announcements for the requested page,
+    /// or null if no announcements are found.
+    /// </returns>
     public async Task<PaginatedResult<Announcement>?> GetPaginatedAsync(PaginationParams paginationParams)
     {
         var query = _dbContext.AnnouncementDOs

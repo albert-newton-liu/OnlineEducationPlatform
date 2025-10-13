@@ -8,6 +8,9 @@ using OnlineEducation.Utils;
 
 namespace OnlineEducation.Service;
 
+/// <summary>
+/// Service for managing users in the online education platform.
+/// </summary>
 public class UserService : IUserService
 {
     private readonly IUserCoreService _userCoreService;
@@ -17,6 +20,9 @@ public class UserService : IUserService
         _userCoreService = userCoreService;
     }
 
+    /// <summary>
+    /// Adds a new admin to the platform.
+    /// </summary>
     public async Task<Admin> AddAdmin(AdminAddRequst requst)
     {
         Admin admin = new Admin();
@@ -34,6 +40,9 @@ public class UserService : IUserService
         return result;
     }
 
+    /// <summary>
+    /// Adds a new student to the platform.
+    /// </summary>
     public async Task<Student> AddStudent(StudentAddRequst requst)
     {
         Student student = new Student();
@@ -56,6 +65,9 @@ public class UserService : IUserService
         return result;
     }
 
+    /// <summary>
+    /// Adds a new teacher to the platform.
+    /// </summary>
     public async Task<Teacher> AddTeacher(TeacherAddRequst requst)
     {
         Teacher teacher = new Teacher();
@@ -77,6 +89,9 @@ public class UserService : IUserService
         return result;
     }
 
+    /// <summary>
+    /// Get Paginated Users from the platform.
+    /// </summary>
     public async Task<PaginatedResult<UserQueryResponse>> GetPaginatedUsersAsync(PaginationParams paginationParams)
     {
         PaginatedResult<UserDO> paginatedResult = await _userCoreService.GetPaginatedBaseUsersAsync(paginationParams);
@@ -102,6 +117,9 @@ public class UserService : IUserService
         return new(users, paginatedResult.TotalCount, paginatedResult.PageNumber, paginatedResult.PageSize);
     }
 
+    /// <summary>
+    /// Authenticates a user with the given username and password.
+    /// </summary>
     public async Task<User> Login(string username, string password)
     {
         User user = await _userCoreService.GetUserByUsernameAsync<User>(username) ?? throw new UnauthorizedAccessException("Invalid username or password.");
@@ -118,6 +136,9 @@ public class UserService : IUserService
         return user;
     }
 
+    /// <summary>
+    /// Queries a user by their unique identifier.
+    /// </summary>
     public async Task<User> QueryById(string id)
     {
         User user = await _userCoreService.GetByIdAsync<User>(id) ?? throw new UnauthorizedAccessException("Invalid username or password.");

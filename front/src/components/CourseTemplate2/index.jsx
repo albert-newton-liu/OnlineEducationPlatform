@@ -4,6 +4,7 @@ import { uploadFile } from "../../constant/UploadFileUtils";
 
 import { TextType, ImageType } from '../../constant/Constants'
 
+// Template2 component for course content with top text and split bottom content
 const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
 
     const location = useLocation();
@@ -28,6 +29,7 @@ const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
         });
     };
 
+    // Handle split content text change
     const handleSplitContentChange = (e, side) => {
         onContentChangeRef.current({
             ...contentRef.current,
@@ -88,8 +90,6 @@ const Template2 = ({ content, onContentChange, speak, isReadOnly = false }) => {
             speak(content.text);
         }
     };
-
-
 
 
     return (

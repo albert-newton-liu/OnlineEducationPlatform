@@ -57,6 +57,7 @@ const convertToTimeSpanFormat = (timeString) => {
     return `${formattedHours}:${formattedMinutes}:00`;
 };
 
+// Main Schedule Management Page Component
 export default function ScheduleManagementPage() {
     const [schedule, setSchedule] = useState({});
     const [isEditing, setIsEditing] = useState(false);
@@ -66,6 +67,7 @@ export default function ScheduleManagementPage() {
 
     const teacherId = localStorage.getItem('userId');
 
+    // Fetch existing schedule from backend
     const fetchSchedule = async () => {
         if (!teacherId) {
             setError('Teacher ID not found. Please log in again.');
@@ -116,6 +118,7 @@ export default function ScheduleManagementPage() {
         fetchSchedule();
     }, []);
 
+    // Handle slot cell click to toggle selection
     const handleSlotClick = (day, slot) => {
         if (!isEditing) return;
 

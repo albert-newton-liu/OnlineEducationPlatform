@@ -4,6 +4,7 @@ import * as signalR from '@microsoft/signalr';
 import { API_BASE_URL } from '../../constant/Constants';
 import './Chat.css';
 
+// Component for real-time chat functionality
 const Chat = () => {
     const location = useLocation();
     const { recipientId, bookingId, recipientName } = location.state || {};
@@ -22,6 +23,7 @@ const Chat = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
+    // Establish SignalR connection and set up message handlers
     useEffect(() => {
         if (!token) return;
 
@@ -32,10 +34,7 @@ const Chat = () => {
 
         connection.start()
             .then(() => {
-                console.log('✅ Connected to Chat Hub!');
                 setIsConnected(true);
-
-
                 connection.on('ReceiveMessage', (senderId, senderUsername, message) => {
                     if (message) {
                         setMessages(prev => [...prev, { senderId, senderUsername, message }]);
@@ -57,6 +56,7 @@ const Chat = () => {
     }, [token]);
 
 
+    // Function to send a message
     const sendMessage = useCallback(async () => {
         const connection = connectionRef.current;
         const trimmedMessage = messageInput.trim();

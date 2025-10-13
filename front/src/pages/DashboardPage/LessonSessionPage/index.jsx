@@ -6,6 +6,7 @@ import ViewCoursePage from '../CourseManagement/ViewCoursePage';
 import Chat from '../../../components/Chat';
 import './LessonSessionPage.css'; // You'll create this file next
 
+// LessonSessionPage component that combines the course viewer and chat interface
 const LessonSessionPage = () => {
     // Both components need access to URL parameters and navigation state.
     // We get them here and pass them down as props.

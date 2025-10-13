@@ -5,6 +5,7 @@ import Template2 from '../../../../../components/CourseTemplate2';
 import VoiceSelector from '../../../../../components/TextToSpeech';
 import { handleTextToSpeech } from '../../../../../components/TextToSpeech/TextToSpeechService';
 
+// PageEditorSection component for editing and navigating course pages
 const PageEditorSection = ({
     pages,
     currentPageIndex,
@@ -37,9 +38,6 @@ const PageEditorSection = ({
         (text) => handleTextToSpeech(text, currentVoice, speechParams.rate, speechParams.pitch),
         [currentVoice, speechParams]
     );
-
-
-
 
     return (
         <div className="page-editor-section">

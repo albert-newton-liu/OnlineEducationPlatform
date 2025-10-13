@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getAvailableVoices, cancelSpeech } from './TextToSpeechService';
 import './VoiceSelector.css'
 
+// Component for selecting voice and adjusting speech parameters
 const VoiceSelector = ({ onVoiceChange, onParamsChange }) => {
     const [voices, setVoices] = useState([]);
     const [selectedVoice, setSelectedVoice] = useState(null);

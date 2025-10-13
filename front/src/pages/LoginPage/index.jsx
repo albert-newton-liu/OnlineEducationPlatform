@@ -25,7 +25,6 @@ function LoginPage({ onLoginSuccess }) { // <--- Added onLoginSuccess prop
         password,
       });
 
-      console.log('Login successful!', response.data);
 
       // Store user authentication token/data
       localStorage.setItem('userToken', response.data.token);

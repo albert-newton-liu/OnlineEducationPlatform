@@ -6,14 +6,28 @@ using OnlineEducation.Utils;
 
 namespace OnlineEducation.Core;
 
+/// <summary>
+/// Core service for managing bookings and teacher schedules in the Online Education Platform.
+/// Provides methods for adding schedules, booking lessons, canceling bookings, completing bookings,
+/// retrieving bookable slots, and generating bookable slots.
+/// </summary>
 public class BookingCoreService : IBookingCoreService
 {
+    // Repository for accessing teacher schedule data
     private readonly ITeacherScheduleRepository _teacherScheduleRepository;
 
+    // Repository for accessing bookable slot data
     private readonly IBookableSlotRepository _bookableSlotRepository;
 
+    // Repository for accessing booking data
     private readonly IBookingRepository _bookingRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookingCoreService"/> class.
+    /// </summary>
+    /// <param name="teacherScheduleRepository">Repository for teacher schedules.</param>
+    /// <param name="bookableSlotRepository">Repository for bookable slots.</param>
+    /// <param name="bookingRepository">Repository for bookings.</param>
     public BookingCoreService(ITeacherScheduleRepository teacherScheduleRepository,
                               IBookableSlotRepository bookableSlotRepository,
                               IBookingRepository bookingRepository)
@@ -23,6 +37,10 @@ public class BookingCoreService : IBookingCoreService
         _bookingRepository = bookingRepository;
     }
 
+    /// <summary>
+    /// Adds or updates a teacher's schedule.
+    /// </summary>
+    /// <param name="teacherSchedule">The teacher schedule to add or update.</param>
     public async Task AddSchedule(TeacherSchedule teacherSchedule)
     {
         List<TeacherScheduleDO> scheduleDOs = Convert(teacherSchedule);
@@ -31,6 +49,11 @@ public class BookingCoreService : IBookingCoreService
         await _teacherScheduleRepository.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Converts a <see cref="TeacherSchedule"/> model to a list of <see cref="TeacherScheduleDO"/> entities.
+    /// </summary>
+    /// <param name="schedule">The teacher schedule model.</param>
+    /// <returns>List of <see cref="TeacherScheduleDO"/> entities.</returns>
     private List<TeacherScheduleDO> Convert(TeacherSchedule schedule)
     {
         List<TeacherScheduleDO> teacherScheduleDOs = new List<TeacherScheduleDO>();
@@ -58,10 +81,17 @@ public class BookingCoreService : IBookingCoreService
             });
         });
 
-
         return teacherScheduleDOs;
     }
 
+    /// <summary>
+    /// Books a lesson for a student in a specific bookable slot.
+    /// </summary>
+    /// <param name="studentId">The unique identifier of the student.</param>
+    /// <param name="lessonId">The unique identifier of the lesson.</param>
+    /// <param name="bookableSlotId">The unique identifier of the bookable slot.</param>
+    /// <returns>The created <see cref="Booking"/> object.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the slot is already booked.</exception>
     public async Task<Booking> Book(string studentId, string lessonId, string bookableSlotId)
     {
         // Begin a transaction to ensure atomicity
@@ -70,7 +100,6 @@ public class BookingCoreService : IBookingCoreService
         try
         {
             // 1. Retrieve the bookable slot and lock it to prevent concurrent updates
-            //    (This can be implemented using SELECT ... FOR UPDATE or EF row-level locks)
             BookableSlotDO? bookableSlotDO = await _bookableSlotRepository
              .GetByIdForUpdateAsync(bookableSlotId);
 
@@ -98,7 +127,6 @@ public class BookingCoreService : IBookingCoreService
             await _bookingRepository.AddAsync(bookingDO);
 
             // 4. Directly update the already retrieved slot entity
-            //    (Avoids EF Core tracking conflicts)
             bookableSlotDO.IsBooked = true;
 
             // 5. Save all changes within the same transaction
@@ -116,6 +144,11 @@ public class BookingCoreService : IBookingCoreService
         }
     }
 
+    /// <summary>
+    /// Cancels an existing booking.
+    /// </summary>
+    /// <param name="bookingId">The unique identifier of the booking to cancel.</param>
+    /// <exception cref="ArgumentException">Thrown if the booking cannot be canceled.</exception>
     public async Task CancelBook(string bookingId)
     {
         BookingDO? bookingDO = await _bookingRepository.GetByIdAsync(bookingId);
@@ -138,6 +171,11 @@ public class BookingCoreService : IBookingCoreService
         await _bookingRepository.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Marks a booking as completed.
+    /// </summary>
+    /// <param name="bookingId">The unique identifier of the booking to complete.</param>
+    /// <exception cref="ArgumentException">Thrown if the booking is already canceled.</exception>
     public async Task Complete(string bookingId)
     {
         BookingDO? bookingDO = await _bookingRepository.GetByIdAsync(bookingId);
@@ -152,6 +190,12 @@ public class BookingCoreService : IBookingCoreService
         await _bookingRepository.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Retrieves available bookable slots for a teacher, marking those already booked by the student.
+    /// </summary>
+    /// <param name="teacherId">The unique identifier of the teacher.</param>
+    /// <param name="studentId">The unique identifier of the student.</param>
+    /// <returns>List of <see cref="BookableSlot"/> objects.</returns>
     public async Task<List<BookableSlot>> GetBookableSlot(string teacherId, string studentId)
     {
         DateTimeOffset NextMonday = GetNextMonday();
@@ -187,6 +231,13 @@ public class BookingCoreService : IBookingCoreService
     )];
     }
 
+    /// <summary>
+    /// Retrieves a list of bookings filtered by student ID, teacher ID, and status.
+    /// </summary>
+    /// <param name="studentId">The unique identifier of the student (optional).</param>
+    /// <param name="teacherId">The unique identifier of the teacher (optional).</param>
+    /// <param name="Status">The status of the bookings to filter by.</param>
+    /// <returns>List of <see cref="Booking"/> objects.</returns>
     public async Task<List<Booking>> GetBookingList(string? studentId, string? teacherId, int Status)
     {
 
@@ -203,7 +254,6 @@ public class BookingCoreService : IBookingCoreService
 
         var auTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific/Auckland");
 
-
         return [.. bookingDOs.Select(x => new Booking()
                     {
                         BookingId = x.BookingId,
@@ -217,6 +267,11 @@ public class BookingCoreService : IBookingCoreService
 
     }
 
+    /// <summary>
+    /// Converts a <see cref="BookingDO"/> entity to a <see cref="Booking"/> model.
+    /// </summary>
+    /// <param name="x">The <see cref="BookingDO"/> entity.</param>
+    /// <returns>The converted <see cref="Booking"/> model.</returns>
     private Booking Convert(BookingDO x)
     {
         var auTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific/Auckland");
@@ -233,6 +288,11 @@ public class BookingCoreService : IBookingCoreService
         };
     }
 
+    /// <summary>
+    /// Retrieves a teacher's schedule.
+    /// </summary>
+    /// <param name="teacherId">The unique identifier of the teacher.</param>
+    /// <returns>The <see cref="TeacherSchedule"/> object, or null if not found.</returns>
     public async Task<TeacherSchedule?> GetSchedule(string teacherId)
     {
         List<TeacherScheduleDO> scheduleDOs = await _teacherScheduleRepository.GetByTeacherId(teacherId);
@@ -269,6 +329,10 @@ public class BookingCoreService : IBookingCoreService
         };
     }
 
+    /// <summary>
+    /// Generates bookable slots for teachers, optionally filtered by a specific teacher ID.
+    /// </summary>
+    /// <param name="teacherId">The unique identifier of the teacher (optional).</param>
     public async Task GenerateBookableSlot(string? teacherId)
     {
         Expression<Func<TeacherScheduleDO, bool>> predicate = (x) => x.IsActive
@@ -302,6 +366,10 @@ public class BookingCoreService : IBookingCoreService
         }
     }
 
+    /// <summary>
+    /// Generates bookable slots for a specific teacher's schedule.
+    /// </summary>
+    /// <param name="teacherScheduleDO">The teacher schedule data object.</param>
     private async Task GenerateTeahcherSlot(TeacherScheduleDO teacherScheduleDO)
     {
         BookableSlotDO bookableSlotDO = new()
@@ -320,11 +388,22 @@ public class BookingCoreService : IBookingCoreService
         await _bookableSlotRepository.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Gets the <see cref="DateTimeOffset"/> for the next Monday at midnight.
+    /// </summary>
+    /// <returns>The <see cref="DateTimeOffset"/> for the next Monday.</returns>
     private DateTimeOffset GetNextMonday()
     {
         return GetNextWeekDate(0, TimeSpan.Zero);
     }
 
+    /// <summary>
+    /// Calculates the next occurrence of a specific day of the week and time.
+    /// </summary>
+    /// <param name="customDayOfWeek">Custom day of the week (0=Mon, 1=Tue, ..., 6=Sun).</param>
+    /// <param name="time">The time of day.</param>
+    /// <param name="timeZoneId">The time zone ID (default: "Pacific/Auckland").</param>
+    /// <returns>The <see cref="DateTimeOffset"/> for the next occurrence.</returns>
     private DateTimeOffset GetNextWeekDate(byte customDayOfWeek, TimeSpan time, string timeZoneId = "Pacific/Auckland")
     {
         var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);

@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../../../constant/Constants'
 
 import '../Modal.css';
 
+// UpdateUserModal component for updating an existing user (Student, Teacher, Admin)
 function UpdateUserModal({ user, onClose }) {
   // Common fields
   const [username, setUsername] = useState(user.username || '');

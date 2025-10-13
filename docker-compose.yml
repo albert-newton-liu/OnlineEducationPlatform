@@ -17,6 +17,7 @@ services:
     volumes:
       # This line creates a named volume to persist the keys
       - weatherapi-keys:/root/.aspnet/DataProtection-Keys
+      - ./backend/src/OnlineEducation/uploads:/app/uploads
 
   # React front-end service
   web:
