@@ -131,7 +131,7 @@ builder.Services.AddCors(options =>
         {
             // IMPORTANT: In production, replace "http://localhost:5173" with your actual
             // production frontend domain (e.g., "https://yourfrontend.com").
-            policyBuilder.WithOrigins("http://localhost:5173", "http://localhost:3000",  "http://localhost", "http://albert.onlineedu.edu")
+            policyBuilder.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://3.88.38.20", "http://localhost", "http://albert.onlineedu.edu")
                          .AllowAnyHeader()
                          .AllowAnyMethod()
                          .AllowCredentials();
