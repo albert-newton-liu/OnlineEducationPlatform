@@ -118,6 +118,7 @@ public class BookingCoreService : IBookingCoreService
                 StudentId = studentId,
                 TeacherId = bookableSlotDO.TeacherId ?? "",
                 BookableSlotId = bookableSlotId,
+                BookableSlot = bookableSlotDO,
                 LessonId = lessonId,
                 Status = 0,
                 CreatedAt = DateTimeOffset.UtcNow,
